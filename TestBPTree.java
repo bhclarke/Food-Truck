@@ -163,13 +163,11 @@ public class TestBPTree {
       tree.insert(4, "Brett");
       tree.insert(5, "Brett");
       int result = tree.rangeSearch(4, "<=").size();
-      assertTrue(result == 4 || result == 1); // TODO: determine if should be ["Brett"] or
-                                              // ["Brett","Brett","Brett","Brett"]
+      assertTrue(result == 4);
       result = tree.rangeSearch(0, "<=").size();
       assertTrue(result == 0);
       result = tree.rangeSearch(7, "<=").size();
-      assertTrue(result == 5 || result == 1); // TODO: determine if should be ["Brett"] or
-                                              // ["Brett","Brett","Brett","Brett","Brett"]
+      assertTrue(result == 5);
       testsPassed++;
     } catch (Exception e) {
       printUnexpectedException(e, "Inserting multiple keys with the same value.");
@@ -310,13 +308,11 @@ public class TestBPTree {
       tree.insert(4, "Brett");
       tree.insert(5, "Brett");
       int result = tree.rangeSearch(4, "<=").size();
-      assertTrue(result == 4 || result == 1); // TODO: determine if should be ["Brett"] or
-                                              // ["Brett","Brett","Brett","Brett"]
+      assertTrue(result == 4);
       result = tree.rangeSearch(0, "<=").size();
       assertTrue(result == 0);
       result = tree.rangeSearch(7, "<=").size();
-      assertTrue(result == 5 || result == 1); // TODO: determine if should be ["Brett"] or
-                                              // ["Brett","Brett","Brett","Brett","Brett"]
+      assertTrue(result == 5);
       testsPassed++;
     } catch (Exception e) {
       printUnexpectedException(e, "Inserting multiple keys with the same value.");
