@@ -34,7 +34,6 @@ public class TestBPTree {
   @Before
   public void setUp() throws Exception {
     tests++;
-    tree = new BPTree<Integer, String>(3);
   }
 
   @After
