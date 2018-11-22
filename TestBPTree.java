@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 public class TestBPTree {
-  boolean DEBUG = false;
+  boolean DEBUG = true;
   private static int testsPassed;
   private static int tests;
 
@@ -180,13 +180,14 @@ public class TestBPTree {
   public void test_canInsertAndSearch_manyKeys_oddBranchingFactor() {
     try {
       tree = new BPTree<Integer, String>(3);
-      for (int i = 0; i < 10000; i++) {
+      int numToInsert = 100000;
+      for (int i = 0; i < numToInsert; i++) {
         tree.insert(i, "Brett" + i);
       }
       int expected = 5;
       int result = tree.rangeSearch(4, "<=").size();
       assertEquals(expected, result);
-      expected = 9996;
+      expected = numToInsert-4;
       result = tree.rangeSearch(4, ">=").size();
       assertEquals(expected, result);
       expected = 1;
@@ -326,13 +327,14 @@ public class TestBPTree {
   public void test_canInsertAndSearch_manyKeys_evenBranchingFactor() {
     try {
       tree = new BPTree<Integer, String>(4);
-      for (int i = 0; i < 10000; i++) {
+      int numToInsert = 100000;
+      for (int i = 0; i < numToInsert; i++) {
         tree.insert(i, "Brett" + i);
       }
       int expected = 5;
       int result = tree.rangeSearch(4, "<=").size();
       assertEquals(expected, result);
-      expected = 9996;
+      expected = numToInsert-4;
       result = tree.rangeSearch(4, ">=").size();
       assertEquals(expected, result);
       expected = 1;
