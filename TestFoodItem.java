@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 public class TestFoodItem {
-  boolean DEBUG = false;
+  boolean DEBUG = true;
   private static int testsPassed;
   private static int tests;
 
@@ -200,10 +200,10 @@ public class TestFoodItem {
       result = fi.getNutrientValue("fat");
       assertEquals(expected, result, .000001);
       expected = 12.1;
-      result = fi.getNutrientValue("fat");
+      result = fi.getNutrientValue("carbs");
       assertEquals(expected, result, .000001);
       expected = 0.95;
-      result = fi.getNutrientValue("fat");
+      result = fi.getNutrientValue("protein");
       assertEquals(expected, result, .000001);
       testsPassed++;
     } catch (Exception e) {
