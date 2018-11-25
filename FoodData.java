@@ -1,5 +1,7 @@
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This class represents the backend for managing all 
@@ -59,7 +61,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void addFoodItem(FoodItem foodItem) {
-        // TODO : Complete
+        foodItemList.add(foodItem);
     }
 
     /*
@@ -68,8 +70,33 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> getAllFoodItems() {
-        // TODO : Complete
-        return null;
+        return foodItemList;
+    }
+    
+    /**
+     * Save the list of food items in ascending order by name
+     * The format of foodItems.txt is a comma-delimited list like this:
+     * hashCode (?), foodItemName, caloriesLabel, caloriesValue, fatLabel, fatValue, carbLabel, carbValue, fiberLabel, fiberValue, proteinLabel, proteinValue
+     * 
+     * @param filename name of the file where the data needs to be saved 
+     */
+    public void saveFoodItems(String filename) {
+		File inputFile = null;
+		Scanner sc = null;
+		
+		try {
+			inputFile = new File(filename);
+			sc = new Scanner(inputFile);
+			while(sc.hasNextLine()) {
+				String name = sc.nextLine();
+				//TODO
+			}
+			sc.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(-1);
+		}
+		
     }
 
 }
