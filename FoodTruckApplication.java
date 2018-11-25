@@ -226,12 +226,8 @@ public class FoodTruckApplication extends Application {
 
   private Meal mockData() {
     Meal meal = new Meal();
-    FoodItem foodItem;
-    for (int i = 0; i < 6; i++) {
-      foodItem = new FoodItem("" + i, "food " + i);
-      foodData.addFoodItem(foodItem);
-    }
-    meal.addFoodItem(new FoodItem("3", "food 3"));
+    foodData.loadFoodItems("foodItems.csv");
+    meal.loadFoodItems("foodItems.csv");
     return meal;
   }
 }
