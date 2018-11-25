@@ -33,18 +33,53 @@ public class FoodTruckApplication extends Application {
     window = primaryStage;
     window.setTitle("Food Truck");
 
-    // Create main layout
-    startLayout = new BorderPane();
+    // Create initial layout
+    startLayout = createStart();
 
-    // Set initial views in mainLayout: TODO
+    // Set initial views in startLayout: TODO
 
     // set scene
-    startScene = new Scene(startLayout, 600, 400);
+    startScene = new Scene(startLayout, 1200, 800);
     window.setScene(startScene);
 
     // show Application
     window.show();
 
   }
+  
+  /**
+   *  Create layout for the initial start of the application
+   * @return BorderPane. You can change the return type. 
+   */
+  private BorderPane createStart() {
+    //TODO
+    return new BorderPane();
+  }
+  
+  /**
+   *  Create layout for the edit food area of the application
+   * @return BorderPane. You can change the return type. 
+   */
+  private BorderPane createEditFood() {
+    //TODO
+    return new BorderPane();
+  }
+  
+  /**
+   *  Create layout for the edit meal area of the application
+   * @return BorderPane. You can change the return type. 
+   */
+  private BorderPane createEditMeal() {
+    //TODO
+    return new BorderPane();
+  }
 
+  /**
+   *  Create layout for the edit rule area of the application
+   * @return BorderPane. You can change the return type. 
+   */
+  private BorderPane createEditRule() {
+    //TODO
+    return new BorderPane();
+  }
 }
