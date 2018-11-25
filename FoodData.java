@@ -77,27 +77,10 @@ public class FoodData implements FoodDataADT<FoodItem> {
     
     /**
      * Save the list of food items in ascending order by name
-     * The format of foodItems.txt is a comma-delimited list like this:
-     * hashCode (?), foodItemName, caloriesLabel, caloriesValue, fatLabel, fatValue, carbLabel, carbValue, fiberLabel, fiberValue, proteinLabel, proteinValue
-     * 
      * @param filename name of the file where the data needs to be saved 
      */
     public void saveFoodItems(String filename) {
-		File inputFile = null;
-		Scanner sc = null;
-		
-		try {
-			inputFile = new File(filename);
-			sc = new Scanner(inputFile);
-			while(sc.hasNextLine()) {
-				String name = sc.nextLine();
-				//TODO
-			}
-			sc.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(-1);
-		}
+		// TODO: This should save what was loaded in by loadFoodItems / in foodItemList out to the file filename
 		
     }
 
