@@ -1,10 +1,13 @@
 
+import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +36,9 @@ public class FoodTruckApplication extends Application {
   // Edit Rules Scene
   BorderPane editRuleLayout;
   Scene editRuleScene;
+
+  // Backend Data
+  FoodData foodData;
 
   public static void main(String[] args) {
     launch(args);
@@ -87,9 +93,41 @@ public class FoodTruckApplication extends Application {
    * 
    * @return BorderPane. You can change the return type.
    */
-  private BorderPane createEditMeal() {
-    // TODO
-    return new BorderPane();
+  private GridPane createEditMeal(Meal meal) {
+    // Define grid and settings
+    GridPane grid = new GridPane();
+    grid.setPadding(new Insets(10, 10, 10, 10));
+    grid.setVgap(8);
+    grid.setHgap(10);
+
+    // Define Food and Meal ListViews
+    List<FoodItem> mealList = meal.getAllFoodItems();
+    List<FoodItem> foodList = foodData.getAllFoodItems();
+    ListView<String> foodListView = new ListView();
+    ListView<String> mealListView = new ListView();
+    for (FoodItem fi : foodData.getAllFoodItems()) {
+      foodListView.getItems().add(fi.getName());
+    }
+    for (FoodItem fi : mealList) {
+      foodListView.getItems().remove(fi.getName());
+      mealListView.getItems().add(fi.getName());
+    }
+    
+    // Define Buttons
+    Button addButton = new Button("Add");
+    Button removeButton = new Button("Remove");
+    Button saveButton = new Button("Save");
+
+    // Add all to grid
+    GridPane.setConstraints(foodListView, 0, 0, 1, 4);
+    GridPane.setConstraints(mealListView, 2, 0, 2, 4);
+    GridPane.setConstraints(addButton, 1, 1, 1, 1);
+    GridPane.setConstraints(removeButton, 1, 2, 1, 1);
+    GridPane.setConstraints(saveButton, 3, 4, 1, 1);
+
+    grid.getChildren().addAll(foodListView, mealListView, addButton, removeButton, saveButton);
+
+    return grid;
   }
 
   /**
@@ -143,25 +181,25 @@ public class FoodTruckApplication extends Application {
   private GridPane getStartCredits() {
     // create grid
     GridPane grid = new GridPane();
-    grid.setPadding(new Insets(200,50,200,50));
+    grid.setPadding(new Insets(200, 50, 200, 50));
     grid.setVgap(8);
     grid.setHgap(10);
-    
+
     // create text and add to grid
     Label appName = new Label("Food Truck");
     Label appCredits =
         new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
     GridPane.setConstraints(appName, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
     GridPane.setConstraints(appCredits, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
-    
-    // import logo and add to grid 
+
+    // import logo and add to grid
     String imagePath = "file:food-truck-logo.png";
     Image image = new Image(imagePath);
     ImageView imageView = new ImageView(image);
     GridPane.setConstraints(imageView, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
-    
+
     grid.getChildren().addAll(appName, appCredits, imageView);
-    
+
     return grid;
   }
 }
