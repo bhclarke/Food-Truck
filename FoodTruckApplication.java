@@ -1,6 +1,11 @@
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,6 +13,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SelectionMode;
@@ -17,6 +23,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 
 public class FoodTruckApplication extends Application {
@@ -41,6 +48,8 @@ public class FoodTruckApplication extends Application {
 
   // Backend Data
   FoodData foodData = new FoodData();
+  List<Meal> mealData = new ArrayList<Meal>();
+  List<String> rulesData = new ArrayList<String>();
 
   public static void main(String[] args) {
     launch(args);
@@ -56,7 +65,7 @@ public class FoodTruckApplication extends Application {
     startLayout = createStart();
 
     // set scene
-    startScene = new Scene(startLayout, 1200, 800);
+    startScene = new Scene(startLayout, 1600, 900);
     window.setScene(startScene);
 
     // show Application
@@ -76,7 +85,7 @@ public class FoodTruckApplication extends Application {
     // Set up application content
     layout.setLeft(getFoodList());
     layout.setRight(getMealList());
-    
+
     // uncomment the setCenter for the content you are testing. Comment out the rest.
     //layout.setCenter(getStartCredits());
     layout.setCenter(createEditMeal(null));
@@ -115,21 +124,81 @@ public class FoodTruckApplication extends Application {
     // Define Food and Meal ListViews
     List<FoodItem> mealList = meal.getAllFoodItems();
     List<FoodItem> foodList = foodData.getAllFoodItems();
-    ListView<String> foodListView = new ListView<String>();
+    ListView<FoodItem> foodListView = new ListView<FoodItem>();
+    ListView<FoodItem> mealListView = new ListView<FoodItem>();
+    for (FoodItem foodItem : foodList) {
+      foodListView.getItems().add(foodItem);
+    }
+    for (FoodItem foodItem : mealList) {
+      foodListView.getItems().remove(foodItem);
+      mealListView.getItems().add(foodItem);
+    }
     foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
-    ListView<String> mealListView = new ListView<String>();
     mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
-    for (FoodItem fi : foodList) {
-      foodListView.getItems().add(fi.getName());
-    }
-    for (FoodItem fi : mealList) {
-      foodListView.getItems().remove(fi.getName());
-      mealListView.getItems().add(fi.getName());
-    }
+    foodListView.setCellFactory(new Callback<ListView<FoodItem>, ListCell<FoodItem>>() {
+      @Override
+      public ListCell<FoodItem> call(ListView<FoodItem> param) {
+        ListCell<FoodItem> cell = new ListCell<FoodItem>() {
+
+          @Override
+          protected void updateItem(FoodItem item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+              setText(item.getName());
+            } else {
+              setText("");
+            }
+          }
+        };
+        return cell;
+      }
+
+    });
+    mealListView.setCellFactory(new Callback<ListView<FoodItem>, ListCell<FoodItem>>() {
+      @Override
+      public ListCell<FoodItem> call(ListView<FoodItem> param) {
+        ListCell<FoodItem> cell = new ListCell<FoodItem>() {
+
+          @Override
+          protected void updateItem(FoodItem item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+              setText(item.getName());
+            } else {
+              setText("");
+            }
+          }
+        };
+        return cell;
+      }
+    });
 
     // Define Buttons
     Button addButton = new Button("->");
+    addButton.setOnAction(new EventHandler<ActionEvent>() {
+
+      @Override
+      public void handle(ActionEvent event) {
+        Object[] foods = foodListView.getSelectionModel().getSelectedItems().toArray();
+        for (Object foodItem : foods) {
+          foodListView.getItems().remove((FoodItem) foodItem);
+          mealListView.getItems().add((FoodItem) foodItem);
+        } ;
+
+      }
+    });
     Button removeButton = new Button("<-");
+    removeButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        Object[] foods = mealListView.getSelectionModel().getSelectedItems().toArray();
+        for (Object foodItem : foods) {
+          foodListView.getItems().add((FoodItem) foodItem);
+          mealListView.getItems().remove((FoodItem) foodItem);
+        } ;
+
+      }
+    });
     VBox toggleButtonBox = new VBox();
     toggleButtonBox.setPadding(new Insets(10, 10, 10, 10));
     toggleButtonBox.setSpacing(30);
@@ -227,7 +296,7 @@ public class FoodTruckApplication extends Application {
   private Meal mockData() {
     Meal meal = new Meal();
     foodData.loadFoodItems("foodItems.csv");
-    meal.loadFoodItems("foodItems.csv");
+    meal.addFoodItem(foodData.getAllFoodItems().get(0));
     return meal;
   }
 }
