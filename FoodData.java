@@ -1,7 +1,10 @@
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * This class represents the backend for managing all 
@@ -23,6 +26,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     public FoodData() {
         // TODO : Complete
+    	foodItemList = new ArrayList<FoodItem>();
+    	indexes = new HashMap<String, BPTree<Double, FoodItem>>();
     }
     
     
@@ -32,7 +37,47 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void loadFoodItems(String filePath) {
-        // TODO : Complete
+        File inputFile = null;
+        Scanner input = null;
+        String oneLineOfData = null;
+        
+    	try {
+            inputFile = new File(filePath);
+            System.out.println("reading data from " + filePath);
+            input = new Scanner(inputFile);
+            while (input.hasNextLine()) {
+                oneLineOfData = input.nextLine();
+                
+                // handle empty rows
+                if (oneLineOfData.length()==0) {
+                	System.out.println("Empty");
+                	continue;
+                }
+                
+                String[] commaSplit = oneLineOfData.split(",");
+                // handle null ids
+                if (commaSplit[0].length() == 0) {
+                	System.out.println("Invalid data");
+                	continue;
+                }
+                
+                // add new food item with nutrients
+                FoodItem food = new FoodItem(commaSplit[0],commaSplit[1]);
+                for (int i = 3; i < commaSplit.length; i = i+2) {
+                	System.out.println(commaSplit[i]);
+                	double nut = Double.parseDouble(commaSplit[i]);
+                	System.out.println("nut" + nut);
+                	food.addNutrient(commaSplit[i-1].toLowerCase(), nut);
+                }
+                
+                foodItemList.add(food);    
+                System.out.println(commaSplit[0] + "; " 
+                + food.getName() + " " + food.getNutrientValue("protein"));
+                
+            }    
+    	} catch (Exception e) {
+    		System.out.println(e.getMessage());
+    	}
     }
 
     /*
@@ -61,7 +106,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void addFoodItem(FoodItem foodItem) {
-        foodItemList.add(foodItem);
+        // TODO : Complete
     }
 
     /*
@@ -70,16 +115,46 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> getAllFoodItems() {
-        return foodItemList;
+        // TODO : Complete
+        return null;
     }
-    
-    /**
-     * Save the list of food items in ascending order by name
-     * @param filename name of the file where the data needs to be saved 
-     */
-    public void saveFoodItems(String filename) {
-		// TODO: This should save what was loaded in by loadFoodItems / in foodItemList out to the file filename
+
+
+	@Override
+	public void saveFoodItems(String filename) {
+        File outputFile = null;
+        PrintStream writer = null;
+
+
+        try {
+                outputFile = new File(filename); 
+                writer = new PrintStream(outputFile);
+                
+                for (int i = 0; i < foodItemList.size(); i++) {
+                	FoodItem f = foodItemList.get(i);
+                	String id = f.getID();
+                	String name = f.getName();
+                	writer.println(id + "," + name + 
+                			",calories," + f.getNutrientValue("calories") 
+                			+ ",fat," + f.getNutrientValue("fat") 
+                			+ ",carbohydrates," + f.getNutrientValue("carbohydrates") 
+                			+ "fiber," + f.getNutrientValue("fiber")
+                			+ ",protein," + f.getNutrientValue("protein"));
+                }
+
+        } catch (IOException e) {  
+                System.out.println("WARNING: Some kind of IO error occurred");
+        } finally {
+                if (writer != null) // if statement checks for null pointer
+                        writer.close();  // close the file
+        } 
 		
-    }
+	}
+	
+	public static void main(String[] args) {
+		FoodData d = new FoodData();
+		d.loadFoodItems("foodItems.txt");
+		d.saveFoodItems("newFile.txt");
+	}
 
 }
