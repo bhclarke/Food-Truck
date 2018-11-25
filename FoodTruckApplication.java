@@ -3,12 +3,14 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -38,7 +40,7 @@ public class FoodTruckApplication extends Application {
   Scene editRuleScene;
 
   // Backend Data
-  FoodData foodData;
+  FoodData foodData = new FoodData();
 
   public static void main(String[] args) {
     launch(args);
@@ -74,7 +76,10 @@ public class FoodTruckApplication extends Application {
     // Set up application content
     layout.setLeft(getFoodList());
     layout.setRight(getMealList());
+    
+    // uncomment the setCenter for the content you are testing. Comment out the rest.
     layout.setCenter(getStartCredits());
+    //layout.setCenter(createEditMeal(null));
     return layout;
   }
 
@@ -100,32 +105,48 @@ public class FoodTruckApplication extends Application {
     grid.setVgap(8);
     grid.setHgap(10);
 
+    // TODO remove mocked data
+    meal = mockData();
+
+    // Define Labels
+    Label foodListLabel = new Label("Available Food:");
+    Label mealListLabel = new Label("Food in Meal:");
+
     // Define Food and Meal ListViews
     List<FoodItem> mealList = meal.getAllFoodItems();
     List<FoodItem> foodList = foodData.getAllFoodItems();
-    ListView<String> foodListView = new ListView();
-    ListView<String> mealListView = new ListView();
-    for (FoodItem fi : foodData.getAllFoodItems()) {
+    ListView<String> foodListView = new ListView<String>();
+    foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
+    ListView<String> mealListView = new ListView<String>();
+    mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
+    for (FoodItem fi : foodList) {
       foodListView.getItems().add(fi.getName());
     }
     for (FoodItem fi : mealList) {
       foodListView.getItems().remove(fi.getName());
       mealListView.getItems().add(fi.getName());
     }
-    
+
     // Define Buttons
-    Button addButton = new Button("Add");
-    Button removeButton = new Button("Remove");
+    Button addButton = new Button("->");
+    Button removeButton = new Button("<-");
+    VBox toggleButtonBox = new VBox();
+    toggleButtonBox.setPadding(new Insets(10, 10, 10, 10));
+    toggleButtonBox.setSpacing(30);
+    toggleButtonBox.alignmentProperty().set(Pos.CENTER);
+    toggleButtonBox.getChildren().addAll(addButton, removeButton);
     Button saveButton = new Button("Save");
 
     // Add all to grid
-    GridPane.setConstraints(foodListView, 0, 0, 1, 4);
-    GridPane.setConstraints(mealListView, 2, 0, 2, 4);
-    GridPane.setConstraints(addButton, 1, 1, 1, 1);
-    GridPane.setConstraints(removeButton, 1, 2, 1, 1);
-    GridPane.setConstraints(saveButton, 3, 4, 1, 1);
+    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
+    GridPane.setConstraints(mealListLabel, 2, 0, 1, 1);
+    GridPane.setConstraints(foodListView, 0, 1, 1, 1);
+    GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
+    GridPane.setConstraints(mealListView, 2, 1, 1, 1);
+    GridPane.setConstraints(saveButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
 
-    grid.getChildren().addAll(foodListView, mealListView, addButton, removeButton, saveButton);
+    grid.getChildren().addAll(foodListLabel, mealListLabel, foodListView, mealListView,
+        toggleButtonBox, saveButton);
 
     return grid;
   }
@@ -201,5 +222,16 @@ public class FoodTruckApplication extends Application {
     grid.getChildren().addAll(appName, appCredits, imageView);
 
     return grid;
+  }
+
+  private Meal mockData() {
+    Meal meal = new Meal();
+    FoodItem foodItem;
+    for (int i = 0; i < 6; i++) {
+      foodItem = new FoodItem("" + i, "food " + i);
+      foodData.addFoodItem(foodItem);
+    }
+    meal.addFoodItem(new FoodItem("3", "food 3"));
+    return meal;
   }
 }

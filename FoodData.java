@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     public FoodData() {
         // TODO : Complete
+      this.foodItemList = new ArrayList<FoodItem>();
     }
     
     
