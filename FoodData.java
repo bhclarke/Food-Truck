@@ -119,8 +119,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> getAllFoodItems() {
-        // TODO : Complete
-        return null;
+        return foodItemList;
     }
 
 
