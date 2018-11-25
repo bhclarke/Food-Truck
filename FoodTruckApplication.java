@@ -78,8 +78,8 @@ public class FoodTruckApplication extends Application {
     layout.setRight(getMealList());
     
     // uncomment the setCenter for the content you are testing. Comment out the rest.
-    layout.setCenter(getStartCredits());
-    //layout.setCenter(createEditMeal(null));
+    //layout.setCenter(getStartCredits());
+    layout.setCenter(createEditMeal(null));
     return layout;
   }
 
