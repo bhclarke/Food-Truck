@@ -1,11 +1,18 @@
+
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 
 public class FoodTruckApplication extends Application {
 
@@ -62,7 +69,7 @@ public class FoodTruckApplication extends Application {
     layout.setLeft(getFoodList());
     layout.setRight(getMealList());
     layout.setCenter(getStartCredits());
-    return new BorderPane();
+    return layout;
   }
 
   /**
@@ -126,7 +133,7 @@ public class FoodTruckApplication extends Application {
     // TODO
     return new MenuBar();
   }
-  
+
   /**
    * Create view of application logo and team credits. Displayed only at start of application in the
    * center of the application.
@@ -134,7 +141,27 @@ public class FoodTruckApplication extends Application {
    * @return GridPane. You can change the return type.
    */
   private GridPane getStartCredits() {
-    // TODO
-    return new GridPane();
+    // create grid
+    GridPane grid = new GridPane();
+    grid.setPadding(new Insets(200,50,200,50));
+    grid.setVgap(8);
+    grid.setHgap(10);
+    
+    // create text and add to grid
+    Label appName = new Label("Food Truck");
+    Label appCredits =
+        new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
+    GridPane.setConstraints(appName, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
+    GridPane.setConstraints(appCredits, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+    
+    // import logo and add to grid 
+    String imagePath = "file:food-truck-logo.png";
+    Image image = new Image(imagePath);
+    ImageView imageView = new ImageView(image);
+    GridPane.setConstraints(imageView, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
+    
+    grid.getChildren().addAll(appName, appCredits, imageView);
+    
+    return grid;
   }
 }
