@@ -15,13 +15,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -257,9 +262,135 @@ public class FoodTruckApplication extends Application {
    * 
    * @return Menu. You can change the return type.
    */
-  private MenuBar getTopMenu() {
+  private VBox getTopMenu() {
     // TODO
-    return new MenuBar();
+	  //create menu and menu bar
+	  Menu menu = new Menu("File");
+	  MenuBar menuBar = new MenuBar();
+	  menuBar.getMenus().add(menu);
+	  
+	  //create menu items
+	  MenuItem loadFoodList = new MenuItem("Load Food List");
+	  MenuItem saveFoodList = new MenuItem("Save Food List");
+	  MenuItem addFoodItem = new MenuItem("Add Food Item");
+	  MenuItem loadMeal = new MenuItem("Load Meal List"); 
+	  MenuItem saveMeal = new MenuItem("Save Meal List");
+	  
+	  //add menu items to the menu
+	  menu.getItems().add(loadFoodList);
+	  menu.getItems().add(saveFoodList);
+	  menu.getItems().add(addFoodItem);
+	  menu.getItems().add(loadMeal);
+	  menu.getItems().add(saveMeal);
+	  
+	  //menu button actions
+	  addFoodItem.setOnAction(e -> getAddFoodItem());
+	  
+	  VBox menuBarVBox = new VBox(menuBar);
+	  
+    return menuBarVBox;
+  }
+  
+  /**
+   * Alert box for adding new food item
+   */
+  private void getAddFoodItem() {
+	  //TODO
+	  //set up window
+	  Stage alertWindow = new Stage();
+	  alertWindow.initModality(Modality.APPLICATION_MODAL);
+	  alertWindow.setTitle("Add Food Item");
+	  alertWindow.setMinWidth(500);
+	  alertWindow.setMaxWidth(500);
+	  alertWindow.setMinHeight(500);
+	  
+	  //set up grid
+	  GridPane alertGrid = new GridPane();
+	  alertGrid.setHgap(10);
+	  alertGrid.setVgap(10);
+	  Scene alertBoxScene = new Scene(alertGrid);
+	  
+	  //grid elements
+	  //f08a,Similac_Formula,calories,100,fat,0,carbohydrate,0,fiber,0,protein,3
+	  Label nameLabel = new Label();
+	  nameLabel.setText("Name: ");
+	  nameLabel.setMinHeight(25);
+	  
+	  TextField nameInput = new TextField();
+	  nameInput.setMinWidth(400);
+	  nameInput.setMinHeight(25);
+	  
+	  Label idLabel = new Label();
+	  idLabel.setText("ID: ");
+	  idLabel.setMinHeight(25);
+	  
+	  TextField idInput = new TextField();
+	  idInput.setMinWidth(400);
+	  idInput.setMinHeight(25);
+	  
+	  Label spacer = new Label();
+	  
+	  Label calLabel = new Label();
+	  calLabel.setText("Calories: ");
+	  idLabel.setMinHeight(25);
+	  
+	  TextField calInput = new TextField();
+	  calInput.setMinWidth(200);
+	  calInput.setMinWidth(25);
+	  
+	  Label fatLabel = new Label();
+	  fatLabel.setText("Fat: ");
+	  
+	  TextField fatInput = new TextField();
+	  
+	  Label carbLabel = new Label();
+	  carbLabel.setText("Fiber: ");
+	  
+	  TextField carbInput = new TextField();
+	  
+	  Label fiberLabel = new Label();
+	  fiberLabel.setText("Fiber: ");
+	  fiberLabel.setMinHeight(25);
+	  
+	  TextField fiberInput = new TextField();
+	  fiberInput.setMinWidth(200);
+	  fiberInput.setMinHeight(25);
+	  
+	  Label proLabel = new Label();
+	  proLabel.setText("Protien: ");
+	  
+	  TextField proInput = new TextField();
+	  
+	  Button acceptButton = new Button("Accept");
+	  Button closeButton = new Button("Close");
+	  closeButton.setOnAction(e -> alertWindow.close());
+	  
+	  //build grid
+	  alertGrid.add(nameLabel, 0, 0);
+	  alertGrid.add(nameInput, 1, 0, 3, 1);
+	  alertGrid.add(idLabel, 0, 1);
+	  alertGrid.add(idInput, 1, 1, 3, 1);
+	  alertGrid.add(spacer, 0, 2);
+	  alertGrid.add(calLabel, 0, 3);
+	  alertGrid.add(calInput, 1, 3);
+	  alertGrid.add(fatLabel, 0, 4);
+	  alertGrid.add(fatInput, 1, 4);
+	  alertGrid.add(carbLabel, 0, 5);
+	  alertGrid.add(carbInput, 1, 5);
+	  alertGrid.add(fiberLabel, 2, 3);
+	  alertGrid.add(fiberInput, 3, 3);
+	  alertGrid.add(proLabel, 2, 4);
+	  alertGrid.add(proInput, 3, 4);
+	  alertGrid.add(acceptButton, 2, 5);
+	  alertGrid.add(closeButton, 3, 5);
+	  
+	  
+	  //VBox alertBox = new VBox();
+	  //alertBox.getChildren().addAll(testLabel, acceptButton, closeButton);
+	  //Scene alertBoxScene = new Scene(alertBox);
+	  
+	  alertWindow.setScene(alertBoxScene);
+	  alertWindow.showAndWait();
   }
 
   /**
