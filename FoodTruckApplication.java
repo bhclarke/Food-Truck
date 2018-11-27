@@ -24,8 +24,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -55,6 +57,7 @@ public class FoodTruckApplication extends Application {
   FoodData foodData = new FoodData();
   List<Meal> mealData = new ArrayList<Meal>();
   List<String> rulesData = new ArrayList<String>();
+  FileChooser fileChooser = new FileChooser();
 
   public static void main(String[] args) {
     launch(args);
@@ -265,27 +268,32 @@ public class FoodTruckApplication extends Application {
   private VBox getTopMenu() {
     // TODO
 	  //create menu and menu bar
-	  Menu menu = new Menu("File");
+	  Menu foodMenu = new Menu("Food");
+	  Menu mealMenu = new Menu("Meal");
 	  MenuBar menuBar = new MenuBar();
-	  menuBar.getMenus().add(menu);
+	  menuBar.getMenus().add(foodMenu);
+	  menuBar.getMenus().add(mealMenu);
 	  
 	  //create menu items
-	  MenuItem loadFoodList = new MenuItem("Load Food List");
+	  MenuItem loadFoodList = new MenuItem("Open Food List");
 	  MenuItem saveFoodList = new MenuItem("Save Food List");
 	  MenuItem addFoodItem = new MenuItem("Add Food Item");
-	  MenuItem loadMeal = new MenuItem("Load Meal List"); 
+	  MenuItem loadMeal = new MenuItem("Open Meal List"); 
 	  MenuItem saveMeal = new MenuItem("Save Meal List");
 	  
 	  //add menu items to the menu
-	  menu.getItems().add(loadFoodList);
-	  menu.getItems().add(saveFoodList);
-	  menu.getItems().add(addFoodItem);
-	  menu.getItems().add(loadMeal);
-	  menu.getItems().add(saveMeal);
+	  foodMenu.getItems().add(loadFoodList);
+	  foodMenu.getItems().add(saveFoodList);
+	  foodMenu.getItems().add(addFoodItem);
+	  mealMenu.getItems().add(loadMeal);
+	  mealMenu.getItems().add(saveMeal);
 	  
 	  //menu button actions
 	  addFoodItem.setOnAction(e -> getAddFoodItem());
-	  
+	  loadFoodList.setOnAction(e -> fileChooser.showOpenDialog(window));
+	  saveFoodList.setOnAction(e -> fileChooser.showSaveDialog(window));
+	  loadMeal.setOnAction(e -> fileChooser.showOpenDialog(window));
+	  saveMeal.setOnAction(e -> fileChooser.showSaveDialog(window));
 	  VBox menuBarVBox = new VBox(menuBar);
 	  
     return menuBarVBox;
@@ -300,24 +308,28 @@ public class FoodTruckApplication extends Application {
 	  Stage alertWindow = new Stage();
 	  alertWindow.initModality(Modality.APPLICATION_MODAL);
 	  alertWindow.setTitle("Add Food Item");
-	  alertWindow.setMinWidth(500);
-	  alertWindow.setMaxWidth(500);
-	  alertWindow.setMinHeight(500);
+	  alertWindow.setMinWidth(560);
+	  alertWindow.setMaxWidth(560);
+	  alertWindow.setMinHeight(290);
+	  alertWindow.setMaxHeight(290);
 	  
 	  //set up grid
 	  GridPane alertGrid = new GridPane();
 	  alertGrid.setHgap(10);
 	  alertGrid.setVgap(10);
-	  Scene alertBoxScene = new Scene(alertGrid);
+	  //Scene alertBoxScene = new Scene(alertGrid);
 	  
 	  //grid elements
-	  //f08a,Similac_Formula,calories,100,fat,0,carbohydrate,0,fiber,0,protein,3
+	  Label header = new Label();
+	  header.setText("Complete form to add a new food item to food list.");
+	  header.setMinHeight(25);
+	  
 	  Label nameLabel = new Label();
 	  nameLabel.setText("Name: ");
 	  nameLabel.setMinHeight(25);
 	  
 	  TextField nameInput = new TextField();
-	  nameInput.setMinWidth(400);
+	  nameInput.setMinWidth(200);
 	  nameInput.setMinHeight(25);
 	  
 	  Label idLabel = new Label();
@@ -325,7 +337,7 @@ public class FoodTruckApplication extends Application {
 	  idLabel.setMinHeight(25);
 	  
 	  TextField idInput = new TextField();
-	  idInput.setMinWidth(400);
+	  idInput.setMinWidth(200);
 	  idInput.setMinHeight(25);
 	  
 	  Label spacer = new Label();
@@ -336,7 +348,7 @@ public class FoodTruckApplication extends Application {
 	  
 	  TextField calInput = new TextField();
 	  calInput.setMinWidth(200);
-	  calInput.setMinWidth(25);
+	  calInput.setMinHeight(25);
 	  
 	  Label fatLabel = new Label();
 	  fatLabel.setText("Fat: ");
@@ -363,6 +375,9 @@ public class FoodTruckApplication extends Application {
 	  
 	  Button acceptButton = new Button("Accept");
 	  Button closeButton = new Button("Close");
+	  
+	  //button actions
+	  acceptButton.setOnAction(e -> System.out.print("Accept button pressed"));
 	  closeButton.setOnAction(e -> alertWindow.close());
 	  
 	  //build grid
@@ -384,10 +399,15 @@ public class FoodTruckApplication extends Application {
 	  alertGrid.add(acceptButton, 2, 5);
 	  alertGrid.add(closeButton, 3, 5);
 	  
+	  HBox buttonMenu = new HBox(8);
+	  buttonMenu.getChildren().addAll(acceptButton, closeButton);
+	  buttonMenu.setAlignment(Pos.BOTTOM_RIGHT);
 	  
-	  //VBox alertBox = new VBox();
-	  //alertBox.getChildren().addAll(testLabel, acceptButton, closeButton);
-	  //Scene alertBoxScene = new Scene(alertBox);
+	  VBox alertBox = new VBox();
+	  alertBox.getChildren().addAll(header, alertGrid, buttonMenu);
+	  alertBox.setPadding(new Insets(0,10,10,10));
+	  
+	  Scene alertBoxScene = new Scene(alertBox);
 	  
 	  alertWindow.setScene(alertBoxScene);
 	  alertWindow.showAndWait();
