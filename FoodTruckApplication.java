@@ -1,4 +1,9 @@
 
+//Icon credits
+// open: https://www.iconfinder.com/icons/1608888/folder_open_icon
+// save: https://www.iconfinder.com/icons/352084/guardar_save_icon
+// add: https://www.iconfinder.com/icons/126583/add_plus_icon
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -282,6 +287,33 @@ public class FoodTruckApplication extends Application {
 	  MenuItem loadMeal = new MenuItem("Open Meal List"); 
 	  MenuItem saveMeal = new MenuItem("Save Meal List");
 	  
+	  //Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
+	  ImageView loadImg = new ImageView("file:open.png");
+	  loadImg.setFitHeight(15);
+	  loadImg.setFitWidth(15);
+	  
+	  ImageView saveImg = new ImageView("file:save.png");
+	  saveImg.setFitHeight(15);
+	  saveImg.setFitWidth(15);
+	  
+	  ImageView addImg = new ImageView("file:add.png");
+	  addImg.setFitHeight(15);
+	  addImg.setFitWidth(15);
+	  
+	  ImageView loadImgMeal = new ImageView("file:open.png");
+	  loadImgMeal.setFitHeight(15);
+	  loadImgMeal.setFitWidth(15);
+	  
+	  ImageView saveImgMeal = new ImageView("file:save.png");
+	  saveImgMeal.setFitHeight(15);
+	  saveImgMeal.setFitWidth(15);
+	  
+	  loadFoodList.setGraphic(loadImg);
+	  saveFoodList.setGraphic(saveImg);
+	  addFoodItem.setGraphic(addImg);
+	  loadMeal.setGraphic(loadImgMeal);
+	  saveMeal.setGraphic(saveImgMeal);
+	  
 	  //add menu items to the menu
 	  foodMenu.getItems().add(loadFoodList);
 	  foodMenu.getItems().add(saveFoodList);
@@ -298,7 +330,10 @@ public class FoodTruckApplication extends Application {
 		  });
 	  saveFoodList.setOnAction(e -> {
 		  fileChooser.setTitle("Save Food List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
 		  File selectedFile = fileChooser.showSaveDialog(window);
+		  foodData.saveFoodItems(selectedFile.getAbsolutePath());
 		  });
 	  loadMeal.setOnAction(e -> {
 		  fileChooser.setTitle("Open Meal List"); 
