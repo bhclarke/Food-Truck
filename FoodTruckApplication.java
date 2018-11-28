@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -124,7 +125,7 @@ public class FoodTruckApplication extends Application {
 
     // TODO remove mocked data
     meal = mockData();
-
+    
     // Define Labels
     Label foodListLabel = new Label("Available Food:");
     Label mealListLabel = new Label("Food in Meal:");
@@ -290,10 +291,24 @@ public class FoodTruckApplication extends Application {
 	  
 	  //menu button actions
 	  addFoodItem.setOnAction(e -> getAddFoodItem());
-	  loadFoodList.setOnAction(e -> fileChooser.showOpenDialog(window));
-	  saveFoodList.setOnAction(e -> fileChooser.showSaveDialog(window));
-	  loadMeal.setOnAction(e -> fileChooser.showOpenDialog(window));
-	  saveMeal.setOnAction(e -> fileChooser.showSaveDialog(window));
+	  loadFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Open Food List");
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  foodData.loadFoodItems(selectedFile.getAbsolutePath());
+		  });
+	  saveFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Save Food List");
+		  File selectedFile = fileChooser.showSaveDialog(window);
+		  });
+	  loadMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Open Meal List"); 
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  
+		  });
+	  saveMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Save Meal List");
+		  File selectedFile = fileChooser.showSaveDialog(window);
+	  });
 	  VBox menuBarVBox = new VBox(menuBar);
 	  
     return menuBarVBox;
@@ -349,16 +364,19 @@ public class FoodTruckApplication extends Application {
 	  TextField calInput = new TextField();
 	  calInput.setMinWidth(200);
 	  calInput.setMinHeight(25);
+	  calInput.setText("0");
 	  
 	  Label fatLabel = new Label();
 	  fatLabel.setText("Fat: ");
 	  
 	  TextField fatInput = new TextField();
+	  fatInput.setText("0");
 	  
 	  Label carbLabel = new Label();
 	  carbLabel.setText("Fiber: ");
 	  
 	  TextField carbInput = new TextField();
+	  carbInput.setText("0");
 	  
 	  Label fiberLabel = new Label();
 	  fiberLabel.setText("Fiber: ");
@@ -367,18 +385,39 @@ public class FoodTruckApplication extends Application {
 	  TextField fiberInput = new TextField();
 	  fiberInput.setMinWidth(200);
 	  fiberInput.setMinHeight(25);
+	  fiberInput.setText("0");
 	  
 	  Label proLabel = new Label();
 	  proLabel.setText("Protien: ");
 	  
 	  TextField proInput = new TextField();
+	  proInput.setText("0");
 	  
 	  Button acceptButton = new Button("Accept");
 	  Button closeButton = new Button("Close");
 	  
 	  //button actions
-	  acceptButton.setOnAction(e -> System.out.print("Accept button pressed"));
 	  closeButton.setOnAction(e -> alertWindow.close());
+	  acceptButton.setOnAction(e -> {
+		  if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)){
+			  getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
+		  } else if ((calInput.getText().compareTo("") == 0) || 
+				  (fatInput.getText().compareTo("") == 0) || 
+				  (carbInput.getText().compareTo("") == 0) ||
+				  (fiberInput.getText().compareTo("") == 0 ||
+				  (proInput.getText().compareTo("") == 0))) {
+			  getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
+		  } else {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", Double.parseDouble(calInput.getText()));
+			  food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
+			  food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
+			  food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
+			  food.addNutrient("protein", Double.parseDouble(proInput.getText()));
+			  foodData.addFoodItem(food);
+			  alertWindow.close();
+		  }
+	  });
 	  
 	  //build grid
 	  alertGrid.add(nameLabel, 0, 0);
@@ -411,6 +450,35 @@ public class FoodTruckApplication extends Application {
 	  
 	  alertWindow.setScene(alertBoxScene);
 	  alertWindow.showAndWait();
+  }
+  
+  /**
+   * Standardized error message popup
+   */
+  private void getErrorMessage(String title, String message) {
+	  Stage alertWindow = new Stage();
+	  alertWindow.initModality(Modality.APPLICATION_MODAL);
+	  alertWindow.setTitle(title);
+	  alertWindow.setMinHeight(115);
+	  alertWindow.setMinWidth(300);
+	  
+	  
+	  Label errorMessage = new Label();
+	  errorMessage.setText(message);
+	  
+	  Button goBackButton = new Button("Go back");
+	  
+	  VBox alertBox = new VBox(10);
+	  alertBox.getChildren().addAll(errorMessage, goBackButton);
+	  alertBox.setAlignment(Pos.CENTER);
+	  
+	  goBackButton.setOnAction(e -> alertWindow.close());
+	  
+	  Scene alertBoxScene = new Scene(alertBox);
+	  
+	  alertWindow.setScene(alertBoxScene);
+	  alertWindow.showAndWait();
+	  
   }
 
   /**
@@ -447,6 +515,14 @@ public class FoodTruckApplication extends Application {
   private Meal mockData() {
     Meal meal = new Meal();
     foodData.loadFoodItems("foodItems.csv");
+    
+//    //Test fileChooser
+//    fileChooser.setTitle("Open Food List");
+//	File selectedFile = fileChooser.showOpenDialog(window);
+//	foodData.loadFoodItems(selectedFile.getAbsolutePath());
+//    //test adding new food item
+//    getAddFoodItem();
+    
     meal.addFoodItem(foodData.getAllFoodItems().get(0));
     return meal;
   }
