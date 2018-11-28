@@ -261,7 +261,7 @@ public class FoodTruckApplication extends Application {
 	    food.loadFoodItems("foodItems.txt");
 	    
 	    // Define Labels
-	    Label foodListLabel = new Label("Food Data:");
+	    Label foodListLabel = new Label("Food List");
 
 	    // Define Food and Meal ListViews
 	    List<FoodItem> foodList = food.getAllFoodItems();
@@ -286,8 +286,8 @@ public class FoodTruckApplication extends Application {
 			input.setFocusTraversable(false);
 			
 			Button add = new Button("Add");
-		    GridPane.setConstraints(add, 0, 2, 1, 1, HPos.LEFT, VPos.BOTTOM);
-		    GridPane.setConstraints(input, 0, 2, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+		    GridPane.setConstraints(add, 0, 2, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+		    GridPane.setConstraints(input, 0, 2, 1, 1, HPos.LEFT, VPos.BOTTOM);
 
 
 
