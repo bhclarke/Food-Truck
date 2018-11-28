@@ -250,9 +250,52 @@ public class FoodTruckApplication extends Application {
    * 
    * @return VBox. You can change the return type.
    */
-  private VBox getFoodList() {
-    // TODO
-    return new VBox();
+  private GridPane getFoodList() {
+	    // Define grid and settings
+	    GridPane grid = new GridPane();
+	    grid.setPadding(new Insets(10, 10, 10, 10));
+
+
+	    
+	    FoodData food = new FoodData();
+	    food.loadFoodItems("foodItems.txt");
+	    
+	    // Define Labels
+	    Label foodListLabel = new Label("Food Data:");
+
+	    // Define Food and Meal ListViews
+	    List<FoodItem> foodList = food.getAllFoodItems();
+	    
+	    ListView<String> foodListView = new ListView<String>();
+	    foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
+	    for (FoodItem fi : foodList) {
+	      foodListView.getItems().add(fi.getName());
+	    }
+	    
+	    // Add all to grid
+	    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
+	    GridPane.setConstraints(foodListView, 0, 1, 1, 1);
+
+	    grid.getChildren().addAll(foodListLabel,foodListView);
+	
+		
+
+			TextField input = new TextField();
+			input.setMaxHeight(20); input.setMaxWidth(200);
+			input.setPromptText("Filter Food Items");
+			input.setFocusTraversable(false);
+			
+			Button add = new Button("Add");
+		    GridPane.setConstraints(add, 0, 2, 1, 1, HPos.LEFT, VPos.BOTTOM);
+		    GridPane.setConstraints(input, 0, 2, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+
+
+
+			//grid.setConstraints(child, columnIndex, rowIndex, columnspan, rowspan, halignment, valignment, hgrow, vgrow, margin);
+			grid.getChildren().addAll(input, add);
+            
+			
+		    return grid;
   }
 
   /**
