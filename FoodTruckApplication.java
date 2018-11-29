@@ -253,10 +253,8 @@ public class FoodTruckApplication extends Application {
   private GridPane getFoodList() {
 	    // Define grid and settings
 	    GridPane grid = new GridPane();
-	    grid.setPadding(new Insets(10, 10, 10, 10));
-
-
-	    
+	    grid.setPadding(new Insets(10, 10, 0, 10));
+    
 	    FoodData food = new FoodData();
 	    food.loadFoodItems("foodItems.txt");
 	    
@@ -271,29 +269,34 @@ public class FoodTruckApplication extends Application {
 	    for (FoodItem fi : foodList) {
 	      foodListView.getItems().add(fi.getName());
 	    }
+	    	    
+	    foodListView.setMinHeight(700);
+	    foodListView.setMinWidth(400);
 	    
 	    // Add all to grid
 	    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
-	    GridPane.setConstraints(foodListView, 0, 1, 1, 1);
-
+	    GridPane.setConstraints(foodListView, 0, 2, 2, 1);
+	    
 	    grid.getChildren().addAll(foodListLabel,foodListView);
 	
-		
-
 			TextField input = new TextField();
-			input.setMaxHeight(20); input.setMaxWidth(200);
-			input.setPromptText("Filter Food Items");
+			input.setMaxHeight(20); input.setMinWidth(200);
+			input.setPromptText("Search Food Items");
 			input.setFocusTraversable(false);
 			
-			Button add = new Button("Add");
-		    GridPane.setConstraints(add, 0, 2, 1, 1, HPos.RIGHT, VPos.BOTTOM);
-		    GridPane.setConstraints(input, 0, 2, 1, 1, HPos.LEFT, VPos.BOTTOM);
-
-
+			Button add = new Button("Add Food Item");		
+			Button rule = new Button("Set Filter Rules");
+			
+			add.setOnAction(e -> getAddFoodItem());
+			
+		    GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+		    GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+		    GridPane.setConstraints(rule, 1, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
 
 			//grid.setConstraints(child, columnIndex, rowIndex, columnspan, rowspan, halignment, valignment, hgrow, vgrow, margin);
-			grid.getChildren().addAll(input, add);
-            
+			grid.getChildren().addAll(input, add, rule);
+			grid.setVgap(5);
+			grid.setHgap(5);
 			
 		    return grid;
   }
