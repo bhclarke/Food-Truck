@@ -1,4 +1,3 @@
-
 //Icon credits
 // open: https://www.iconfinder.com/icons/1608888/folder_open_icon
 // save: https://www.iconfinder.com/icons/352084/guardar_save_icon
@@ -33,6 +32,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -260,6 +260,9 @@ public class FoodTruckApplication extends Application {
 	    
 	    // Define Labels
 	    Label foodListLabel = new Label("Food List");
+	    
+	    Font f = new Font(20);
+	    foodListLabel.setFont(f);
 
 	    // Define Food and Meal ListViews
 	    List<FoodItem> foodList = food.getAllFoodItems();
