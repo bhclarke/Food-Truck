@@ -24,6 +24,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -98,7 +99,8 @@ public class FoodTruckApplication extends Application {
     layout.setTop(getTopMenu());
     // Set up application content
     layout.setLeft(getFoodList());
-    layout.setRight(getMealList());
+    //layout.setRight(getMealList());
+    layout.setRight(getMealGrid());
 
     // uncomment the setCenter for the content you are testing. Comment out the rest.
     //layout.setCenter(getStartCredits());
@@ -313,6 +315,63 @@ public class FoodTruckApplication extends Application {
   private VBox getMealList() {
     // TODO
     return new VBox();
+  }
+  
+  /**
+   * Use a GridPane to display the meal list, similar to how we're displaying the food list.
+   * @return
+   */
+  private GridPane getMealGrid() {
+	  GridPane mealGrid = new GridPane();
+	  // TODO: right offset of 100 gets things closer together, but I need to set each layout (2 GridPane, 1 BorderPane) to move with each other
+	  mealGrid.setPadding(new Insets(10, 100, 10, 10)); // right offset of 100 gets things closer together
+	  // TODO: Need to adjust padding so that both Food List and Meal List grids are aligned
+	  mealGrid.setVgap(8);
+	  mealGrid.setHgap(10);
+	  Label mealGridLabel = new Label("Meal list");
+	  
+	  // if a ListView of type String, we can display the name of each meal; if a ListView of type Meal, we can dynamically change nutrientField
+	  ListView<Meal> mealListView = new ListView<Meal>();
+	  mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);  // not sure if I need to list this -- I think default is single select
+	  mealListView.setMinHeight(700);
+	  mealListView.setMinWidth(400);
+	  
+	  // TODO: remove mock data // begin mock data
+	  List<Meal> mealList = new ArrayList<Meal>();  // a list of meals that we'll add to the ListView
+	  foodData.loadFoodItems("foodItems.csv");
+	  Meal meal1 = new Meal();
+	  meal1.addFoodItem(foodData.getAllFoodItems().get(0));
+	  meal1.addFoodItem(foodData.getAllFoodItems().get(2));
+	  Meal meal2 = new Meal();
+	  meal2.addFoodItem(foodData.getAllFoodItems().get(5));
+	  meal2.addFoodItem(foodData.getAllFoodItems().get(6));
+
+	  mealList.add(meal1);
+	  mealList.add(meal2);
+	  // end mock data
+	  
+	  // create a text field for displaying nutrient data for each meal
+	  TextArea nutrientField = new TextArea();
+	  
+
+	  for (Meal v : mealList) {
+		  //mealListView.getItems().add(v.getMealName());
+		  mealListView.getItems().add(v);
+		  nutrientField.setText(v.analyzeMealData()); // TODO: remove this line -- this was to test that the TextArea would populate
+	  }
+	  
+	  // create a listener to update nutrientField based on meal selection (done within mealListView)
+	  mealListView.getSelectionModel().selectedItemProperty().addListener(
+			  (observable, oldvalue, newvalue) -> nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData())
+			  );
+	  
+	  GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
+	  GridPane.setConstraints(mealListView, 0, 2, 2, 1);
+	  GridPane.setConstraints(nutrientField, 0, 3, 2, 1);
+	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField);
+	  
+	  
+	  return mealGrid;
   }
 
   /**
