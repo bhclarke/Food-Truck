@@ -29,7 +29,6 @@ public class Meal extends FoodData {
 			for (String label:nutrientLabels) {
 				nutrientString += label.toUpperCase() + ": " + nutrients.get(label) + "\n";
 			}
-			System.out.println("This is nutrient string: " + nutrientString);
 		}
 		return nutrientString;
 	}
@@ -46,8 +45,8 @@ public class Meal extends FoodData {
 	/**
 	 * Retrieves a display name for the meal
 	 * TODO: Figure out a good naming convention for meals -- right now, it just returns the first 4 chars of each FoodItem in foodItemList
-	 */
-	public String getMealName() {
+	 */	
+	public String toString() {
 		for (FoodItem fi : super.getAllFoodItems()) {
 			mealName = mealName.concat(fi.getName().substring(0, 4));
 		}
