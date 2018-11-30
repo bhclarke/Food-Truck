@@ -33,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -407,8 +408,8 @@ public class FoodTruckApplication extends Application {
 	  Stage alertWindow = new Stage();
 	  alertWindow.initModality(Modality.APPLICATION_MODAL);
 	  alertWindow.setTitle("Add Food Item");
-	  alertWindow.setMinWidth(560);
-	  alertWindow.setMaxWidth(560);
+	  alertWindow.setMinWidth(570);
+	  alertWindow.setMaxWidth(570);
 	  alertWindow.setMinHeight(290);
 	  alertWindow.setMaxHeight(290);
 	  
@@ -483,6 +484,7 @@ public class FoodTruckApplication extends Application {
 	  //button actions
 	  closeButton.setOnAction(e -> alertWindow.close());
 	  acceptButton.setOnAction(e -> {
+		  /*
 		  if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)){
 			  getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
 		  } else if ((calInput.getText().compareTo("") == 0) || 
@@ -501,6 +503,96 @@ public class FoodTruckApplication extends Application {
 			  foodData.addFoodItem(food);
 			  alertWindow.close();
 		  }
+		  */
+		  //declare local variables
+		  boolean failedParse = false;
+		  double calories = 0.0;
+		  double fat = 0.0;
+		  double carbohydrates = 0.0;
+		  double fiber = 0.0;
+		  double protein = 0.0;
+		  
+		  //check each field for validation
+		  if(nameInput.getText().compareTo("") == 0) {
+			  nameLabel.setTextFill(Color.RED);
+			  nameLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  nameLabel.setTextFill(Color.BLACK);
+			  nameLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  if(idInput.getText().compareTo("") == 0) {
+			  idLabel.setTextFill(Color.RED);
+			  idLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  idLabel.setTextFill(Color.BLACK);
+			  idLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  try {
+			  calories = Double.parseDouble(calInput.getText());
+			  calLabel.setTextFill(Color.BLACK);
+			  calLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  calLabel.setTextFill(Color.RED);
+			  calLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fat = Double.parseDouble(fatInput.getText());
+			  fatLabel.setTextFill(Color.BLACK);
+			  fatLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fatLabel.setTextFill(Color.RED);
+			  fatLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  carbohydrates = Double.parseDouble(carbInput.getText());
+			  carbLabel.setTextFill(Color.BLACK);
+			  carbLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  carbLabel.setTextFill(Color.RED);
+			  carbLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fiber = Double.parseDouble(fiberInput.getText());
+			  fiberLabel.setTextFill(Color.BLACK);
+			  fiberLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fiberLabel.setTextFill(Color.RED);
+			  fiberLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  protein = Double.parseDouble(proInput.getText());
+			  proLabel.setTextFill(Color.BLACK);
+			  proLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  proLabel.setTextFill(Color.RED);
+			  proLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  //check if validation fails
+		  if(failedParse == false) {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", calories);
+			  food.addNutrient("fat", fat);
+			  food.addNutrient("carbohydrates", carbohydrates);
+			  food.addNutrient("fiber", fiber);
+			  food.addNutrient("protein", protein);
+			  foodData.addFoodItem(food);
+			  alertWindow.close(); 
+		  }
+		  
 	  });
 	  
 	  //build grid
@@ -563,6 +655,36 @@ public class FoodTruckApplication extends Application {
 	  alertWindow.setScene(alertBoxScene);
 	  alertWindow.showAndWait();
 	  
+  }
+  
+  private void getSaveMessage(String title, String message) {
+	  Stage alertWindow = new Stage();
+	  alertWindow.initModality(Modality.APPLICATION_MODAL);
+	  alertWindow.setTitle(title);
+	  alertWindow.setMinHeight(115);
+	  alertWindow.setMinWidth(300);
+	  
+	  
+	  Label errorMessage = new Label();
+	  errorMessage.setText(message);
+	  
+	  Button saveButton = new Button("Save");
+	  Button dontSaveButton = new Button("Dont Save");
+	  Button goBackButton = new Button("Go back");
+	  	  
+	  VBox alertBox = new VBox(10);
+	  HBox hBox = new HBox(10);
+	  hBox.getChildren().addAll(saveButton, dontSaveButton, goBackButton);
+	  alertBox.getChildren().addAll(errorMessage, hBox);
+	  alertBox.setAlignment(Pos.CENTER);
+	  
+	  //TODO: add save and don't save actions
+	  goBackButton.setOnAction(e -> alertWindow.close());
+	  
+	  Scene alertBoxScene = new Scene(alertBox);
+	  
+	  alertWindow.setScene(alertBoxScene);
+	  alertWindow.showAndWait();
   }
 
   /**
