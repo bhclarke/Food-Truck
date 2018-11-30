@@ -17,8 +17,9 @@ public class Meal extends FoodData {
 	}
 	
 	/**
-	 * Given a list of foodItems in a Meal object, search through individual nutrition BPTrees
-	 * for corresponding nutrition value
+	 * Given a list of foodItems in a Meal object, return nutrition values in a long string.
+	 * The form of the string is
+	 * 		Nutrition Label: Nutrition Value
 	 * @return
 	 */
 	public String analyzeMealData() {		
@@ -51,6 +52,10 @@ public class Meal extends FoodData {
 			mealName = mealName.concat(fi.getName().substring(0, 4));
 		}
 		return mealName;
+	}
+	
+	public String getNutrientString() {
+		return nutrientString;
 	}
 
 }
