@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -355,15 +357,34 @@ public class FoodTruckApplication extends Application {
 	  
 
 	  for (Meal v : mealList) {
-		  //mealListView.getItems().add(v.getMealName());
 		  mealListView.getItems().add(v);
-		  nutrientField.setText(v.analyzeMealData()); // TODO: remove this line -- this was to test that the TextArea would populate
 	  }
 	  
-	  // create a listener to update nutrientField based on meal selection (done within mealListView)
+	  /*
+	  // TODO: Is there a better way of implementing this instead of regenerating nutrientString and re-running analyzeMealData with each selection?
+	  // Use listeners to update mealListView whenever a new Meal is selected
+	  // Build nutrientString for newValue (the newly selected meal), then set this value to nutrientField
 	  mealListView.getSelectionModel().selectedItemProperty().addListener(
-			  (observable, oldvalue, newvalue) -> nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData())
+			  (observable, oldValue, newValue) -> nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData())
 			  );
+	  // Clear out nutrientString for newValue so that the next time that same Meal is selected, it is starting with a clean nutrientString
+	  // (instead of appending to a nutrientString that already
+	  mealListView.getSelectionModel().selectedItemProperty().addListener(
+			  (observable, oldValue, newValue) -> newValue.cleanUpSring()
+			  );*/
+	  
+	  // Creates a listener to update the value in the TextArea (nutrientField) whenever a value is selected in the meal list (mealListView).
+	  mealListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Meal>() {
+		  @Override
+		  public void changed(ObservableValue<? extends Meal> observable, Meal oldValue, Meal newValue) {
+			  if (newValue.getNutrientString().isEmpty()) {
+				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData());
+			  }
+			  else {
+				  nutrientField.setText(newValue.getNutrientString());
+			  }
+		  }
+	  });
 	  
 	  GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
 	  GridPane.setConstraints(mealListView, 0, 2, 2, 1);
