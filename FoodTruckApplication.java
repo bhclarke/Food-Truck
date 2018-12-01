@@ -283,53 +283,6 @@ public class FoodTruckApplication extends Application {
     Button rule = new Button("Set Filter Rules");
     add.setOnAction(e -> getAddFoodItem());
 
-	    // Define Food and Meal ListViews
-	    List<FoodItem> foodList = food.getAllFoodItems();
-	    
-	    ListView<String> foodListView = new ListView<String>();
-	    foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
-	    for (FoodItem fi : foodList) {
-	      foodListView.getItems().add(fi.getName());
-	    }
-	    	    
-	    foodListView.setMinHeight(700);
-	    foodListView.setMinWidth(400);
-	    
-	    // Add all to grid
-	    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
-	    GridPane.setConstraints(foodListView, 0, 2, 2, 1);
-	    
-	    grid.getChildren().addAll(foodListLabel,foodListView);
-	
-			TextField input = new TextField();
-			input.setMaxHeight(20); input.setMinWidth(200);
-			input.setPromptText("Search Food Items");
-			input.setFocusTraversable(false);
-	  	        input.setOnAction(new EventHandler<ActionEvent>() {
-			      @Override
-			      public void handle(ActionEvent event) {
-			    	  List<FoodItem> temp = foodList;
-			    	  temp.stream()
-			    	  .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()));
-			    	  
-			    	  foodListView.getItems().clear();
-			    	  for (FoodItem fi : temp) {
-			    		  if (fi.getName().toLowerCase().contains(input.getText().toLowerCase()))
-			  	             foodListView.getItems().add(fi.getName());
-			  	    };
-
-			      }
-			    });
-			
-			Button add = new Button("Add Food Item");		
-			Button rule = new Button("Set Filter Rules");
-			
-			add.setOnAction(e -> getAddFoodItem());
-			
-		    GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
-		    GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
-		    GridPane.setConstraints(rule, 1, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
-
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
     
