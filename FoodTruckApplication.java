@@ -271,7 +271,7 @@ public class FoodTruckApplication extends Application {
 	
 			TextField input = new TextField();
 			input.setMaxHeight(20); input.setMinWidth(200);
-			input.setPromptText("Search Food Items");
+			input.setPromptText("Search Food Items (Press Enter)");
 			input.setFocusTraversable(false);
 	  	        input.setOnAction(new EventHandler<ActionEvent>() {
 			      @Override
