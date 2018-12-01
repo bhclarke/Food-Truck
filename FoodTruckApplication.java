@@ -22,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -300,6 +301,7 @@ public class FoodTruckApplication extends Application {
     Button add = new Button("Add Food Item");
     Button rule = new Button("Set Filter Rules");
     add.setOnAction(e -> getAddFoodItem());
+    rule.setOnAction(e -> getRulePopup());
 
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
@@ -714,6 +716,73 @@ public class FoodTruckApplication extends Application {
     alertWindow.showAndWait();
   }
   
+  
+  /**
+   * Popup for rule editor
+   */
+  private void getRulePopup() {
+	  Stage alertWindow = new Stage();
+	  alertWindow.initModality(Modality.APPLICATION_MODAL);
+	  alertWindow.setTitle("Set Filter Rule");
+	  
+	  List<String> ruleList = new ArrayList<String>();
+	  
+	  Label prompt = new Label("Add a new rule.");
+	  
+	  ObservableList<String> nutOptions = 
+			    FXCollections.observableArrayList(
+			        "Calories",
+			        "Fat",
+			        "Carbohydrates",
+			        "Fiber",
+			        "Protein"
+			    );
+	  ComboBox<String> nutCombo = new ComboBox(nutOptions);
+	  nutCombo.setPromptText("Nutrient");
+	  
+	  ObservableList<String> logicOptions = 
+			    FXCollections.observableArrayList(
+			    	">",
+			    	"<",
+			    	"="
+			    );
+	  ComboBox<String> logicCombo = new ComboBox(logicOptions);
+	  logicCombo.setPromptText("Logic");
+	  
+	  TextField valueField = new TextField();
+	  valueField.setPromptText("Value");
+	  
+	  Button addRule = new Button("Add Rule");
+	  Button removeRule = new Button("Remove Rule");
+	  
+	  ObservableList<String> ruleListObs = FXCollections.observableArrayList(ruleList);
+	  ListView<String> listView = new ListView<String>(ruleListObs);
+	  listView.setMaxHeight(100);
+	  
+	  Button accept = new Button("Accept");
+	  Button cancel = new Button("Cancel");
+	  cancel.setOnAction(e -> alertWindow.close());
+	  
+	  HBox ruleHbox = new HBox(8);
+	  ruleHbox.getChildren().addAll(nutCombo,logicCombo,valueField);
+	  
+	  HBox ruleButtonHbox = new HBox(8);
+	  ruleButtonHbox.getChildren().addAll(addRule,removeRule);
+	  ruleButtonHbox.setAlignment(Pos.CENTER);
+	  
+	  HBox buttonHbox = new HBox(8);
+	  buttonHbox.getChildren().addAll(accept,cancel);
+	  buttonHbox.setAlignment(Pos.BOTTOM_RIGHT);
+	  
+	  VBox vbox= new VBox();
+	  vbox.getChildren().addAll(prompt, ruleHbox, ruleButtonHbox, listView, buttonHbox);
+	  
+	  Scene alertBoxScene = new Scene(vbox);
+	  alertWindow.setScene(alertBoxScene);
+	  alertWindow.showAndWait();
+	  
+  }
+  
   /**
    * Standardized error message popup
    * 
@@ -764,21 +833,20 @@ public class FoodTruckApplication extends Application {
 	  errorMessage.setText(message);
 	  
 	  Button saveButton = new Button("Save");
-	  Button dontSaveButton = new Button("Dont Save");
-	  Button goBackButton = new Button("Go back");
+	  Button dontSaveButton = new Button("Don't Save");
 	  	  
 	  VBox alertBox = new VBox(10);
 	  HBox hBox = new HBox(10);
 	  
 	  Label spacer = new Label();
 	  errorMessage.setAlignment(Pos.CENTER);
-	  hBox.getChildren().addAll(saveButton, dontSaveButton, goBackButton);
+	  hBox.getChildren().addAll(saveButton, dontSaveButton);
 	  alertBox.getChildren().addAll(errorMessage, spacer, hBox);
 	  alertBox.setAlignment(Pos.CENTER);
 	  hBox.setAlignment(Pos.BOTTOM_RIGHT);
 	  
 	  //TODO: add save and don't save actions
-	  goBackButton.setOnAction(e -> alertWindow.close());
+	  dontSaveButton.setOnAction(e -> alertWindow.close());
 	  
 	  Scene alertBoxScene = new Scene(alertBox);
 	  
