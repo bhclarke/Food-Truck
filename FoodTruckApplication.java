@@ -357,7 +357,12 @@ public class FoodTruckApplication extends Application {
     mealTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     mealTable.setColumnResizePolicy(mealTable.CONSTRAINED_RESIZE_POLICY);
     mealTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-      layout.setCenter(createEditMeal(newSelection));
+      if (newSelection!= null) {
+        layout.setCenter(createEditMeal(newSelection));
+      } else {
+        layout.setCenter(getStartCredits());
+      }
+      
   });
 
     GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
