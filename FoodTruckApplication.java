@@ -344,6 +344,7 @@ public class FoodTruckApplication extends Application {
 
     // Define Labels
     Label mealGridLabel = new Label("Meal list");
+    mealGridLabel.getStyleClass().add("label-tableHeader");
     
     // Define Meal Table
     TableView<Meal> mealTable = new TableView<>();
