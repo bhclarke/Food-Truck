@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -79,6 +80,9 @@ public class FoodTruckApplication extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
+    // get starting data
+    foodData.loadFoodItems("foodItems.csv");
+    
     // Set Application Title
     window = primaryStage;
     window.setTitle("Food Truck");
@@ -698,7 +702,7 @@ public class FoodTruckApplication extends Application {
 
   private Meal mockData() {
     Meal meal = new Meal();
-    foodData.loadFoodItems("foodItems.csv");
+    
     
 //    //Test fileChooser
 //    fileChooser.setTitle("Open Food List");
