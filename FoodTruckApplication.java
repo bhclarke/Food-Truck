@@ -114,8 +114,7 @@ public class FoodTruckApplication extends Application {
     layout.setRight(getMealGrid());
 
     // uncomment the setCenter for the content you are testing. Comment out the rest.
-    // layout.setCenter(getStartCredits());
-    layout.setCenter(createEditMeal(null));
+    layout.setCenter(getStartCredits());
     return layout;
   }
 
@@ -140,9 +139,6 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(10, 10, 10, 10));
     grid.setVgap(8);
     grid.setHgap(10);
-
-    // TODO remove mocked data
-    meal = mockData();
 
     // Define Food and Meal Data 
     List<FoodItem> mealList = meal.getAllFoodItems();
@@ -187,6 +183,7 @@ public class FoodTruckApplication extends Application {
         for (Object foodItem : foods) {
           foodListView.remove((FoodItem) foodItem);
           mealListView.add((FoodItem) foodItem);
+          meal.addFoodItem((FoodItem) foodItem);
         } ;
 
       }
@@ -202,6 +199,7 @@ public class FoodTruckApplication extends Application {
         for (Object foodItem : foods) {
           foodListView.add((FoodItem) foodItem);
           mealListView.remove((FoodItem) foodItem);
+          meal.removeFood((FoodItem) foodItem);
         } ;
 
       }
@@ -212,15 +210,29 @@ public class FoodTruckApplication extends Application {
     toggleButtonBox.setSpacing(30);
     toggleButtonBox.alignmentProperty().set(Pos.CENTER);
     toggleButtonBox.getChildren().addAll(addButton, removeButton);
-    Button saveButton = new Button("Save");
+    
+    // create a text field for displaying nutrient data for each meal
+    TextArea nutrientField = new TextArea();
+    nutrientField.setPrefRowCount(12);
+    
+    // an alternative to TextArea is discrete fields to show each nutrient value
+    // TODO: set this up
+    
+    Button analyzeMealButton = new Button("Analyze Meal");
+    // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's nutrients
+    analyzeMealButton.setOnAction((event) -> {
+        meal.analyzeMealData();
+        nutrientField.setText(meal.getNutrientString());
+    });     
 
     // Add all to grid
     GridPane.setConstraints(allFoodTable, 0, 0, 1, 1);
     GridPane.setConstraints(toggleButtonBox, 1, 0, 1, 1);
     GridPane.setConstraints(mealFoodTable, 2, 0, 1, 1);
-    GridPane.setConstraints(saveButton, 2, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
+    GridPane.setConstraints(analyzeMealButton, 2, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
+    GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
 
-    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, saveButton);
+    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton, nutrientField);
 
     return grid;
   }
@@ -251,9 +263,6 @@ public class FoodTruckApplication extends Application {
 
     // Define Labels
     Label foodListLabel = new Label("Food List");
-
-    Font f = new Font(20);
-    foodListLabel.setFont(f);
 
     // Define Food Table
     ObservableList<FoodItem> foodList = FXCollections.observableArrayList();
@@ -313,79 +322,51 @@ public class FoodTruckApplication extends Application {
    * @return
    */
   private GridPane getMealGrid() {
-	  GridPane mealGrid = new GridPane();
-	  // TODO: right offset of 100 gets things closer together, but I need to set each layout (2 GridPane, 1 BorderPane) to move with each other
-	  mealGrid.setPadding(new Insets(10, 100, 10, 10)); // right offset of 100 gets things closer together
-	  // TODO: Need to adjust padding so that both Food List and Meal List grids are aligned
-	  mealGrid.setVgap(8);
-	  mealGrid.setHgap(10);
-	  Label mealGridLabel = new Label("Meal list");
-	  
-	  // if a ListView of type String, we can display the name of each meal; if a ListView of type Meal, we can dynamically change nutrientField
-	  ListView<Meal> mealListView = new ListView<Meal>();
-	  mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);  // not sure if I need to list this -- I think default is single select
-	  mealListView.setMinHeight(400);
-	  mealListView.setMinWidth(400);
-	  
-	  // TODO: remove mock data // begin mock data
-	  List<Meal> mealList = new ArrayList<Meal>();  // a list of meals that we'll add to the ListView
-	  foodData.loadFoodItems("foodItems.csv");
-	  Meal meal1 = new Meal();
-	  meal1.addFoodItem(foodData.getAllFoodItems().get(0));
-	  meal1.addFoodItem(foodData.getAllFoodItems().get(2));
-	  Meal meal2 = new Meal();
-	  meal2.addFoodItem(foodData.getAllFoodItems().get(5));
-	  meal2.addFoodItem(foodData.getAllFoodItems().get(6));
-	  
-	  // need the following two lines in order to avoid duplicate meal names
-	  meal1.createMealName();
-	  meal2.createMealName();
-	  mealList.add(meal1);
-	  mealList.add(meal2);
-	  // end mock data
-	  
-	  // create a text field for displaying nutrient data for each meal
-	  TextArea nutrientField = new TextArea();
-	  nutrientField.setPrefRowCount(12);
-	  
-	  // an alternative to TextArea is discrete fields to show each nutrient value
-	  // TODO: set this up
-	  
-	  Button analyzeMealButton = new Button("Analyze Selected Meal");
-	  // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's nutrients
-	  analyzeMealButton.setOnAction((event) -> {		  
-		  if (mealListView.getSelectionModel().isEmpty() == false) {
-			  // only execute action if there is a meal selected
-			  // TODO: add conditional so that we only run analyzeMealData once
-			  if (mealListView.getSelectionModel().getSelectedItem().getNutrientString().isEmpty()) {
-				  mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
-				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
-			  }
-			  else {
-				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
-			  }
-			  /*mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
-			  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());*/
-			  // TODO: the following line is for testing -- remove later
-			  System.out.println("== BEGIN NUTRIENT LIST == " + "\n" + mealListView.getSelectionModel().getSelectedItem().getNutrientString() + "== END NUTRIENT LIST ==");
-		  }
-		  else {
-			  // otherwise, let the user know what happened (rather than not showing anything)
-			  getErrorMessage("No update was made", "A meal was not selected so no nutrient data was calculated.");
-		  }
-	  });	  
+    
+    // TODO: remove mock data // begin mock data
+    ObservableList<Meal> mealList = FXCollections.observableArrayList();
+    foodData.loadFoodItems("foodItems.csv");
+    Meal meal1 = new Meal();
+    meal1.addFoodItem(foodData.getAllFoodItems().get(0));
+    meal1.addFoodItem(foodData.getAllFoodItems().get(2));
+    Meal meal2 = new Meal();
+    meal2.addFoodItem(foodData.getAllFoodItems().get(5));
+    meal2.addFoodItem(foodData.getAllFoodItems().get(6));
 
-	  for (Meal v : mealList) {
-		  mealListView.getItems().add(v);
-	  }
-	  
-	  GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
-	  GridPane.setConstraints(mealListView, 0, 2, 2, 1);
-	  GridPane.setConstraints(analyzeMealButton, 0, 3, 1, 1);
-	  GridPane.setConstraints(nutrientField, 0, 4, 2, 1);
-	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField, analyzeMealButton);
-	  	  
-	  return mealGrid;
+    // need the following two lines in order to avoid duplicate meal names
+    meal1.createMealName();
+    meal2.createMealName();
+    mealList.addAll(meal1,meal2);
+
+
+    // Define grid and settings
+    GridPane mealGrid = new GridPane();
+    mealGrid.setPadding(new Insets(10, 10, 0, 10));
+    mealGrid.setVgap(5);
+    mealGrid.setHgap(5);
+
+    // Define Labels
+    Label mealGridLabel = new Label("Meal list");
+    
+    // Define Meal Table
+    TableView<Meal> mealTable = new TableView<>();
+    TableColumn<Meal, String> mealNames = new TableColumn<Meal, String>("Name");
+    mealNames.setMinWidth(200);
+    mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));
+
+    mealTable.setItems(mealList);
+    mealTable.getColumns().add(mealNames);
+    mealTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
+    mealTable.setColumnResizePolicy(mealTable.CONSTRAINED_RESIZE_POLICY);
+    mealTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+      layout.setCenter(createEditMeal(newSelection));
+  });
+
+    GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
+    GridPane.setConstraints(mealTable, 0, 2, 2, 1);
+    mealGrid.getChildren().addAll(mealGridLabel, mealTable);
+
+    return mealGrid;
   }
 
   /**

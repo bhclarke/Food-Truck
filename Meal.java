@@ -78,6 +78,10 @@ public class Meal extends FoodData {
 			mealName = mealName.concat(fi.getName().substring(0, 4));
 		}
 	}
+	
+	public String getMealName() {
+	  return this.mealName;
+	}
 		
 	public String getNutrientString() {
 		return nutrientString;
