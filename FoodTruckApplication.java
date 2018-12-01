@@ -384,79 +384,106 @@ public class FoodTruckApplication extends Application {
    * @return VBox containing the menu bar
    */
   private VBox getTopMenu() {
-    // TODO
-    // create menu and menu bar
-    Menu foodMenu = new Menu("Food");
-    Menu mealMenu = new Menu("Meal");
-    MenuBar menuBar = new MenuBar();
-    menuBar.getMenus().add(foodMenu);
-    menuBar.getMenus().add(mealMenu);
-
-    // create menu items
-    MenuItem loadFoodList = new MenuItem("Open Food List");
-    MenuItem saveFoodList = new MenuItem("Save Food List");
-    MenuItem addFoodItem = new MenuItem("Add Food Item");
-    MenuItem loadMeal = new MenuItem("Open Meal List");
-    MenuItem saveMeal = new MenuItem("Save Meal List");
-
-    // Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
-    ImageView loadImg = new ImageView("file:open.png");
-    loadImg.setFitHeight(15);
-    loadImg.setFitWidth(15);
-
-    ImageView saveImg = new ImageView("file:save.png");
-    saveImg.setFitHeight(15);
-    saveImg.setFitWidth(15);
-
-    ImageView addImg = new ImageView("file:add.png");
-    addImg.setFitHeight(15);
-    addImg.setFitWidth(15);
-
-    ImageView loadImgMeal = new ImageView("file:open.png");
-    loadImgMeal.setFitHeight(15);
-    loadImgMeal.setFitWidth(15);
-
-    ImageView saveImgMeal = new ImageView("file:save.png");
-    saveImgMeal.setFitHeight(15);
-    saveImgMeal.setFitWidth(15);
-
-    loadFoodList.setGraphic(loadImg);
-    saveFoodList.setGraphic(saveImg);
-    addFoodItem.setGraphic(addImg);
-    loadMeal.setGraphic(loadImgMeal);
-    saveMeal.setGraphic(saveImgMeal);
-
-    // add menu items to the menu
-    foodMenu.getItems().add(loadFoodList);
-    foodMenu.getItems().add(saveFoodList);
-    foodMenu.getItems().add(addFoodItem);
-    mealMenu.getItems().add(loadMeal);
-    mealMenu.getItems().add(saveMeal);
-
-    // menu button actions
-    addFoodItem.setOnAction(e -> getAddFoodItem());
-    loadFoodList.setOnAction(e -> {
-      fileChooser.setTitle("Open Food List");
-      File selectedFile = fileChooser.showOpenDialog(window);
-      foodData.loadFoodItems(selectedFile.getAbsolutePath());
-    });
-    saveFoodList.setOnAction(e -> {
-      fileChooser.setTitle("Save Food List");
-      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-      File selectedFile = fileChooser.showSaveDialog(window);
-      foodData.saveFoodItems(selectedFile.getAbsolutePath());
-    });
-    loadMeal.setOnAction(e -> {
-      fileChooser.setTitle("Open Meal List");
-      File selectedFile = fileChooser.showOpenDialog(window);
-
-    });
-    saveMeal.setOnAction(e -> {
-      fileChooser.setTitle("Save Meal List");
-      File selectedFile = fileChooser.showSaveDialog(window);
-    });
-    VBox menuBarVBox = new VBox(menuBar);
-
+	  
+	  //create menu and menu bar
+	  Menu foodMenu = new Menu("Food");
+	  Menu mealMenu = new Menu("Meal");
+	  MenuBar menuBar = new MenuBar();
+	  menuBar.getMenus().add(foodMenu);
+	  menuBar.getMenus().add(mealMenu);
+	  
+	  //create menu items
+	  MenuItem loadFoodList = new MenuItem("Open Food List");
+	  MenuItem saveFoodList = new MenuItem("Save Food List");
+	  MenuItem addFoodItem = new MenuItem("Add Food Item");
+	  MenuItem loadMeal = new MenuItem("Open Meal List"); 
+	  MenuItem saveMeal = new MenuItem("Save Meal List");
+	  
+	  //Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
+	  ImageView loadImg = new ImageView("file:open.png");
+	  loadImg.setFitHeight(15);
+	  loadImg.setFitWidth(15);
+	  
+	  ImageView saveImg = new ImageView("file:save.png");
+	  saveImg.setFitHeight(15);
+	  saveImg.setFitWidth(15);
+	  
+	  ImageView addImg = new ImageView("file:add.png");
+	  addImg.setFitHeight(15);
+	  addImg.setFitWidth(15);
+	  
+	  ImageView loadImgMeal = new ImageView("file:open.png");
+	  loadImgMeal.setFitHeight(15);
+	  loadImgMeal.setFitWidth(15);
+	  
+	  ImageView saveImgMeal = new ImageView("file:save.png");
+	  saveImgMeal.setFitHeight(15);
+	  saveImgMeal.setFitWidth(15);
+	  
+	  loadFoodList.setGraphic(loadImg);
+	  saveFoodList.setGraphic(saveImg);
+	  addFoodItem.setGraphic(addImg);
+	  loadMeal.setGraphic(loadImgMeal);
+	  saveMeal.setGraphic(saveImgMeal);
+	  
+	  //add menu items to the menu
+	  foodMenu.getItems().add(loadFoodList);
+	  foodMenu.getItems().add(saveFoodList);
+	  foodMenu.getItems().add(addFoodItem);
+	  mealMenu.getItems().add(loadMeal);
+	  mealMenu.getItems().add(saveMeal);
+	  
+	  
+	  //menu button actions
+	  addFoodItem.setOnAction(e -> getAddFoodItem());
+	  loadFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Open Food List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  if (selectedFile != null) {
+			  foodData.loadFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  saveFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Save Food List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showSaveDialog(window);
+		  if(selectedFile != null) {
+			  foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  loadMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Open Meal List"); 
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  if(selectedFile != null) {
+			  //TODO add load meal
+			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  saveMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Save Meal List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showSaveDialog(window);
+		  if(selectedFile != null) {
+			  //TODO add save meal
+			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+	  });
+	  VBox menuBarVBox = new VBox(menuBar);
+	  
     return menuBarVBox;
   }
   
@@ -642,7 +669,6 @@ public class FoodTruckApplication extends Application {
 	  alertWindow.setMinHeight(115);
 	  alertWindow.setMinWidth(300);
 	  
-	  
 	  Label errorMessage = new Label();
 	  errorMessage.setText(message);
 	  
@@ -652,9 +678,13 @@ public class FoodTruckApplication extends Application {
 	  	  
 	  VBox alertBox = new VBox(10);
 	  HBox hBox = new HBox(10);
+	  
+	  Label spacer = new Label();
+	  errorMessage.setAlignment(Pos.CENTER);
 	  hBox.getChildren().addAll(saveButton, dontSaveButton, goBackButton);
-	  alertBox.getChildren().addAll(errorMessage, hBox);
-	  alertBox.setAlignment(Pos.BOTTOM_RIGHT);
+	  alertBox.getChildren().addAll(errorMessage, spacer, hBox);
+	  alertBox.setAlignment(Pos.CENTER);
+	  hBox.setAlignment(Pos.BOTTOM_RIGHT);
 	  
 	  //TODO: add save and don't save actions
 	  goBackButton.setOnAction(e -> alertWindow.close());
@@ -702,7 +732,7 @@ public class FoodTruckApplication extends Application {
     
 //    //Test fileChooser
 //    fileChooser.setTitle("Open Food List");
-//	File selectedFile = fileChooser.showOpenDialog(window);
+//   	File selectedFile = fileChooser.showOpenDialog(window);
 //	foodData.loadFoodItems(selectedFile.getAbsolutePath());
 //    //test adding new food item
 //    getAddFoodItem();
