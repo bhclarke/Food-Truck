@@ -399,7 +399,7 @@ public class FoodTruckApplication extends Application {
   /**
    * Creates menus along top of application.
    * 
-   * @return Menu. You can change the return type.
+   * @return VBox containing the menu bar
    */
   private VBox getTopMenu() {
     // TODO
@@ -451,6 +451,11 @@ public class FoodTruckApplication extends Application {
 	  mealMenu.getItems().add(loadMeal);
 	  mealMenu.getItems().add(saveMeal);
 	  
+	  //TODO remove test button
+	  MenuItem testItem = new MenuItem("Test Item");
+	  foodMenu.getItems().add(testItem);
+	  testItem.setOnAction(e -> getSaveMessage("Test","Sample text"));
+	  
 	  //menu button actions
 	  addFoodItem.setOnAction(e -> getAddFoodItem());
 	  loadFoodList.setOnAction(e -> {
@@ -480,7 +485,7 @@ public class FoodTruckApplication extends Application {
   }
   
   /**
-   * Alert box for adding new food item
+   * Pop-up for adding new food item
    */
   private void getAddFoodItem() {
 	  //TODO
@@ -538,7 +543,7 @@ public class FoodTruckApplication extends Application {
 	  fatInput.setText("0");
 	  
 	  Label carbLabel = new Label();
-	  carbLabel.setText("Fiber: ");
+	  carbLabel.setText("Carbs: ");
 	  
 	  TextField carbInput = new TextField();
 	  carbInput.setText("0");
@@ -691,8 +696,8 @@ public class FoodTruckApplication extends Application {
 	  alertGrid.add(fiberInput, 3, 3);
 	  alertGrid.add(proLabel, 2, 4);
 	  alertGrid.add(proInput, 3, 4);
-	  alertGrid.add(acceptButton, 2, 5);
-	  alertGrid.add(closeButton, 3, 5);
+	  //alertGrid.add(acceptButton, 2, 5);
+	  //alertGrid.add(closeButton, 3, 5);
 	  
 	  HBox buttonMenu = new HBox(8);
 	  buttonMenu.getChildren().addAll(acceptButton, closeButton);
@@ -710,6 +715,9 @@ public class FoodTruckApplication extends Application {
   
   /**
    * Standardized error message popup
+   * 
+   * @param title: the popup title
+   * @param message: the text that displays within the message
    */
   private void getErrorMessage(String title, String message) {
 	  Stage alertWindow = new Stage();
@@ -737,6 +745,13 @@ public class FoodTruckApplication extends Application {
 	  
   }
   
+  
+  /**
+   * Popup error message prompting user to save before exiting
+   * 
+   * @param title name of the popup
+   * @param message the main text in the popup 
+   */
   private void getSaveMessage(String title, String message) {
 	  Stage alertWindow = new Stage();
 	  alertWindow.initModality(Modality.APPLICATION_MODAL);
@@ -756,7 +771,7 @@ public class FoodTruckApplication extends Application {
 	  HBox hBox = new HBox(10);
 	  hBox.getChildren().addAll(saveButton, dontSaveButton, goBackButton);
 	  alertBox.getChildren().addAll(errorMessage, hBox);
-	  alertBox.setAlignment(Pos.CENTER);
+	  alertBox.setAlignment(Pos.BOTTOM_RIGHT);
 	  
 	  //TODO: add save and don't save actions
 	  goBackButton.setOnAction(e -> alertWindow.close());
