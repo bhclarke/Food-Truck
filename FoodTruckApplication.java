@@ -519,7 +519,7 @@ public class FoodTruckApplication extends Application {
     fatInput.setText("0");
 
     Label carbLabel = new Label();
-    carbLabel.setText("Fiber: ");
+    carbLabel.setText("Carbs: ");
 
     TextField carbInput = new TextField();
     carbInput.setText("0");
