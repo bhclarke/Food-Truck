@@ -83,8 +83,12 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> filterByName(String substring) {
-        // TODO : Complete
-        return null;
+    	List<FoodItem> newList = new ArrayList<FoodItem>();
+        for (int i = 0; i < foodItemList.size(); i++) {
+        	if (foodItemList.get(i).getName().contains(substring))
+        		newList.add(foodItemList.get(i));
+        }
+        return newList;
     }
 
     /*

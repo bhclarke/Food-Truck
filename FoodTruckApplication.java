@@ -283,6 +283,53 @@ public class FoodTruckApplication extends Application {
     Button rule = new Button("Set Filter Rules");
     add.setOnAction(e -> getAddFoodItem());
 
+	    // Define Food and Meal ListViews
+	    List<FoodItem> foodList = food.getAllFoodItems();
+	    
+	    ListView<String> foodListView = new ListView<String>();
+	    foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
+	    for (FoodItem fi : foodList) {
+	      foodListView.getItems().add(fi.getName());
+	    }
+	    	    
+	    foodListView.setMinHeight(700);
+	    foodListView.setMinWidth(400);
+	    
+	    // Add all to grid
+	    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
+	    GridPane.setConstraints(foodListView, 0, 2, 2, 1);
+	    
+	    grid.getChildren().addAll(foodListLabel,foodListView);
+	
+			TextField input = new TextField();
+			input.setMaxHeight(20); input.setMinWidth(200);
+			input.setPromptText("Search Food Items");
+			input.setFocusTraversable(false);
+	  	        input.setOnAction(new EventHandler<ActionEvent>() {
+			      @Override
+			      public void handle(ActionEvent event) {
+			    	  List<FoodItem> temp = foodList;
+			    	  temp.stream()
+			    	  .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()));
+			    	  
+			    	  foodListView.getItems().clear();
+			    	  for (FoodItem fi : temp) {
+			    		  if (fi.getName().toLowerCase().contains(input.getText().toLowerCase()))
+			  	             foodListView.getItems().add(fi.getName());
+			  	    };
+
+			      }
+			    });
+			
+			Button add = new Button("Add Food Item");		
+			Button rule = new Button("Set Filter Rules");
+			
+			add.setOnAction(e -> getAddFoodItem());
+			
+		    GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+		    GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+		    GridPane.setConstraints(rule, 1, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
     
@@ -324,7 +371,7 @@ public class FoodTruckApplication extends Application {
 	  // if a ListView of type String, we can display the name of each meal; if a ListView of type Meal, we can dynamically change nutrientField
 	  ListView<Meal> mealListView = new ListView<Meal>();
 	  mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);  // not sure if I need to list this -- I think default is single select
-	  mealListView.setMinHeight(700);
+	  mealListView.setMinHeight(400);
 	  mealListView.setMinWidth(400);
 	  
 	  // TODO: remove mock data // begin mock data
@@ -336,51 +383,55 @@ public class FoodTruckApplication extends Application {
 	  Meal meal2 = new Meal();
 	  meal2.addFoodItem(foodData.getAllFoodItems().get(5));
 	  meal2.addFoodItem(foodData.getAllFoodItems().get(6));
-
+	  
+	  // need the following two lines in order to avoid duplicate meal names
+	  meal1.createMealName();
+	  meal2.createMealName();
 	  mealList.add(meal1);
 	  mealList.add(meal2);
 	  // end mock data
 	  
 	  // create a text field for displaying nutrient data for each meal
 	  TextArea nutrientField = new TextArea();
+	  nutrientField.setPrefRowCount(12);
 	  
+	  // an alternative to TextArea is discrete fields to show each nutrient value
+	  // TODO: set this up
+	  
+	  Button analyzeMealButton = new Button("Analyze Selected Meal");
+	  // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's nutrients
+	  analyzeMealButton.setOnAction((event) -> {		  
+		  if (mealListView.getSelectionModel().isEmpty() == false) {
+			  // only execute action if there is a meal selected
+			  // TODO: add conditional so that we only run analyzeMealData once
+			  if (mealListView.getSelectionModel().getSelectedItem().getNutrientString().isEmpty()) {
+				  mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
+				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
+			  }
+			  else {
+				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
+			  }
+			  /*mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
+			  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());*/
+			  // TODO: the following line is for testing -- remove later
+			  System.out.println("== BEGIN NUTRIENT LIST == " + "\n" + mealListView.getSelectionModel().getSelectedItem().getNutrientString() + "== END NUTRIENT LIST ==");
+		  }
+		  else {
+			  // otherwise, let the user know what happened (rather than not showing anything)
+			  getErrorMessage("No update was made", "A meal was not selected so no nutrient data was calculated.");
+		  }
+	  });	  
 
 	  for (Meal v : mealList) {
 		  mealListView.getItems().add(v);
 	  }
 	  
-	  /*
-	  // TODO: Is there a better way of implementing this instead of regenerating nutrientString and re-running analyzeMealData with each selection?
-	  // Use listeners to update mealListView whenever a new Meal is selected
-	  // Build nutrientString for newValue (the newly selected meal), then set this value to nutrientField
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(
-			  (observable, oldValue, newValue) -> nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData())
-			  );
-	  // Clear out nutrientString for newValue so that the next time that same Meal is selected, it is starting with a clean nutrientString
-	  // (instead of appending to a nutrientString that already
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(
-			  (observable, oldValue, newValue) -> newValue.cleanUpSring()
-			  );*/
-	  
-	  // Creates a listener to update the value in the TextArea (nutrientField) whenever a value is selected in the meal list (mealListView).
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Meal>() {
-		  @Override
-		  public void changed(ObservableValue<? extends Meal> observable, Meal oldValue, Meal newValue) {
-			  if (newValue.getNutrientString().isEmpty()) {
-				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData());
-			  }
-			  else {
-				  nutrientField.setText(newValue.getNutrientString());
-			  }
-		  }
-	  });
-	  
 	  GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
 	  GridPane.setConstraints(mealListView, 0, 2, 2, 1);
-	  GridPane.setConstraints(nutrientField, 0, 3, 2, 1);
-	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField);
-	  
-	  
+	  GridPane.setConstraints(analyzeMealButton, 0, 3, 1, 1);
+	  GridPane.setConstraints(nutrientField, 0, 4, 2, 1);
+	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField, analyzeMealButton);
+	  	  
 	  return mealGrid;
   }
 
@@ -390,79 +441,105 @@ public class FoodTruckApplication extends Application {
    * @return VBox containing the menu bar
    */
   private VBox getTopMenu() {
-    // TODO
-    // create menu and menu bar
-    Menu foodMenu = new Menu("Food");
-    Menu mealMenu = new Menu("Meal");
-    MenuBar menuBar = new MenuBar();
-    menuBar.getMenus().add(foodMenu);
-    menuBar.getMenus().add(mealMenu);
-
-    // create menu items
-    MenuItem loadFoodList = new MenuItem("Open Food List");
-    MenuItem saveFoodList = new MenuItem("Save Food List");
-    MenuItem addFoodItem = new MenuItem("Add Food Item");
-    MenuItem loadMeal = new MenuItem("Open Meal List");
-    MenuItem saveMeal = new MenuItem("Save Meal List");
-
-    // Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
-    ImageView loadImg = new ImageView("file:open.png");
-    loadImg.setFitHeight(15);
-    loadImg.setFitWidth(15);
-
-    ImageView saveImg = new ImageView("file:save.png");
-    saveImg.setFitHeight(15);
-    saveImg.setFitWidth(15);
-
-    ImageView addImg = new ImageView("file:add.png");
-    addImg.setFitHeight(15);
-    addImg.setFitWidth(15);
-
-    ImageView loadImgMeal = new ImageView("file:open.png");
-    loadImgMeal.setFitHeight(15);
-    loadImgMeal.setFitWidth(15);
-
-    ImageView saveImgMeal = new ImageView("file:save.png");
-    saveImgMeal.setFitHeight(15);
-    saveImgMeal.setFitWidth(15);
-
-    loadFoodList.setGraphic(loadImg);
-    saveFoodList.setGraphic(saveImg);
-    addFoodItem.setGraphic(addImg);
-    loadMeal.setGraphic(loadImgMeal);
-    saveMeal.setGraphic(saveImgMeal);
-
-    // add menu items to the menu
-    foodMenu.getItems().add(loadFoodList);
-    foodMenu.getItems().add(saveFoodList);
-    foodMenu.getItems().add(addFoodItem);
-    mealMenu.getItems().add(loadMeal);
-    mealMenu.getItems().add(saveMeal);
-
-    // menu button actions
-    addFoodItem.setOnAction(e -> getAddFoodItem());
-    loadFoodList.setOnAction(e -> {
-      fileChooser.setTitle("Open Food List");
-      File selectedFile = fileChooser.showOpenDialog(window);
-      foodData.loadFoodItems(selectedFile.getAbsolutePath());
-    });
-    saveFoodList.setOnAction(e -> {
-      fileChooser.setTitle("Save Food List");
-      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-      File selectedFile = fileChooser.showSaveDialog(window);
-      foodData.saveFoodItems(selectedFile.getAbsolutePath());
-    });
-    loadMeal.setOnAction(e -> {
-      fileChooser.setTitle("Open Meal List");
-      File selectedFile = fileChooser.showOpenDialog(window);
-
-    });
-    saveMeal.setOnAction(e -> {
-      fileChooser.setTitle("Save Meal List");
-      File selectedFile = fileChooser.showSaveDialog(window);
-    });
-    VBox menuBarVBox = new VBox(menuBar);
-
+	  //create menu and menu bar
+	  Menu foodMenu = new Menu("Food");
+	  Menu mealMenu = new Menu("Meal");
+	  MenuBar menuBar = new MenuBar();
+	  menuBar.getMenus().add(foodMenu);
+	  menuBar.getMenus().add(mealMenu);
+	  
+	  //create menu items
+	  MenuItem loadFoodList = new MenuItem("Open Food List");
+	  MenuItem saveFoodList = new MenuItem("Save Food List");
+	  MenuItem addFoodItem = new MenuItem("Add Food Item");
+	  MenuItem loadMeal = new MenuItem("Open Meal List"); 
+	  MenuItem saveMeal = new MenuItem("Save Meal List");
+	  
+	  //Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
+	  ImageView loadImg = new ImageView("file:open.png");
+	  loadImg.setFitHeight(15);
+	  loadImg.setFitWidth(15);
+	  
+	  ImageView saveImg = new ImageView("file:save.png");
+	  saveImg.setFitHeight(15);
+	  saveImg.setFitWidth(15);
+	  
+	  ImageView addImg = new ImageView("file:add.png");
+	  addImg.setFitHeight(15);
+	  addImg.setFitWidth(15);
+	  
+	  ImageView loadImgMeal = new ImageView("file:open.png");
+	  loadImgMeal.setFitHeight(15);
+	  loadImgMeal.setFitWidth(15);
+	  
+	  ImageView saveImgMeal = new ImageView("file:save.png");
+	  saveImgMeal.setFitHeight(15);
+	  saveImgMeal.setFitWidth(15);
+	  
+	  loadFoodList.setGraphic(loadImg);
+	  saveFoodList.setGraphic(saveImg);
+	  addFoodItem.setGraphic(addImg);
+	  loadMeal.setGraphic(loadImgMeal);
+	  saveMeal.setGraphic(saveImgMeal);
+	  
+	  //add menu items to the menu
+	  foodMenu.getItems().add(loadFoodList);
+	  foodMenu.getItems().add(saveFoodList);
+	  foodMenu.getItems().add(addFoodItem);
+	  mealMenu.getItems().add(loadMeal);
+	  mealMenu.getItems().add(saveMeal);
+	  
+	  
+	  //menu button actions
+	  addFoodItem.setOnAction(e -> getAddFoodItem());
+	  loadFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Open Food List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  if (selectedFile != null) {
+			  foodData.loadFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  saveFoodList.setOnAction(e -> {
+		  fileChooser.setTitle("Save Food List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showSaveDialog(window);
+		  if(selectedFile != null) {
+			  foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  loadMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Open Meal List"); 
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showOpenDialog(window);
+		  if(selectedFile != null) {
+			  //TODO add load meal
+			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+		  });
+	  saveMeal.setOnAction(e -> {
+		  fileChooser.setTitle("Save Meal List");
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+		  fileChooser.getExtensionFilters().add(
+				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
+		  File selectedFile = fileChooser.showSaveDialog(window);
+		  if(selectedFile != null) {
+			  //TODO add save meal
+			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
+		  }
+	  });
+	  VBox menuBarVBox = new VBox(menuBar);
+	  
     return menuBarVBox;
   }
   
@@ -475,8 +552,8 @@ public class FoodTruckApplication extends Application {
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
     alertWindow.setTitle("Add Food Item");
-    alertWindow.setMinWidth(560);
-    alertWindow.setMaxWidth(560);
+    alertWindow.setMinWidth(570);
+    alertWindow.setMaxWidth(570);
     alertWindow.setMinHeight(290);
     alertWindow.setMaxHeight(290);
 
@@ -511,7 +588,7 @@ public class FoodTruckApplication extends Application {
 
     Label calLabel = new Label();
     calLabel.setText("Calories: ");
-    idLabel.setMinHeight(25);
+    calLabel.setMinHeight(25);
 
     TextField calInput = new TextField();
     calInput.setMinWidth(200);
@@ -548,26 +625,119 @@ public class FoodTruckApplication extends Application {
     Button acceptButton = new Button("Accept");
     Button closeButton = new Button("Close");
 
-    // button actions
-    closeButton.setOnAction(e -> alertWindow.close());
-    acceptButton.setOnAction(e -> {
-      if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)) {
-        getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
-      } else if ((calInput.getText().compareTo("") == 0) || (fatInput.getText().compareTo("") == 0)
-          || (carbInput.getText().compareTo("") == 0)
-          || (fiberInput.getText().compareTo("") == 0 || (proInput.getText().compareTo("") == 0))) {
-        getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
-      } else {
-        FoodItem food = new FoodItem(idInput.getText(), nameInput.getText());
-        food.addNutrient("calories", Double.parseDouble(calInput.getText()));
-        food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
-        food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
-        food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
-        food.addNutrient("protein", Double.parseDouble(proInput.getText()));
-        foodData.addFoodItem(food);
-        alertWindow.close();
-      }
-    });
+  //button actions
+	  closeButton.setOnAction(e -> alertWindow.close());
+	  acceptButton.setOnAction(e -> {
+		  /*
+		  if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)){
+			  getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
+		  } else if ((calInput.getText().compareTo("") == 0) || 
+				  (fatInput.getText().compareTo("") == 0) || 
+				  (carbInput.getText().compareTo("") == 0) ||
+				  (fiberInput.getText().compareTo("") == 0 ||
+				  (proInput.getText().compareTo("") == 0))) {
+			  getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
+		  } else {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", Double.parseDouble(calInput.getText()));
+			  food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
+			  food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
+			  food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
+			  food.addNutrient("protein", Double.parseDouble(proInput.getText()));
+			  foodData.addFoodItem(food);
+			  alertWindow.close();
+		  }
+		  */
+		  //declare local variables
+		  boolean failedParse = false;
+		  double calories = 0.0;
+		  double fat = 0.0;
+		  double carbohydrates = 0.0;
+		  double fiber = 0.0;
+		  double protein = 0.0;
+		  
+		  //check each field for validation
+		  if(nameInput.getText().compareTo("") == 0) {
+			  nameLabel.setTextFill(Color.RED);
+			  nameLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  nameLabel.setTextFill(Color.BLACK);
+			  nameLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  if(idInput.getText().compareTo("") == 0) {
+			  idLabel.setTextFill(Color.RED);
+			  idLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  idLabel.setTextFill(Color.BLACK);
+			  idLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  try {
+			  calories = Double.parseDouble(calInput.getText());
+			  calLabel.setTextFill(Color.BLACK);
+			  calLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  calLabel.setTextFill(Color.RED);
+			  calLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fat = Double.parseDouble(fatInput.getText());
+			  fatLabel.setTextFill(Color.BLACK);
+			  fatLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fatLabel.setTextFill(Color.RED);
+			  fatLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  carbohydrates = Double.parseDouble(carbInput.getText());
+			  carbLabel.setTextFill(Color.BLACK);
+			  carbLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  carbLabel.setTextFill(Color.RED);
+			  carbLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fiber = Double.parseDouble(fiberInput.getText());
+			  fiberLabel.setTextFill(Color.BLACK);
+			  fiberLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fiberLabel.setTextFill(Color.RED);
+			  fiberLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  protein = Double.parseDouble(proInput.getText());
+			  proLabel.setTextFill(Color.BLACK);
+			  proLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  proLabel.setTextFill(Color.RED);
+			  proLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  //check if validation fails
+		  if(failedParse == false) {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", calories);
+			  food.addNutrient("fat", fat);
+			  food.addNutrient("carbohydrates", carbohydrates);
+			  food.addNutrient("fiber", fiber);
+			  food.addNutrient("protein", protein);
+			  foodData.addFoodItem(food);
+			  alertWindow.close(); 
+		  }
+		  
+	  });
 
     // build grid
     alertGrid.add(nameLabel, 0, 0);
@@ -648,7 +818,6 @@ public class FoodTruckApplication extends Application {
 	  alertWindow.setMinHeight(115);
 	  alertWindow.setMinWidth(300);
 	  
-	  
 	  Label errorMessage = new Label();
 	  errorMessage.setText(message);
 	  
@@ -658,9 +827,13 @@ public class FoodTruckApplication extends Application {
 	  	  
 	  VBox alertBox = new VBox(10);
 	  HBox hBox = new HBox(10);
+	  
+	  Label spacer = new Label();
+	  errorMessage.setAlignment(Pos.CENTER);
 	  hBox.getChildren().addAll(saveButton, dontSaveButton, goBackButton);
-	  alertBox.getChildren().addAll(errorMessage, hBox);
-	  alertBox.setAlignment(Pos.BOTTOM_RIGHT);
+	  alertBox.getChildren().addAll(errorMessage, spacer, hBox);
+	  alertBox.setAlignment(Pos.CENTER);
+	  hBox.setAlignment(Pos.BOTTOM_RIGHT);
 	  
 	  //TODO: add save and don't save actions
 	  goBackButton.setOnAction(e -> alertWindow.close());
@@ -708,7 +881,7 @@ public class FoodTruckApplication extends Application {
     
 //    //Test fileChooser
 //    fileChooser.setTitle("Open Food List");
-//	File selectedFile = fileChooser.showOpenDialog(window);
+//   	File selectedFile = fileChooser.showOpenDialog(window);
 //	foodData.loadFoodItems(selectedFile.getAbsolutePath());
 //    //test adding new food item
 //    getAddFoodItem();
