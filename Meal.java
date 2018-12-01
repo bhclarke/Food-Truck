@@ -8,7 +8,7 @@ public class Meal extends FoodData {
 	private HashMap<String, Double> nutrients = null;  // map of all nutrient values for a given food item
 	private String nutrientString = new String();  // the string containing all nutrient labels and values
 	private String mealName = new String();
-	private HashMap<String, Double> mealNutrients = new HashMap<>(); // separate map for  building the nutrientString
+	private HashMap<String, Double> mealNutrients = new HashMap<>();; // separate map for  building the nutrientString
 	
 	/**
 	 * Default constructor -- foodItemList is defined in FoodData
@@ -23,12 +23,16 @@ public class Meal extends FoodData {
 	 * TODO: may want to change this to void return type and to clear out nutrientString on each run
 	 * @return
 	 */
-	public String analyzeMealData() {		
+	public void analyzeMealData() {
+		// start with a new nutrientString mealNutrients to avoid over-appending or over-incrementing
+		// this is a temp workaround until conditional is set up in button event handler
 		//nutrientString = new String();
+		//mealNutrients = new HashMap<>();
 		for (int i = 0; i < super.getAllFoodItems().size(); i++) {
 			foodItem = super.getAllFoodItems().get(i);  // look at each food item
 			nutrients = foodItem.getNutrients();  // get the nutrient map - a new one is created for each food item in meal
-			nutrientString += super.getAllFoodItems().get(i).getName() + "\n"; // TODO: remove this line -- this just full name of food items that comprise this meal
+			// TODO: remove the following line -- this just includes the name of all food items in the meal (for troubleshooting)
+			nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
 			for (String label:nutrients.keySet()) {
 				if (mealNutrients.containsKey(label)) {
 					// if we previously added a nutrient of this (label), retrieve its 
@@ -46,7 +50,7 @@ public class Meal extends FoodData {
 		for (String label:mealNutrients.keySet()) {
 			nutrientString += label.toUpperCase() + ": " + mealNutrients.get(label) + "\n";
 		}
-		return nutrientString;
+		//return nutrientString;
 	}
 	
 	/**
