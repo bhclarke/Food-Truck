@@ -53,7 +53,7 @@ public class FoodTruckApplication extends Application {
   Stage window;
 
   // Initial Scene
-  BorderPane startLayout;
+  BorderPane layout;
   Scene startScene;
 
   // Edit Food
@@ -88,10 +88,10 @@ public class FoodTruckApplication extends Application {
     window.setTitle("Food Truck");
 
     // Create initial layout
-    startLayout = createStart();
+    layout = createStart();
 
     // set scene
-    startScene = new Scene(startLayout, 1600, 900);
+    startScene = new Scene(layout, 1600, 900);
     window.setScene(startScene);
 
     // show Application
@@ -105,7 +105,7 @@ public class FoodTruckApplication extends Application {
    * @return BorderPane. You can change the return type.
    */
   private BorderPane createStart() {
-    BorderPane layout = new BorderPane();
+    layout = new BorderPane();
     // Set Menu
     layout.setTop(getTopMenu());
     // Set up application content
@@ -242,57 +242,59 @@ public class FoodTruckApplication extends Application {
    * @return VBox. You can change the return type.
    */
   private GridPane getFoodList() {
-	    // Define grid and settings
-	    GridPane grid = new GridPane();
-	    grid.setPadding(new Insets(10, 10, 0, 10));
+    // Define grid and settings
+    GridPane grid = new GridPane();
+    grid.setPadding(new Insets(10, 10, 0, 10));
+    grid.setVgap(5);
+    grid.setHgap(5);
+
+
+    // Define Labels
+    Label foodListLabel = new Label("Food List");
+
+    Font f = new Font(20);
+    foodListLabel.setFont(f);
+
+    // Define Food Table
+    ObservableList<FoodItem> foodList = FXCollections.observableArrayList();
+    for (FoodItem fi : foodData.getAllFoodItems()) {
+      foodList.add(fi);
+    }
+
+    TableView<FoodItem> foodTable = new TableView<>();
+    TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
+    foodNames.setMinWidth(200);
+    foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     
-	    FoodData food = new FoodData();
-	    food.loadFoodItems("foodItems.txt");
-	    
-	    // Define Labels
-	    Label foodListLabel = new Label("Food List");
-	    
-	    Font f = new Font(20);
-	    foodListLabel.setFont(f);
+    foodTable.setItems(foodList);
+    foodTable.getColumns().add(foodNames);
+    foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
+    foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
 
-	    // Define Food and Meal ListViews
-	    List<FoodItem> foodList = food.getAllFoodItems();
-	    
-	    ListView<String> foodListView = new ListView<String>();
-	    foodListView.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
-	    for (FoodItem fi : foodList) {
-	      foodListView.getItems().add(fi.getName());
-	    }
-	    	    
-	    foodListView.setMinHeight(700);
-	    foodListView.setMinWidth(400);
-	    
-	    // Add all to grid
-	    GridPane.setConstraints(foodListLabel, 0, 0, 1, 1);
-	    GridPane.setConstraints(foodListView, 0, 2, 2, 1);
-	    
-	    grid.getChildren().addAll(foodListLabel,foodListView);
-	
-			TextField input = new TextField();
-			input.setMaxHeight(20); input.setMinWidth(200);
-			input.setPromptText("Search Food Items");
-			input.setFocusTraversable(false);
-			
-			Button add = new Button("Add Food Item");		
-			Button rule = new Button("Set Filter Rules");
-			
-			add.setOnAction(e -> getAddFoodItem());
-			
-		    GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
-		    GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
-		    GridPane.setConstraints(rule, 1, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+    // Define Search Field
+    TextField input = new TextField();
+    input.setMaxHeight(20);
+    input.setMinWidth(200);
+    input.setPromptText("Search Food Items");
+    input.setFocusTraversable(false);
+    
+    // Define Buttons
+    Button add = new Button("Add Food Item");
+    Button rule = new Button("Set Filter Rules");
+    add.setOnAction(e -> getAddFoodItem());
 
-			//grid.setConstraints(child, columnIndex, rowIndex, columnspan, rowspan, halignment, valignment, hgrow, vgrow, margin);
-			grid.getChildren().addAll(input, add, rule);
-			grid.setVgap(5);
-			grid.setHgap(5);
-			
-		    return grid;
+    // Add all to grid
+    GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
+    
+    GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+    GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
+    GridPane.setConstraints(rule, 2, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
+    
+    GridPane.setConstraints(foodTable, 0, 2, 3, 1);
+    
+    grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule);
+
+    return grid;
   }
 
   /**
