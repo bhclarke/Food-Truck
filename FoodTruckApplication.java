@@ -88,6 +88,7 @@ public class FoodTruckApplication extends Application {
 
     // set scene
     startScene = new Scene(startLayout, 1600, 900);
+    startScene.getStylesheets().add("FoodTruckMain.css");
     window.setScene(startScene);
 
     // show Application
@@ -110,8 +111,8 @@ public class FoodTruckApplication extends Application {
     layout.setRight(getMealGrid());
 
     // uncomment the setCenter for the content you are testing. Comment out the rest.
-    // layout.setCenter(getStartCredits());
-    layout.setCenter(createEditMeal(null));
+    layout.setCenter(getStartCredits());
+    // layout.setCenter(createEditMeal(null));
     return layout;
   }
 
@@ -247,9 +248,10 @@ public class FoodTruckApplication extends Application {
 	    
 	    // Define Labels
 	    Label foodListLabel = new Label("Food List");
+	    foodListLabel.getStyleClass().add("label-tableHeader");
 	    
-	    Font f = new Font(20);
-	    foodListLabel.setFont(f);
+	    //Font f = new Font(20);
+	    //foodListLabel.setFont(f);
 
 	    // Define Food and Meal ListViews
 	    List<FoodItem> foodList = food.getAllFoodItems();
@@ -328,7 +330,8 @@ public class FoodTruckApplication extends Application {
 	  // TODO: Need to adjust padding so that both Food List and Meal List grids are aligned
 	  mealGrid.setVgap(8);
 	  mealGrid.setHgap(10);
-	  Label mealGridLabel = new Label("Meal list");
+	  Label mealGridLabel = new Label("Meal List");
+	  mealGridLabel.getStyleClass().add("label-tableHeader");
 	  
 	  // if a ListView of type String, we can display the name of each meal; if a ListView of type Meal, we can dynamically change nutrientField
 	  ListView<Meal> mealListView = new ListView<Meal>();
@@ -815,24 +818,26 @@ public class FoodTruckApplication extends Application {
   private GridPane getStartCredits() {
     // create grid
     GridPane grid = new GridPane();
-    grid.setPadding(new Insets(200, 50, 200, 50));
+    grid.setPadding(new Insets(50, 50, 200, 50));
     grid.setVgap(8);
     grid.setHgap(10);
-
-    // create text and add to grid
-    Label appName = new Label("Food Truck");
-    Label appCredits =
-        new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
-    GridPane.setConstraints(appName, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
-    GridPane.setConstraints(appCredits, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
 
     // import logo and add to grid
     String imagePath = "file:food-truck-logo.png";
     Image image = new Image(imagePath);
     ImageView imageView = new ImageView(image);
-    GridPane.setConstraints(imageView, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
+    imageView.setFitWidth(350);
+    imageView.setPreserveRatio(true);
+    imageView.setSmooth(true);
+    GridPane.setConstraints(imageView, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+    
+    // create text and add to grid
+    Label appCredits =
+        new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
+    appCredits.setWrapText(true);
+    GridPane.setConstraints(appCredits, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
 
-    grid.getChildren().addAll(appName, appCredits, imageView);
+    grid.getChildren().addAll(imageView, appCredits);
 
     return grid;
   }
