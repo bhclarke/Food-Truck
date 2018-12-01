@@ -7,8 +7,8 @@ public class Meal extends FoodData {
 	private FoodItem foodItem = null;
 	private HashMap<String, Double> nutrients = null;  // map of all nutrient values for a given food item
 	private String nutrientString = new String();  // the string containing all nutrient labels and values
-	private Set<String> nutrientLabels = null;  // all keys from our nutrient map
 	private String mealName = new String();
+	private HashMap<String, Double> mealNutrients = new HashMap<>(); // separate map for  building the nutrientString
 	
 	/**
 	 * Default constructor -- foodItemList is defined in FoodData
@@ -17,19 +17,34 @@ public class Meal extends FoodData {
 	}
 	
 	/**
-	 * Given a list of foodItems in a Meal object, return nutrition values in a long string.
+	 * Given a list of foodItems in a Meal object, adds nutrition values in a long string.
 	 * The form of the string is
 	 * 		Nutrition Label: Nutrition Value
+	 * TODO: may want to change this to void return type and to clear out nutrientString on each run
 	 * @return
 	 */
 	public String analyzeMealData() {		
+		//nutrientString = new String();
 		for (int i = 0; i < super.getAllFoodItems().size(); i++) {
 			foodItem = super.getAllFoodItems().get(i);  // look at each food item
-			nutrients = foodItem.getNutrients();  // get the nutrient map
-			nutrientLabels = nutrients.keySet();  // retrieve each nutrient and append its value to nutrientString
-			for (String label:nutrientLabels) {
-				nutrientString += label.toUpperCase() + ": " + nutrients.get(label) + "\n";
-			}
+			nutrients = foodItem.getNutrients();  // get the nutrient map - a new one is created for each food item in meal
+			nutrientString += super.getAllFoodItems().get(i).getName() + "\n"; // TODO: remove this line -- this just full name of food items that comprise this meal
+			for (String label:nutrients.keySet()) {
+				if (mealNutrients.containsKey(label)) {
+					// if we previously added a nutrient of this (label), retrieve its 
+					// previous value and increment with the value for the next food item
+					mealNutrients.put(label, mealNutrients.get(label) + nutrients.get(label));
+				}
+				else {
+					// otherwise, just add the value to mealNutrients table
+					mealNutrients.put(label, nutrients.get(label));
+				}
+			}			
+		}
+		// build the sting outside of the above loop so that we display the total of each nutrient value 
+		// (e.g. total fat instead of the fat content for each food item in meal)
+		for (String label:mealNutrients.keySet()) {
+			nutrientString += label.toUpperCase() + ": " + mealNutrients.get(label) + "\n";
 		}
 		return nutrientString;
 	}
@@ -44,16 +59,22 @@ public class Meal extends FoodData {
 	}
 	
 	/**
-	 * Retrieves a display name for the meal
-	 * TODO: Figure out a good naming convention for meals -- right now, it just returns the first 4 chars of each FoodItem in foodItemList
+	 * Retrieves the display name for the meal (for ListView when it displays each meal object).
 	 */	
 	public String toString() {
-		for (FoodItem fi : super.getAllFoodItems()) {
-			mealName = mealName.concat(fi.getName().substring(0, 4));
-		}
 		return mealName;
 	}
 	
+	/**
+	 * Creates the meal name string. To be called right before adding the meal to the meal list.
+	 * TODO: Figure out a good naming convention for meals -- right now, it just returns the first 4 chars of each FoodItem in foodItemList
+	 */
+	public void createMealName() {
+		for (FoodItem fi : super.getAllFoodItems()) {
+			mealName = mealName.concat(fi.getName().substring(0, 4));
+		}
+	}
+		
 	public String getNutrientString() {
 		return nutrientString;
 	}
