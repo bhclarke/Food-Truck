@@ -384,7 +384,6 @@ public class FoodTruckApplication extends Application {
    * @return VBox containing the menu bar
    */
   private VBox getTopMenu() {
-	  
 	  //create menu and menu bar
 	  Menu foodMenu = new Menu("Food");
 	  Menu mealMenu = new Menu("Meal");
