@@ -171,7 +171,7 @@ public class FoodTruckApplication extends Application {
     mealFoodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
 
     // Define Buttons
-    Button addButton = new Button("->");
+    Button addButton = new Button(">");
 
     addButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -187,7 +187,7 @@ public class FoodTruckApplication extends Application {
       }
     });
 
-    Button removeButton = new Button("<-");
+    Button removeButton = new Button("<");
 
     removeButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -288,9 +288,9 @@ public class FoodTruckApplication extends Application {
     input.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-          ObservableList<FoodItem> temp = (ObservableList<FoodItem>) foodTable.getItems().stream()
+          ObservableList<FoodItem> temp = foodData.getAllFoodItems().stream()
               .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()))
-              .collect(Collectors.toList());
+              .collect(Collectors.toCollection(FXCollections::observableArrayList));
           
           foodTable.setItems(temp); // TODO does this replace or append?
         };
