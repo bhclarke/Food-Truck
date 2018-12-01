@@ -47,40 +47,33 @@ public class FoodData implements FoodDataADT<FoodItem> {
         
     	try {
             inputFile = new File(filePath);
-            System.out.println("reading data from " + filePath);
             input = new Scanner(inputFile);
             while (input.hasNextLine()) {
                 oneLineOfData = input.nextLine();
                 
                 // handle empty rows
                 if (oneLineOfData.length()==0) {
-                	System.out.println("Empty");
                 	continue;
                 }
                 
                 String[] commaSplit = oneLineOfData.split(",");
                 // handle null ids
                 if (commaSplit[0].length() == 0) {
-                	System.out.println("Invalid data");
                 	continue;
                 }
                 
                 // add new food item with nutrients
                 FoodItem food = new FoodItem(commaSplit[0],commaSplit[1]);
                 for (int i = 3; i < commaSplit.length; i = i+2) {
-                	System.out.println(commaSplit[i]);
                 	double nut = Double.parseDouble(commaSplit[i]);
-                	System.out.println("nut" + nut);
                 	food.addNutrient(commaSplit[i-1].toLowerCase(), nut);
                 }
                 
                 foodItemList.add(food);    
-                System.out.println(commaSplit[0] + "; " 
-                + food.getName() + " " + food.getNutrientValue("protein"));
                 
             }    
     	} catch (Exception e) {
-    		System.out.println(e.getMessage());
+    		//System.out.println(e.getMessage());
     	}
     }
 
@@ -146,7 +139,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
                 }
 
         } catch (IOException e) {  
-                System.out.println("WARNING: Some kind of IO error occurred");
+                //System.out.println("WARNING: Some kind of IO error occurred");
         } finally {
                 if (writer != null) // if statement checks for null pointer
                         writer.close();  // close the file
