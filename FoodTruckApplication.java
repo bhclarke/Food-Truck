@@ -273,6 +273,21 @@ public class FoodTruckApplication extends Application {
 			input.setMaxHeight(20); input.setMinWidth(200);
 			input.setPromptText("Search Food Items");
 			input.setFocusTraversable(false);
+	  	        input.setOnAction(new EventHandler<ActionEvent>() {
+			      @Override
+			      public void handle(ActionEvent event) {
+			    	  List<FoodItem> temp = foodList;
+			    	  temp.stream()
+			    	  .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()));
+			    	  
+			    	  foodListView.getItems().clear();
+			    	  for (FoodItem fi : temp) {
+			    		  if (fi.getName().toLowerCase().contains(input.getText().toLowerCase()))
+			  	             foodListView.getItems().add(fi.getName());
+			  	    };
+
+			      }
+			    });
 			
 			Button add = new Button("Add Food Item");		
 			Button rule = new Button("Set Filter Rules");
