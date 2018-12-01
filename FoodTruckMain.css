@@ -3,24 +3,37 @@
 }
 
 .label {
-	-fx-text-fill:white;
+	-fx-text-fill: white;
 }
 
 .label-tableHeader {
 	-fx-font-size: 20pt;
 }
 
-/*
-.menu {
-	-fx-background-color: #262626
-}
-* 
-*/
-/* */
 .menu-bar {
 	-fx-background-color: #1f425d;
 }
 
 .context-menu {
 	-fx-background-color: #1f425d;
+}
+
+.text-field {
+	-fx-text-fill: white;
+	-fx-background-color: #1f425d;
+}
+
+.button {
+	-fx-text-fill: #102331;
+	-fx-background-color: #97ccd0;
+	-fx-cursor: hand;
+}
+
+.button-negative {
+	-fx-text-fill: white;
+	-fx-background-color: #d64c28
+}
+
+.button-affirmative {
+	-fx-background-color: #60f667;
 }

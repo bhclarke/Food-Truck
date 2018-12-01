@@ -556,6 +556,10 @@ public class FoodTruckApplication extends Application {
 
     Button acceptButton = new Button("Accept");
     Button closeButton = new Button("Close");
+    
+    // Button style classes
+    acceptButton.getStyleClass().add("button-affirmative");
+    closeButton.getStyleClass().add("button-negative");
 
   //button actions
 	  closeButton.setOnAction(e -> alertWindow.close());
@@ -699,6 +703,7 @@ public class FoodTruckApplication extends Application {
     alertBox.setPadding(new Insets(0, 10, 10, 10));
 
     Scene alertBoxScene = new Scene(alertBox);
+    alertBoxScene.getStylesheets().add("FoodTruckMain.css");
 
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
