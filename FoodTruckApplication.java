@@ -318,7 +318,7 @@ public class FoodTruckApplication extends Application {
 	  // if a ListView of type String, we can display the name of each meal; if a ListView of type Meal, we can dynamically change nutrientField
 	  ListView<Meal> mealListView = new ListView<Meal>();
 	  mealListView.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);  // not sure if I need to list this -- I think default is single select
-	  mealListView.setMinHeight(700);
+	  mealListView.setMinHeight(400);
 	  mealListView.setMinWidth(400);
 	  
 	  // TODO: remove mock data // begin mock data
@@ -330,51 +330,55 @@ public class FoodTruckApplication extends Application {
 	  Meal meal2 = new Meal();
 	  meal2.addFoodItem(foodData.getAllFoodItems().get(5));
 	  meal2.addFoodItem(foodData.getAllFoodItems().get(6));
-
+	  
+	  // need the following two lines in order to avoid duplicate meal names
+	  meal1.createMealName();
+	  meal2.createMealName();
 	  mealList.add(meal1);
 	  mealList.add(meal2);
 	  // end mock data
 	  
 	  // create a text field for displaying nutrient data for each meal
 	  TextArea nutrientField = new TextArea();
+	  nutrientField.setPrefRowCount(12);
 	  
+	  // an alternative to TextArea is discrete fields to show each nutrient value
+	  // TODO: set this up
+	  
+	  Button analyzeMealButton = new Button("Analyze Selected Meal");
+	  // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's nutrients
+	  analyzeMealButton.setOnAction((event) -> {		  
+		  if (mealListView.getSelectionModel().isEmpty() == false) {
+			  // only execute action if there is a meal selected
+			  // TODO: add conditional so that we only run analyzeMealData once
+			  if (mealListView.getSelectionModel().getSelectedItem().getNutrientString().isEmpty()) {
+				  mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
+				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
+			  }
+			  else {
+				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());
+			  }
+			  /*mealListView.getSelectionModel().getSelectedItem().analyzeMealData();
+			  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().getNutrientString());*/
+			  // TODO: the following line is for testing -- remove later
+			  System.out.println("== BEGIN NUTRIENT LIST == " + "\n" + mealListView.getSelectionModel().getSelectedItem().getNutrientString() + "== END NUTRIENT LIST ==");
+		  }
+		  else {
+			  // otherwise, let the user know what happened (rather than not showing anything)
+			  getErrorMessage("No update was made", "A meal was not selected so no nutrient data was calculated.");
+		  }
+	  });	  
 
 	  for (Meal v : mealList) {
 		  mealListView.getItems().add(v);
 	  }
 	  
-	  /*
-	  // TODO: Is there a better way of implementing this instead of regenerating nutrientString and re-running analyzeMealData with each selection?
-	  // Use listeners to update mealListView whenever a new Meal is selected
-	  // Build nutrientString for newValue (the newly selected meal), then set this value to nutrientField
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(
-			  (observable, oldValue, newValue) -> nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData())
-			  );
-	  // Clear out nutrientString for newValue so that the next time that same Meal is selected, it is starting with a clean nutrientString
-	  // (instead of appending to a nutrientString that already
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(
-			  (observable, oldValue, newValue) -> newValue.cleanUpSring()
-			  );*/
-	  
-	  // Creates a listener to update the value in the TextArea (nutrientField) whenever a value is selected in the meal list (mealListView).
-	  mealListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Meal>() {
-		  @Override
-		  public void changed(ObservableValue<? extends Meal> observable, Meal oldValue, Meal newValue) {
-			  if (newValue.getNutrientString().isEmpty()) {
-				  nutrientField.setText(mealListView.getSelectionModel().getSelectedItem().analyzeMealData());
-			  }
-			  else {
-				  nutrientField.setText(newValue.getNutrientString());
-			  }
-		  }
-	  });
-	  
 	  GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
 	  GridPane.setConstraints(mealListView, 0, 2, 2, 1);
-	  GridPane.setConstraints(nutrientField, 0, 3, 2, 1);
-	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField);
-	  
-	  
+	  GridPane.setConstraints(analyzeMealButton, 0, 3, 1, 1);
+	  GridPane.setConstraints(nutrientField, 0, 4, 2, 1);
+	  mealGrid.getChildren().addAll(mealGridLabel, mealListView, nutrientField, analyzeMealButton);
+	  	  
 	  return mealGrid;
   }
 
