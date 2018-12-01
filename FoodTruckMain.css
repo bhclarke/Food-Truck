@@ -1,0 +1,26 @@
+.root {
+	-fx-background-color: #102331;
+}
+
+.label {
+	-fx-text-fill:white;
+}
+
+.label-tableHeader {
+	-fx-font-size: 20pt;
+}
+
+/*
+.menu {
+	-fx-background-color: #262626
+}
+* 
+*/
+/* */
+.menu-bar {
+	-fx-background-color: #1f425d;
+}
+
+.context-menu {
+	-fx-background-color: #1f425d;
+}

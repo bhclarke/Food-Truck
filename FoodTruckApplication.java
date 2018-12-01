@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -88,10 +89,11 @@ public class FoodTruckApplication extends Application {
     window.setTitle("Food Truck");
 
     // Create initial layout
-    layout = createStart();
+    createStart();
 
     // set scene
     startScene = new Scene(layout, 1600, 900);
+    startScene.getStylesheets().add("FoodTruckMain.css");
     window.setScene(startScene);
 
     // show Application
@@ -104,18 +106,14 @@ public class FoodTruckApplication extends Application {
    * 
    * @return BorderPane. You can change the return type.
    */
-  private BorderPane createStart() {
+  private void createStart() {
     layout = new BorderPane();
     // Set Menu
     layout.setTop(getTopMenu());
     // Set up application content
     layout.setLeft(getFoodList());
-    // layout.setRight(getMealList());
-    layout.setRight(getMealGrid());
-
-    // uncomment the setCenter for the content you are testing. Comment out the rest.
+    layout.setRight(getMealList());
     layout.setCenter(getStartCredits());
-    return layout;
   }
 
   /**
@@ -263,6 +261,7 @@ public class FoodTruckApplication extends Application {
 
     // Define Labels
     Label foodListLabel = new Label("Food List");
+    foodListLabel.getStyleClass().add("label-tableHeader");
 
     // Define Food Table
     ObservableList<FoodItem> foodList = FXCollections.observableArrayList();
@@ -284,8 +283,18 @@ public class FoodTruckApplication extends Application {
     TextField input = new TextField();
     input.setMaxHeight(20);
     input.setMinWidth(200);
-    input.setPromptText("Search Food Items");
+    input.setPromptText("Search Food Items (Press Enter)");
     input.setFocusTraversable(false);
+    input.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+          ObservableList<FoodItem> temp = (ObservableList<FoodItem>) foodTable.getItems().stream()
+              .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()))
+              .collect(Collectors.toList());
+          
+          foodTable.setItems(temp); // TODO does this replace or append?
+        };
+    });
     
     // Define Buttons
     Button add = new Button("Add Food Item");
@@ -305,23 +314,12 @@ public class FoodTruckApplication extends Application {
 
     return grid;
   }
-
-  /**
-   * Create view of meal list that includes access to meal functionality. This will be added to the
-   * right-hand area of each scene.
-   * 
-   * @return VBox. You can change the return type.
-   */
-  private VBox getMealList() {
-    // TODO
-    return new VBox();
-  }
-  
+    
   /**
    * Use a GridPane to display the meal list, similar to how we're displaying the food list.
    * @return
    */
-  private GridPane getMealGrid() {
+  private GridPane getMealList() {
     
     // TODO: remove mock data // begin mock data
     ObservableList<Meal> mealList = FXCollections.observableArrayList();
@@ -337,7 +335,6 @@ public class FoodTruckApplication extends Application {
     meal1.createMealName();
     meal2.createMealName();
     mealList.addAll(meal1,meal2);
-
 
     // Define grid and settings
     GridPane mealGrid = new GridPane();
@@ -471,10 +468,10 @@ public class FoodTruckApplication extends Application {
 			  //TODO add save meal
 			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
 		  }
-	  });
+	      });
 	  VBox menuBarVBox = new VBox(menuBar);
 	  
-    return menuBarVBox;
+      return menuBarVBox;
   }
   
   /**
@@ -787,40 +784,27 @@ public class FoodTruckApplication extends Application {
   private GridPane getStartCredits() {
     // create grid
     GridPane grid = new GridPane();
-    grid.setPadding(new Insets(200, 50, 200, 50));
+    grid.setPadding(new Insets(50, 50, 200, 50));
     grid.setVgap(8);
     grid.setHgap(10);
-
-    // create text and add to grid
-    Label appName = new Label("Food Truck");
-    Label appCredits =
-        new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
-    GridPane.setConstraints(appName, 0, 0, 1, 1, HPos.CENTER, VPos.CENTER);
-    GridPane.setConstraints(appCredits, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
 
     // import logo and add to grid
     String imagePath = "file:food-truck-logo.png";
     Image image = new Image(imagePath);
     ImageView imageView = new ImageView(image);
-    GridPane.setConstraints(imageView, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
+    imageView.setFitWidth(350);
+    imageView.setPreserveRatio(true);
+    imageView.setSmooth(true);
+    GridPane.setConstraints(imageView, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
+    
+    // create text and add to grid
+    Label appCredits =
+        new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
+    appCredits.setWrapText(true);
+    GridPane.setConstraints(appCredits, 0, 2, 1, 1, HPos.CENTER, VPos.CENTER);
 
-    grid.getChildren().addAll(appName, appCredits, imageView);
+    grid.getChildren().addAll(imageView, appCredits);
 
     return grid;
-  }
-
-  private Meal mockData() {
-    Meal meal = new Meal();
-    
-    
-//    //Test fileChooser
-//    fileChooser.setTitle("Open Food List");
-//   	File selectedFile = fileChooser.showOpenDialog(window);
-//	foodData.loadFoodItems(selectedFile.getAbsolutePath());
-//    //test adding new food item
-//    getAddFoodItem();
-    
-    meal.addFoodItem(foodData.getAllFoodItems().get(0));
-    return meal;
   }
 }
