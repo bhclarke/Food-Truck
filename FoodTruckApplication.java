@@ -495,8 +495,8 @@ public class FoodTruckApplication extends Application {
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
     alertWindow.setTitle("Add Food Item");
-    alertWindow.setMinWidth(560);
-    alertWindow.setMaxWidth(560);
+    alertWindow.setMinWidth(570);
+    alertWindow.setMaxWidth(570);
     alertWindow.setMinHeight(290);
     alertWindow.setMaxHeight(290);
 
@@ -531,7 +531,7 @@ public class FoodTruckApplication extends Application {
 
     Label calLabel = new Label();
     calLabel.setText("Calories: ");
-    idLabel.setMinHeight(25);
+    calLabel.setMinHeight(25);
 
     TextField calInput = new TextField();
     calInput.setMinWidth(200);
@@ -568,26 +568,119 @@ public class FoodTruckApplication extends Application {
     Button acceptButton = new Button("Accept");
     Button closeButton = new Button("Close");
 
-    // button actions
-    closeButton.setOnAction(e -> alertWindow.close());
-    acceptButton.setOnAction(e -> {
-      if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)) {
-        getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
-      } else if ((calInput.getText().compareTo("") == 0) || (fatInput.getText().compareTo("") == 0)
-          || (carbInput.getText().compareTo("") == 0)
-          || (fiberInput.getText().compareTo("") == 0 || (proInput.getText().compareTo("") == 0))) {
-        getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
-      } else {
-        FoodItem food = new FoodItem(idInput.getText(), nameInput.getText());
-        food.addNutrient("calories", Double.parseDouble(calInput.getText()));
-        food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
-        food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
-        food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
-        food.addNutrient("protein", Double.parseDouble(proInput.getText()));
-        foodData.addFoodItem(food);
-        alertWindow.close();
-      }
-    });
+  //button actions
+	  closeButton.setOnAction(e -> alertWindow.close());
+	  acceptButton.setOnAction(e -> {
+		  /*
+		  if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)){
+			  getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
+		  } else if ((calInput.getText().compareTo("") == 0) || 
+				  (fatInput.getText().compareTo("") == 0) || 
+				  (carbInput.getText().compareTo("") == 0) ||
+				  (fiberInput.getText().compareTo("") == 0 ||
+				  (proInput.getText().compareTo("") == 0))) {
+			  getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
+		  } else {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", Double.parseDouble(calInput.getText()));
+			  food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
+			  food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
+			  food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
+			  food.addNutrient("protein", Double.parseDouble(proInput.getText()));
+			  foodData.addFoodItem(food);
+			  alertWindow.close();
+		  }
+		  */
+		  //declare local variables
+		  boolean failedParse = false;
+		  double calories = 0.0;
+		  double fat = 0.0;
+		  double carbohydrates = 0.0;
+		  double fiber = 0.0;
+		  double protein = 0.0;
+		  
+		  //check each field for validation
+		  if(nameInput.getText().compareTo("") == 0) {
+			  nameLabel.setTextFill(Color.RED);
+			  nameLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  nameLabel.setTextFill(Color.BLACK);
+			  nameLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  if(idInput.getText().compareTo("") == 0) {
+			  idLabel.setTextFill(Color.RED);
+			  idLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  } else {
+			  idLabel.setTextFill(Color.BLACK);
+			  idLabel.setStyle("-fx-font-weight: normal");
+		  }
+		  
+		  try {
+			  calories = Double.parseDouble(calInput.getText());
+			  calLabel.setTextFill(Color.BLACK);
+			  calLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  calLabel.setTextFill(Color.RED);
+			  calLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fat = Double.parseDouble(fatInput.getText());
+			  fatLabel.setTextFill(Color.BLACK);
+			  fatLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fatLabel.setTextFill(Color.RED);
+			  fatLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  carbohydrates = Double.parseDouble(carbInput.getText());
+			  carbLabel.setTextFill(Color.BLACK);
+			  carbLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  carbLabel.setTextFill(Color.RED);
+			  carbLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  fiber = Double.parseDouble(fiberInput.getText());
+			  fiberLabel.setTextFill(Color.BLACK);
+			  fiberLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  fiberLabel.setTextFill(Color.RED);
+			  fiberLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  try {
+			  protein = Double.parseDouble(proInput.getText());
+			  proLabel.setTextFill(Color.BLACK);
+			  proLabel.setStyle("-fx-font-weight: normal");
+		  } catch (NumberFormatException f) {
+			  proLabel.setTextFill(Color.RED);
+			  proLabel.setStyle("-fx-font-weight: bold");
+			  failedParse = true;
+		  }
+		  
+		  //check if validation fails
+		  if(failedParse == false) {
+			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
+			  food.addNutrient("calories", calories);
+			  food.addNutrient("fat", fat);
+			  food.addNutrient("carbohydrates", carbohydrates);
+			  food.addNutrient("fiber", fiber);
+			  food.addNutrient("protein", protein);
+			  foodData.addFoodItem(food);
+			  alertWindow.close(); 
+		  }
+		  
+	  });
 
     // build grid
     alertGrid.add(nameLabel, 0, 0);
