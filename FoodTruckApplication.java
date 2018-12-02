@@ -272,13 +272,13 @@ public class FoodTruckApplication extends Application {
 
     TableView<FoodItem> foodTable = new TableView<>();
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
-    foodNames.setMinWidth(200);
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     
     foodTable.setItems(foodList);
     foodTable.getColumns().add(foodNames);
     foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
+    foodTable.setMinWidth(400);
 
     // Define Search Field
     TextField input = new TextField();
@@ -363,6 +363,7 @@ public class FoodTruckApplication extends Application {
     mealTable.getColumns().add(mealNames);
     mealTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     mealTable.setColumnResizePolicy(mealTable.CONSTRAINED_RESIZE_POLICY);
+    mealTable.setMinWidth(400);
     mealTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
       if (newSelection!= null) {
         layout.setCenter(createEditMeal(newSelection));
