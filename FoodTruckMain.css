@@ -23,6 +23,33 @@
 	-fx-background-color: #1f425d;
 }
 
+.text-area .content {
+	-fx-text-fill: white;
+	-fx-background-color: #1f425d;
+	-fx-border-width:0.0% 
+}
+
+.scroll-bar:vertical, .scroll-bar:horizontal {
+	-fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+	-fx-text-fill: white;
+}
+
+.table-row-cell {
+	-fx-background-color: #102331
+}
+
+.table-row-cell:odd {
+	-fx-background-color: #1f425d;
+}
+
+.table-row-cell:selected {
+	-fx-background-color: -fx-focus-color;
+}
+
+
 .button {
 	-fx-text-fill: #102331;
 	-fx-background-color: #97ccd0;
