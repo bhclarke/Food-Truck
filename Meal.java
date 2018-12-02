@@ -8,12 +8,17 @@ public class Meal extends FoodData {
 	private HashMap<String, Double> nutrients = null;  // map of all nutrient values for a given food item
 	private String nutrientString = new String();  // the string containing all nutrient labels and values
 	private String mealName = new String();
+	//private String mealName;
 	private HashMap<String, Double> mealNutrients = new HashMap<>();; // separate map for  building the nutrientString
 	
 	/**
 	 * Default constructor -- foodItemList is defined in FoodData
 	 */
 	public Meal() {
+	}
+	
+	public Meal(String mealName) {
+		this.mealName = mealName;
 	}
 	
 	/**

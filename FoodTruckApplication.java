@@ -374,10 +374,57 @@ public class FoodTruckApplication extends Application {
       }
       
   });
+    
+    Button createMealButton = new Button("Create Meal");
+    createMealButton.setOnAction(e -> {
+
+    	layout.setCenter(createEditMeal(new Meal()));
+    	// Create a grid pane to store the text field and buttons
+    	/*
+    	GridPane mealCreationGrid = new GridPane();
+    	mealCreationGrid.setHgap(10);
+    	mealCreationGrid.setVgap(10);
+    	
+    	Stage mealCreationStage = new Stage();
+    	mealCreationStage.initModality(Modality.APPLICATION_MODAL);
+    	mealCreationStage.setTitle("Create new meal");
+    	mealCreationStage.setMinWidth(570);
+    	mealCreationStage.setMaxWidth(570);
+    	mealCreationStage.setMinHeight(290);
+    	mealCreationStage.setMaxHeight(290);
+        
+        TextField mealNameInput = new TextField();
+        mealNameInput.setMinWidth(200);
+        mealNameInput.setMinHeight(25);
+        
+        Button closeMealButton = new Button("Close");
+        Button acceptMealButton = new Button("Accept");
+        acceptMealButton.getStyleClass().add("button-affirmative");
+        closeMealButton.getStyleClass().add("button-negative");
+        closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
+        
+               
+        VBox mealNameBox = new VBox();
+        mealNameBox.getChildren().addAll(mealCreationGrid);
+        mealNameBox.setPadding(new Insets(0, 10, 10, 10));
+        mealNameBox.getChildren().addAll(acceptMealButton,closeMealButton);
+        
+        mealCreationGrid.add(mealNameInput, 2, 2);
+        mealCreationGrid.add(mealNameBox, 3, 3);
+        
+    	
+    	Scene mealScene = new Scene(mealNameBox);
+    	mealScene.getStylesheets().add("FoodTruckMain.css");
+        
+    	mealCreationStage.setScene(mealScene);
+    	mealCreationStage.showAndWait();
+    	*/
+    });
 
     GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
     GridPane.setConstraints(mealTable, 0, 2, 2, 1);
-    mealGrid.getChildren().addAll(mealGridLabel, mealTable);
+    GridPane.setConstraints(createMealButton, 0, 1, 1, 1);
+    mealGrid.getChildren().addAll(mealGridLabel, mealTable, createMealButton);
 
     return mealGrid;
   }
