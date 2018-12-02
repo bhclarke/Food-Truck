@@ -389,18 +389,15 @@ public class FoodTruckApplication extends Application {
    */
   private VBox getTopMenu() {
 	  //create menu and menu bar
-	  Menu foodMenu = new Menu("Food");
-	  Menu mealMenu = new Menu("Meal");
+	  Menu foodMenu = new Menu("File");
 	  MenuBar menuBar = new MenuBar();
 	  menuBar.getMenus().add(foodMenu);
-	  menuBar.getMenus().add(mealMenu);
 	  
 	  //create menu items
 	  MenuItem loadFoodList = new MenuItem("Open Food List");
 	  MenuItem saveFoodList = new MenuItem("Save Food List");
 	  MenuItem addFoodItem = new MenuItem("Add Food Item");
-	  MenuItem loadMeal = new MenuItem("Open Meal List"); 
-	  MenuItem saveMeal = new MenuItem("Save Meal List");
+	  MenuItem addMeal = new MenuItem("Add Meal"); 
 	  
 	  //Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
 	  ImageView loadImg = new ImageView("file:open.png");
@@ -415,26 +412,20 @@ public class FoodTruckApplication extends Application {
 	  addImg.setFitHeight(15);
 	  addImg.setFitWidth(15);
 	  
-	  ImageView loadImgMeal = new ImageView("file:open.png");
-	  loadImgMeal.setFitHeight(15);
-	  loadImgMeal.setFitWidth(15);
-	  
-	  ImageView saveImgMeal = new ImageView("file:save.png");
-	  saveImgMeal.setFitHeight(15);
-	  saveImgMeal.setFitWidth(15);
+	  ImageView addMealImg = new ImageView("file:add.png");
+	  addMealImg.setFitHeight(15);
+	  addMealImg.setFitWidth(15);
 	  
 	  loadFoodList.setGraphic(loadImg);
 	  saveFoodList.setGraphic(saveImg);
 	  addFoodItem.setGraphic(addImg);
-	  loadMeal.setGraphic(loadImgMeal);
-	  saveMeal.setGraphic(saveImgMeal);
+	  addMeal.setGraphic(addMealImg);
 	  
 	  //add menu items to the menu
 	  foodMenu.getItems().add(loadFoodList);
 	  foodMenu.getItems().add(saveFoodList);
 	  foodMenu.getItems().add(addFoodItem);
-	  mealMenu.getItems().add(loadMeal);
-	  mealMenu.getItems().add(saveMeal);
+	  foodMenu.getItems().add(addMeal);
 	  
 	  
 	  //menu button actions
@@ -461,34 +452,89 @@ public class FoodTruckApplication extends Application {
 			  foodData.saveFoodItems(selectedFile.getAbsolutePath());
 		  }
 		  });
-	  loadMeal.setOnAction(e -> {
-		  fileChooser.setTitle("Open Meal List"); 
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
-		  File selectedFile = fileChooser.showOpenDialog(window);
-		  if(selectedFile != null) {
-			  //TODO add load meal
-			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
-		  }
-		  });
-	  saveMeal.setOnAction(e -> {
-		  fileChooser.setTitle("Save Meal List");
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
-		  File selectedFile = fileChooser.showSaveDialog(window);
-		  if(selectedFile != null) {
-			  //TODO add save meal
-			  //foodData.saveFoodItems(selectedFile.getAbsolutePath());
-		  }
-	      });
+	  
+	  
 	  VBox menuBarVBox = new VBox(menuBar);
 	  
       return menuBarVBox;
   }
+  /**
+   * Generate nutrition grid for food item or a meal
+   * 
+   * @param name
+   * @param calories
+   * @param fat
+   * @param carbohydrates
+   * @param protein
+   */
+  private VBox getNutritionForm(String name, Double calories, Double fat, Double carbohydrate, 
+		  Double fiber, Double protein){
+
+	  GridPane alertGrid = new GridPane();
+	  alertGrid.setHgap(10);
+	  alertGrid.setVgap(10);
+	    
+	  Label header = new Label();
+	  header.setText(name);
+	  header.setMinHeight(25);
+
+	  Label calLabel = new Label();
+	  calLabel.setText("Calories: ");
+	  calLabel.setMinHeight(25);
+
+	  TextField calInput = new TextField();
+	  calInput.setMinWidth(200);
+	  calInput.setMinHeight(25);
+	  calInput.setText(Double.toString(calories));
+	  calInput.setDisable(true);
+	  
+	  Label fatLabel = new Label();
+	  fatLabel.setText("Fat: ");
+	  
+	  TextField fatInput = new TextField();
+	  fatInput.setText(Double.toString(fat));
+	  fatInput.setDisable(true);
+	  
+	  Label carbLabel = new Label();
+	  carbLabel.setText("Carbs: ");
+
+	  TextField carbInput = new TextField();
+	  carbInput.setText(Double.toString(carbohydrate));
+	  carbInput.setDisable(true);
+	  
+	  Label fiberLabel = new Label();
+	  fiberLabel.setText("Fiber: ");
+	  fiberLabel.setMinHeight(25);
+	  
+	  TextField fiberInput = new TextField();
+	  fiberInput.setMinWidth(200);
+	  fiberInput.setMinHeight(25);
+	  fiberInput.setText(Double.toString(fiber));
+	  fiberInput.setDisable(true);
+	  
+	  Label proLabel = new Label();
+	  proLabel.setText("Protien: ");
+
+	  TextField proInput = new TextField();
+	  proInput.setText(Double.toString(protein));
+	  proInput.setDisable(true);
+	  
+	  alertGrid.add(calLabel, 0, 0);
+	  alertGrid.add(calInput, 1, 0);
+	  alertGrid.add(fatLabel, 0, 1);
+	  alertGrid.add(fatInput, 1, 1);
+	  alertGrid.add(carbLabel, 0, 2);
+	  alertGrid.add(carbInput, 1, 2);
+	  alertGrid.add(fiberLabel, 2, 0);
+	  alertGrid.add(fiberInput, 3, 0);
+	  alertGrid.add(proLabel, 2, 1);
+	  alertGrid.add(proInput, 3, 1);
+	  
+	  VBox vbox = new VBox();
+	  return vbox;
+	  
+  }
+  
   
   /**
    * Pop-up for adding new food item
@@ -579,27 +625,7 @@ public class FoodTruckApplication extends Application {
   //button actions
 	  closeButton.setOnAction(e -> alertWindow.close());
 	  acceptButton.setOnAction(e -> {
-		  /*
-		  if ((nameInput.getText().compareTo("") == 0) || (idInput.getText().compareTo("") == 0)){
-			  getErrorMessage("Add Food Item", "Error: Name and/or ID is required.");
-		  } else if ((calInput.getText().compareTo("") == 0) || 
-				  (fatInput.getText().compareTo("") == 0) || 
-				  (carbInput.getText().compareTo("") == 0) ||
-				  (fiberInput.getText().compareTo("") == 0 ||
-				  (proInput.getText().compareTo("") == 0))) {
-			  getErrorMessage("Add Food Item", "Error: All Nutrients must have a value.");
-		  } else {
-			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
-			  food.addNutrient("calories", Double.parseDouble(calInput.getText()));
-			  food.addNutrient("fat", Double.parseDouble(fatInput.getText()));
-			  food.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
-			  food.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
-			  food.addNutrient("protein", Double.parseDouble(proInput.getText()));
-			  foodData.addFoodItem(food);
-			  alertWindow.close();
-		  }
-		  */
-		  //declare local variables
+  //declare local variables
 		  boolean failedParse = false;
 		  double calories = 0.0;
 		  double fat = 0.0;
