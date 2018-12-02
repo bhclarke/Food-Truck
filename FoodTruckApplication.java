@@ -808,8 +808,8 @@ public class FoodTruckApplication extends Application {
     ComboBox<String> nutCombo = new ComboBox(nutOptions);
     nutCombo.setPromptText("Nutrient");
 
-    ObservableList<String> logicOptions = FXCollections.observableArrayList("\u2265", // unicode for
-                                                                                      // >=
+    ObservableList<String> logicOptions = FXCollections.observableArrayList(
+    	"\u2265", // unicode for >=
         "\u2264", // unicode for <=
         "=");
     ComboBox<String> logicCombo = new ComboBox(logicOptions);
@@ -827,7 +827,8 @@ public class FoodTruckApplication extends Application {
 
     Button accept = new Button("Accept");
     Button cancel = new Button("Cancel");
-    cancel.setOnAction(e -> alertWindow.close());
+    accept.getStyleClass().add("button-affirmative");
+    cancel.getStyleClass().add("button-negative");
 
     HBox ruleHbox = new HBox(8);
     ruleHbox.getChildren().addAll(nutCombo, logicCombo, valueField);
@@ -840,10 +841,44 @@ public class FoodTruckApplication extends Application {
     buttonHbox.getChildren().addAll(accept, cancel);
     buttonHbox.setAlignment(Pos.BOTTOM_RIGHT);
 
-    VBox vbox = new VBox();
+    VBox vbox = new VBox(8);
     vbox.getChildren().addAll(prompt, ruleHbox, ruleButtonHbox, listView, buttonHbox);
-
+    vbox.setPadding(new Insets(0,8,8,8));
+    
+    //button actions
+    addRule.setOnAction(e -> {
+    	boolean failedParse = false;
+    	if (nutCombo.getSelectionModel().isEmpty()) {
+    		getErrorMessage("Set Filter Rule","Error: A nutrient must be specified.");
+    		failedParse = true;
+    	}
+    	if(logicCombo.getSelectionModel().isEmpty()) {
+    		getErrorMessage("Set Filter Rule","Error: A logic must be specified.");
+    		failedParse = true;
+    	}
+    	try {
+    		Double.parseDouble(valueField.getText());
+    	} catch(NumberFormatException f) {
+    		getErrorMessage("Set Filter Rule", "Error: Value must be a double.");
+    		failedParse = true;
+    	}
+    	if (failedParse == false) {
+    		ruleListObs.add(nutCombo.getValue() + " " + logicCombo.getValue() + " " + 
+    			valueField.getText());
+    	}
+    });
+    removeRule.setOnAction(e -> {
+    	int selectedRow = listView.getSelectionModel().getSelectedIndex();
+    	ruleListObs.remove(selectedRow);
+    });
+    accept.setOnAction(e -> {
+    	//TODO: add accept action
+    });
+    cancel.setOnAction(e -> alertWindow.close());
+    
     Scene alertBoxScene = new Scene(vbox);
+    alertBoxScene.getStylesheets().add("FoodTruckMain.css");
+    
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
 
@@ -875,6 +910,7 @@ public class FoodTruckApplication extends Application {
     goBackButton.setOnAction(e -> alertWindow.close());
 
     Scene alertBoxScene = new Scene(alertBox);
+    alertBoxScene.getStylesheets().add("FoodTruckMain.css");
 
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
@@ -900,7 +936,9 @@ public class FoodTruckApplication extends Application {
 
     Button saveButton = new Button("Save");
     Button dontSaveButton = new Button("Don't Save");
-
+    saveButton.getStyleClass().add("button-affirmative");
+    dontSaveButton.getStyleClass().add("button-negative");
+    
     VBox alertBox = new VBox(10);
     HBox hBox = new HBox(10);
 
@@ -915,6 +953,7 @@ public class FoodTruckApplication extends Application {
     dontSaveButton.setOnAction(e -> alertWindow.close());
 
     Scene alertBoxScene = new Scene(alertBox);
+    alertBoxScene.getStylesheets().add("FoodTruckMain.css");
 
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
