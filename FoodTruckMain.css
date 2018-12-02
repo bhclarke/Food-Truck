@@ -1,4 +1,12 @@
-
+/*
+ * CSS Credits:
+ * 
+ * JavaFX generic tutorial: https://www.youtube.com/playlist?list=PL6gx4Cwl9DGBzfXLWLSYVy8EbTdpGbUIG
+ * Oracle CSS reference: https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
+ * Color converter: https://www.w3schools.com/colors/colors_converter.asp
+ * Scrollbar arrows: https://stackoverflow.com/questions/42808539/in-javafx-how-to-change-scrollbar-arrow-color
+ * Tableview style help: https://stackoverflow.com/questions/33938811/styling-a-tableview-in-css-javafx
+ */
 .root {
 	-fx-background-color: #102331;
 }

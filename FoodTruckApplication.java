@@ -2,6 +2,7 @@
 // open: https://www.iconfinder.com/icons/1608888/folder_open_icon
 // save: https://www.iconfinder.com/icons/352084/guardar_save_icon
 // add: https://www.iconfinder.com/icons/126583/add_plus_icon
+// foodTruck: https://www.thebusinessplanshop.com/fr/blog/logo-food-truck
 
 import java.io.File;
 import java.util.ArrayList;
