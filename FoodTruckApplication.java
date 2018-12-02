@@ -302,6 +302,11 @@ public class FoodTruckApplication extends Application {
     Button rule = new Button("Set Filter Rules");
     add.setOnAction(e -> getAddFoodItem());
     rule.setOnAction(e -> getRulePopup());
+    
+	  int counted = foodData.getAllFoodItems().size();
+    String count = "Total: " + counted;
+    Label countL = new Label(count);
+    GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
@@ -312,7 +317,7 @@ public class FoodTruckApplication extends Application {
     
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
     
-    grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule);
+    grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
 
     return grid;
   }
