@@ -173,7 +173,7 @@ public class FoodTruckApplication extends Application {
 
     // Define Buttons
     Button addButton = new Button(">");
-    addButton.setMinWidth(25);
+    addButton.setMinWidth(30);
 
     addButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -190,7 +190,7 @@ public class FoodTruckApplication extends Application {
     });
 
     Button removeButton = new Button("<");
-    removeButton.setMinWidth(25);
+    removeButton.setMinWidth(30);
 
     removeButton.setOnAction(new EventHandler<ActionEvent>() {
 
