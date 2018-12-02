@@ -742,8 +742,8 @@ public class FoodTruckApplication extends Application {
 	  
 	  ObservableList<String> logicOptions = 
 			    FXCollections.observableArrayList(
-			    	">",
-			    	"<",
+			    	"\u2265", // unicode for >=
+			    	"\u2264", // unicode for <=
 			    	"="
 			    );
 	  ComboBox<String> logicCombo = new ComboBox(logicOptions);
