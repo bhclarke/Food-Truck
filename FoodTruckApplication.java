@@ -84,7 +84,7 @@ public class FoodTruckApplication extends Application {
   public void start(Stage primaryStage) throws Exception {
     // get starting data
     foodData.loadFoodItems("foodItems.csv");
-    
+
     // Set Application Title
     window = primaryStage;
     window.setTitle("Food Truck");
@@ -139,7 +139,7 @@ public class FoodTruckApplication extends Application {
     grid.setVgap(8);
     grid.setHgap(10);
 
-    // Define Food and Meal Data 
+    // Define Food and Meal Data
     List<FoodItem> mealList = meal.getAllFoodItems();
     List<FoodItem> foodList = foodData.getAllFoodItems();
 
@@ -211,20 +211,21 @@ public class FoodTruckApplication extends Application {
     toggleButtonBox.setSpacing(30);
     toggleButtonBox.alignmentProperty().set(Pos.CENTER);
     toggleButtonBox.getChildren().addAll(addButton, removeButton);
-    
+
     // create a text field for displaying nutrient data for each meal
     TextArea nutrientField = new TextArea();
     nutrientField.setPrefRowCount(12);
-    
+
     // an alternative to TextArea is discrete fields to show each nutrient value
     // TODO: set this up
-    
+
     Button analyzeMealButton = new Button("Analyze Meal");
-    // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's nutrients
+    // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's
+    // nutrients
     analyzeMealButton.setOnAction((event) -> {
-        meal.analyzeMealData();
-        nutrientField.setText(meal.getNutrientString());
-    });     
+      meal.analyzeMealData();
+      nutrientField.setText(meal.getNutrientString());
+    });
 
     // Add all to grid
     GridPane.setConstraints(allFoodTable, 0, 0, 1, 1);
@@ -233,7 +234,8 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(analyzeMealButton, 2, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
     GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
 
-    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton, nutrientField);
+    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
+        nutrientField);
 
     return grid;
   }
@@ -275,7 +277,7 @@ public class FoodTruckApplication extends Application {
     TableView<FoodItem> foodTable = new TableView<>();
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
-    
+
     foodTable.setItems(foodList);
     foodTable.getColumns().add(foodNames);
     foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
@@ -291,45 +293,46 @@ public class FoodTruckApplication extends Application {
     input.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-          ObservableList<FoodItem> temp = foodData.getAllFoodItems().stream()
-              .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()))
-              .collect(Collectors.toCollection(FXCollections::observableArrayList));
-          
-          foodTable.setItems(temp); // TODO does this replace or append?
-        };
+        ObservableList<FoodItem> temp = foodData.getAllFoodItems().stream()
+            .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()))
+            .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+        foodTable.setItems(temp); // TODO does this replace or append?
+      };
     });
-    
+
     // Define Buttons
     Button add = new Button("Add Food Item");
     Button rule = new Button("Set Filter Rules");
     add.setOnAction(e -> getAddFoodItem());
     rule.setOnAction(e -> getRulePopup());
-    
-	  int counted = foodData.getAllFoodItems().size();
+
+    int counted = foodData.getAllFoodItems().size();
     String count = "Total: " + counted;
     Label countL = new Label(count);
     GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
-    
+
     GridPane.setConstraints(input, 0, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
     GridPane.setConstraints(add, 1, 1, 1, 1, HPos.RIGHT, VPos.BOTTOM);
     GridPane.setConstraints(rule, 2, 1, 1, 1, HPos.LEFT, VPos.BOTTOM);
-    
+
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
-    
+
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
 
     return grid;
   }
-    
+
   /**
    * Use a GridPane to display the meal list, similar to how we're displaying the food list.
+   * 
    * @return
    */
   private GridPane getMealList() {
-    
+
     // TODO: remove mock data // begin mock data
     ObservableList<Meal> mealList = FXCollections.observableArrayList();
     foodData.loadFoodItems("foodItems.csv");
@@ -343,7 +346,7 @@ public class FoodTruckApplication extends Application {
     // need the following two lines in order to avoid duplicate meal names
     meal1.createMealName();
     meal2.createMealName();
-    mealList.addAll(meal1,meal2);
+    mealList.addAll(meal1, meal2);
 
     // Define grid and settings
     GridPane mealGrid = new GridPane();
@@ -354,7 +357,7 @@ public class FoodTruckApplication extends Application {
     // Define Labels
     Label mealGridLabel = new Label("Meal list");
     mealGridLabel.getStyleClass().add("label-tableHeader");
-    
+
     // Define Meal Table
     TableView<Meal> mealTable = new TableView<>();
     TableColumn<Meal, String> mealNames = new TableColumn<Meal, String>("Name");
@@ -366,59 +369,52 @@ public class FoodTruckApplication extends Application {
     mealTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     mealTable.setColumnResizePolicy(mealTable.CONSTRAINED_RESIZE_POLICY);
     mealTable.setMinWidth(400);
-    mealTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-      if (newSelection!= null) {
-        layout.setCenter(createEditMeal(newSelection));
-      } else {
-        layout.setCenter(getStartCredits());
-      }
-      
-  });
-    
+    mealTable.getSelectionModel().selectedItemProperty()
+        .addListener((obs, oldSelection, newSelection) -> {
+          if (newSelection != null) {
+            layout.setCenter(createEditMeal(newSelection));
+          } else {
+            layout.setCenter(getStartCredits());
+          }
+
+        });
+
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
 
-    	layout.setCenter(createEditMeal(new Meal()));
-    	// Create a grid pane to store the text field and buttons
-    	/*
-    	GridPane mealCreationGrid = new GridPane();
-    	mealCreationGrid.setHgap(10);
-    	mealCreationGrid.setVgap(10);
-    	
-    	Stage mealCreationStage = new Stage();
-    	mealCreationStage.initModality(Modality.APPLICATION_MODAL);
-    	mealCreationStage.setTitle("Create new meal");
-    	mealCreationStage.setMinWidth(570);
-    	mealCreationStage.setMaxWidth(570);
-    	mealCreationStage.setMinHeight(290);
-    	mealCreationStage.setMaxHeight(290);
-        
-        TextField mealNameInput = new TextField();
-        mealNameInput.setMinWidth(200);
-        mealNameInput.setMinHeight(25);
-        
-        Button closeMealButton = new Button("Close");
-        Button acceptMealButton = new Button("Accept");
-        acceptMealButton.getStyleClass().add("button-affirmative");
-        closeMealButton.getStyleClass().add("button-negative");
-        closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
-        
-               
-        VBox mealNameBox = new VBox();
-        mealNameBox.getChildren().addAll(mealCreationGrid);
-        mealNameBox.setPadding(new Insets(0, 10, 10, 10));
-        mealNameBox.getChildren().addAll(acceptMealButton,closeMealButton);
-        
-        mealCreationGrid.add(mealNameInput, 2, 2);
-        mealCreationGrid.add(mealNameBox, 3, 3);
-        
-    	
-    	Scene mealScene = new Scene(mealNameBox);
-    	mealScene.getStylesheets().add("FoodTruckMain.css");
-        
-    	mealCreationStage.setScene(mealScene);
-    	mealCreationStage.showAndWait();
-    	*/
+      layout.setCenter(createEditMeal(new Meal()));
+      // Create a grid pane to store the text field and buttons
+      /*
+       * GridPane mealCreationGrid = new GridPane(); mealCreationGrid.setHgap(10);
+       * mealCreationGrid.setVgap(10);
+       * 
+       * Stage mealCreationStage = new Stage();
+       * mealCreationStage.initModality(Modality.APPLICATION_MODAL);
+       * mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(570);
+       * mealCreationStage.setMaxWidth(570); mealCreationStage.setMinHeight(290);
+       * mealCreationStage.setMaxHeight(290);
+       * 
+       * TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
+       * mealNameInput.setMinHeight(25);
+       * 
+       * Button closeMealButton = new Button("Close"); Button acceptMealButton = new
+       * Button("Accept"); acceptMealButton.getStyleClass().add("button-affirmative");
+       * closeMealButton.getStyleClass().add("button-negative");
+       * closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
+       * 
+       * 
+       * VBox mealNameBox = new VBox(); mealNameBox.getChildren().addAll(mealCreationGrid);
+       * mealNameBox.setPadding(new Insets(0, 10, 10, 10));
+       * mealNameBox.getChildren().addAll(acceptMealButton,closeMealButton);
+       * 
+       * mealCreationGrid.add(mealNameInput, 2, 2); mealCreationGrid.add(mealNameBox, 3, 3);
+       * 
+       * 
+       * Scene mealScene = new Scene(mealNameBox);
+       * mealScene.getStylesheets().add("FoodTruckMain.css");
+       * 
+       * mealCreationStage.setScene(mealScene); mealCreationStage.showAndWait();
+       */
     });
 
     GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
@@ -435,76 +431,73 @@ public class FoodTruckApplication extends Application {
    * @return VBox containing the menu bar
    */
   private VBox getTopMenu() {
-	  //create menu and menu bar
-	  Menu foodMenu = new Menu("File");
-	  MenuBar menuBar = new MenuBar();
-	  menuBar.getMenus().add(foodMenu);
-	  
-	  //create menu items
-	  MenuItem loadFoodList = new MenuItem("Open Food List");
-	  MenuItem saveFoodList = new MenuItem("Save Food List");
-	  MenuItem addFoodItem = new MenuItem("Add Food Item");
-	  MenuItem addMeal = new MenuItem("Add Meal"); 
-	  
-	  //Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
-	  ImageView loadImg = new ImageView("file:open.png");
-	  loadImg.setFitHeight(15);
-	  loadImg.setFitWidth(15);
-	  
-	  ImageView saveImg = new ImageView("file:save.png");
-	  saveImg.setFitHeight(15);
-	  saveImg.setFitWidth(15);
-	  
-	  ImageView addImg = new ImageView("file:add.png");
-	  addImg.setFitHeight(15);
-	  addImg.setFitWidth(15);
-	  
-	  ImageView addMealImg = new ImageView("file:add.png");
-	  addMealImg.setFitHeight(15);
-	  addMealImg.setFitWidth(15);
-	  
-	  loadFoodList.setGraphic(loadImg);
-	  saveFoodList.setGraphic(saveImg);
-	  addFoodItem.setGraphic(addImg);
-	  addMeal.setGraphic(addMealImg);
-	  
-	  //add menu items to the menu
-	  foodMenu.getItems().add(loadFoodList);
-	  foodMenu.getItems().add(saveFoodList);
-	  foodMenu.getItems().add(addFoodItem);
-	  foodMenu.getItems().add(addMeal);
-	  
-	  
-	  //menu button actions
-	  addFoodItem.setOnAction(e -> getAddFoodItem());
-	  loadFoodList.setOnAction(e -> {
-		  fileChooser.setTitle("Open Food List");
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
-		  File selectedFile = fileChooser.showOpenDialog(window);
-		  if (selectedFile != null) {
-			  foodData.loadFoodItems(selectedFile.getAbsolutePath());
-		  }
-		  });
-	  saveFoodList.setOnAction(e -> {
-		  fileChooser.setTitle("Save Food List");
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-		  fileChooser.getExtensionFilters().add(
-				  new FileChooser.ExtensionFilter("Text files", "*.txt"));
-		  File selectedFile = fileChooser.showSaveDialog(window);
-		  if(selectedFile != null) {
-			  foodData.saveFoodItems(selectedFile.getAbsolutePath());
-		  }
-		  });
-	  
-	  
-	  VBox menuBarVBox = new VBox(menuBar);
-	  
-      return menuBarVBox;
+    // create menu and menu bar
+    Menu foodMenu = new Menu("File");
+    MenuBar menuBar = new MenuBar();
+    menuBar.getMenus().add(foodMenu);
+
+    // create menu items
+    MenuItem loadFoodList = new MenuItem("Open Food List");
+    MenuItem saveFoodList = new MenuItem("Save Food List");
+    MenuItem addFoodItem = new MenuItem("Add Food Item");
+    MenuItem addMeal = new MenuItem("Add Meal");
+
+    // Add icons menu.setGraphic(new ImageView("file:volleyball.png"));
+    ImageView loadImg = new ImageView("file:open.png");
+    loadImg.setFitHeight(15);
+    loadImg.setFitWidth(15);
+
+    ImageView saveImg = new ImageView("file:save.png");
+    saveImg.setFitHeight(15);
+    saveImg.setFitWidth(15);
+
+    ImageView addImg = new ImageView("file:add.png");
+    addImg.setFitHeight(15);
+    addImg.setFitWidth(15);
+
+    ImageView addMealImg = new ImageView("file:add.png");
+    addMealImg.setFitHeight(15);
+    addMealImg.setFitWidth(15);
+
+    loadFoodList.setGraphic(loadImg);
+    saveFoodList.setGraphic(saveImg);
+    addFoodItem.setGraphic(addImg);
+    addMeal.setGraphic(addMealImg);
+
+    // add menu items to the menu
+    foodMenu.getItems().add(loadFoodList);
+    foodMenu.getItems().add(saveFoodList);
+    foodMenu.getItems().add(addFoodItem);
+    foodMenu.getItems().add(addMeal);
+
+
+    // menu button actions
+    addFoodItem.setOnAction(e -> getAddFoodItem());
+    loadFoodList.setOnAction(e -> {
+      fileChooser.setTitle("Open Food List");
+      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+      File selectedFile = fileChooser.showOpenDialog(window);
+      if (selectedFile != null) {
+        foodData.loadFoodItems(selectedFile.getAbsolutePath());
+      }
+    });
+    saveFoodList.setOnAction(e -> {
+      fileChooser.setTitle("Save Food List");
+      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
+      File selectedFile = fileChooser.showSaveDialog(window);
+      if (selectedFile != null) {
+        foodData.saveFoodItems(selectedFile.getAbsolutePath());
+      }
+    });
+
+
+    VBox menuBarVBox = new VBox(menuBar);
+
+    return menuBarVBox;
   }
+
   /**
    * Generate nutrition grid for food item or a meal
    * 
@@ -514,75 +507,75 @@ public class FoodTruckApplication extends Application {
    * @param carbohydrates
    * @param protein
    */
-  private VBox getNutritionForm(String name, Double calories, Double fat, Double carbohydrate, 
-		  Double fiber, Double protein){
+  private VBox getNutritionForm(String name, Double calories, Double fat, Double carbohydrate,
+      Double fiber, Double protein) {
 
-	  GridPane alertGrid = new GridPane();
-	  alertGrid.setHgap(10);
-	  alertGrid.setVgap(10);
-	    
-	  Label header = new Label();
-	  header.setText(name);
-	  header.setMinHeight(25);
+    GridPane alertGrid = new GridPane();
+    alertGrid.setHgap(10);
+    alertGrid.setVgap(10);
 
-	  Label calLabel = new Label();
-	  calLabel.setText("Calories: ");
-	  calLabel.setMinHeight(25);
+    Label header = new Label();
+    header.setText(name);
+    header.setMinHeight(25);
 
-	  TextField calInput = new TextField();
-	  calInput.setMinWidth(200);
-	  calInput.setMinHeight(25);
-	  calInput.setText(Double.toString(calories));
-	  calInput.setDisable(true);
-	  
-	  Label fatLabel = new Label();
-	  fatLabel.setText("Fat: ");
-	  
-	  TextField fatInput = new TextField();
-	  fatInput.setText(Double.toString(fat));
-	  fatInput.setDisable(true);
-	  
-	  Label carbLabel = new Label();
-	  carbLabel.setText("Carbs: ");
+    Label calLabel = new Label();
+    calLabel.setText("Calories: ");
+    calLabel.setMinHeight(25);
 
-	  TextField carbInput = new TextField();
-	  carbInput.setText(Double.toString(carbohydrate));
-	  carbInput.setDisable(true);
-	  
-	  Label fiberLabel = new Label();
-	  fiberLabel.setText("Fiber: ");
-	  fiberLabel.setMinHeight(25);
-	  
-	  TextField fiberInput = new TextField();
-	  fiberInput.setMinWidth(200);
-	  fiberInput.setMinHeight(25);
-	  fiberInput.setText(Double.toString(fiber));
-	  fiberInput.setDisable(true);
-	  
-	  Label proLabel = new Label();
-	  proLabel.setText("Protien: ");
+    TextField calInput = new TextField();
+    calInput.setMinWidth(200);
+    calInput.setMinHeight(25);
+    calInput.setText(Double.toString(calories));
+    calInput.setDisable(true);
 
-	  TextField proInput = new TextField();
-	  proInput.setText(Double.toString(protein));
-	  proInput.setDisable(true);
-	  
-	  alertGrid.add(calLabel, 0, 0);
-	  alertGrid.add(calInput, 1, 0);
-	  alertGrid.add(fatLabel, 0, 1);
-	  alertGrid.add(fatInput, 1, 1);
-	  alertGrid.add(carbLabel, 0, 2);
-	  alertGrid.add(carbInput, 1, 2);
-	  alertGrid.add(fiberLabel, 2, 0);
-	  alertGrid.add(fiberInput, 3, 0);
-	  alertGrid.add(proLabel, 2, 1);
-	  alertGrid.add(proInput, 3, 1);
-	  
-	  VBox vbox = new VBox();
-	  return vbox;
-	  
+    Label fatLabel = new Label();
+    fatLabel.setText("Fat: ");
+
+    TextField fatInput = new TextField();
+    fatInput.setText(Double.toString(fat));
+    fatInput.setDisable(true);
+
+    Label carbLabel = new Label();
+    carbLabel.setText("Carbs: ");
+
+    TextField carbInput = new TextField();
+    carbInput.setText(Double.toString(carbohydrate));
+    carbInput.setDisable(true);
+
+    Label fiberLabel = new Label();
+    fiberLabel.setText("Fiber: ");
+    fiberLabel.setMinHeight(25);
+
+    TextField fiberInput = new TextField();
+    fiberInput.setMinWidth(200);
+    fiberInput.setMinHeight(25);
+    fiberInput.setText(Double.toString(fiber));
+    fiberInput.setDisable(true);
+
+    Label proLabel = new Label();
+    proLabel.setText("Protien: ");
+
+    TextField proInput = new TextField();
+    proInput.setText(Double.toString(protein));
+    proInput.setDisable(true);
+
+    alertGrid.add(calLabel, 0, 0);
+    alertGrid.add(calInput, 1, 0);
+    alertGrid.add(fatLabel, 0, 1);
+    alertGrid.add(fatInput, 1, 1);
+    alertGrid.add(carbLabel, 0, 2);
+    alertGrid.add(carbInput, 1, 2);
+    alertGrid.add(fiberLabel, 2, 0);
+    alertGrid.add(fiberInput, 3, 0);
+    alertGrid.add(proLabel, 2, 1);
+    alertGrid.add(proInput, 3, 1);
+
+    VBox vbox = new VBox();
+    return vbox;
+
   }
-  
-  
+
+
   /**
    * Pop-up for adding new food item
    */
@@ -664,104 +657,104 @@ public class FoodTruckApplication extends Application {
 
     Button acceptButton = new Button("Accept");
     Button closeButton = new Button("Close");
-    
+
     // Button style classes
     acceptButton.getStyleClass().add("button-affirmative");
     closeButton.getStyleClass().add("button-negative");
 
-  //button actions
-	  closeButton.setOnAction(e -> alertWindow.close());
-	  acceptButton.setOnAction(e -> {
-  //declare local variables
-		  boolean failedParse = false;
-		  double calories = 0.0;
-		  double fat = 0.0;
-		  double carbohydrates = 0.0;
-		  double fiber = 0.0;
-		  double protein = 0.0;
-		  
-		  //check each field for validation
-		  if(nameInput.getText().compareTo("") == 0) {
-			  nameLabel.setTextFill(Color.RED);
-			  nameLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  } else {
-			  nameLabel.setTextFill(Color.BLACK);
-			  nameLabel.setStyle("-fx-font-weight: normal");
-		  }
-		  
-		  if(idInput.getText().compareTo("") == 0) {
-			  idLabel.setTextFill(Color.RED);
-			  idLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  } else {
-			  idLabel.setTextFill(Color.BLACK);
-			  idLabel.setStyle("-fx-font-weight: normal");
-		  }
-		  
-		  try {
-			  calories = Double.parseDouble(calInput.getText());
-			  calLabel.setTextFill(Color.BLACK);
-			  calLabel.setStyle("-fx-font-weight: normal");
-		  } catch (NumberFormatException f) {
-			  calLabel.setTextFill(Color.RED);
-			  calLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  }
-		  
-		  try {
-			  fat = Double.parseDouble(fatInput.getText());
-			  fatLabel.setTextFill(Color.BLACK);
-			  fatLabel.setStyle("-fx-font-weight: normal");
-		  } catch (NumberFormatException f) {
-			  fatLabel.setTextFill(Color.RED);
-			  fatLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  }
-		  
-		  try {
-			  carbohydrates = Double.parseDouble(carbInput.getText());
-			  carbLabel.setTextFill(Color.BLACK);
-			  carbLabel.setStyle("-fx-font-weight: normal");
-		  } catch (NumberFormatException f) {
-			  carbLabel.setTextFill(Color.RED);
-			  carbLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  }
-		  
-		  try {
-			  fiber = Double.parseDouble(fiberInput.getText());
-			  fiberLabel.setTextFill(Color.BLACK);
-			  fiberLabel.setStyle("-fx-font-weight: normal");
-		  } catch (NumberFormatException f) {
-			  fiberLabel.setTextFill(Color.RED);
-			  fiberLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  }
-		  
-		  try {
-			  protein = Double.parseDouble(proInput.getText());
-			  proLabel.setTextFill(Color.BLACK);
-			  proLabel.setStyle("-fx-font-weight: normal");
-		  } catch (NumberFormatException f) {
-			  proLabel.setTextFill(Color.RED);
-			  proLabel.setStyle("-fx-font-weight: bold");
-			  failedParse = true;
-		  }
-		  
-		  //check if validation fails
-		  if(failedParse == false) {
-			  FoodItem food = new FoodItem(idInput.getText(),nameInput.getText());
-			  food.addNutrient("calories", calories);
-			  food.addNutrient("fat", fat);
-			  food.addNutrient("carbohydrates", carbohydrates);
-			  food.addNutrient("fiber", fiber);
-			  food.addNutrient("protein", protein);
-			  foodData.addFoodItem(food);
-			  alertWindow.close(); 
-		  }
-		  
-	  });
+    // button actions
+    closeButton.setOnAction(e -> alertWindow.close());
+    acceptButton.setOnAction(e -> {
+      // declare local variables
+      boolean failedParse = false;
+      double calories = 0.0;
+      double fat = 0.0;
+      double carbohydrates = 0.0;
+      double fiber = 0.0;
+      double protein = 0.0;
+
+      // check each field for validation
+      if (nameInput.getText().compareTo("") == 0) {
+        nameLabel.setTextFill(Color.RED);
+        nameLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      } else {
+        nameLabel.setTextFill(Color.BLACK);
+        nameLabel.setStyle("-fx-font-weight: normal");
+      }
+
+      if (idInput.getText().compareTo("") == 0) {
+        idLabel.setTextFill(Color.RED);
+        idLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      } else {
+        idLabel.setTextFill(Color.BLACK);
+        idLabel.setStyle("-fx-font-weight: normal");
+      }
+
+      try {
+        calories = Double.parseDouble(calInput.getText());
+        calLabel.setTextFill(Color.BLACK);
+        calLabel.setStyle("-fx-font-weight: normal");
+      } catch (NumberFormatException f) {
+        calLabel.setTextFill(Color.RED);
+        calLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      }
+
+      try {
+        fat = Double.parseDouble(fatInput.getText());
+        fatLabel.setTextFill(Color.BLACK);
+        fatLabel.setStyle("-fx-font-weight: normal");
+      } catch (NumberFormatException f) {
+        fatLabel.setTextFill(Color.RED);
+        fatLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      }
+
+      try {
+        carbohydrates = Double.parseDouble(carbInput.getText());
+        carbLabel.setTextFill(Color.BLACK);
+        carbLabel.setStyle("-fx-font-weight: normal");
+      } catch (NumberFormatException f) {
+        carbLabel.setTextFill(Color.RED);
+        carbLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      }
+
+      try {
+        fiber = Double.parseDouble(fiberInput.getText());
+        fiberLabel.setTextFill(Color.BLACK);
+        fiberLabel.setStyle("-fx-font-weight: normal");
+      } catch (NumberFormatException f) {
+        fiberLabel.setTextFill(Color.RED);
+        fiberLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      }
+
+      try {
+        protein = Double.parseDouble(proInput.getText());
+        proLabel.setTextFill(Color.BLACK);
+        proLabel.setStyle("-fx-font-weight: normal");
+      } catch (NumberFormatException f) {
+        proLabel.setTextFill(Color.RED);
+        proLabel.setStyle("-fx-font-weight: bold");
+        failedParse = true;
+      }
+
+      // check if validation fails
+      if (failedParse == false) {
+        FoodItem food = new FoodItem(idInput.getText(), nameInput.getText());
+        food.addNutrient("calories", calories);
+        food.addNutrient("fat", fat);
+        food.addNutrient("carbohydrates", carbohydrates);
+        food.addNutrient("fiber", fiber);
+        food.addNutrient("protein", protein);
+        foodData.addFoodItem(food);
+        alertWindow.close();
+      }
+
+    });
 
     // build grid
     alertGrid.add(nameLabel, 0, 0);
@@ -796,74 +789,66 @@ public class FoodTruckApplication extends Application {
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
   }
-  
-  
+
+
   /**
    * Popup for rule editor
    */
   private void getRulePopup() {
-	  Stage alertWindow = new Stage();
-	  alertWindow.initModality(Modality.APPLICATION_MODAL);
-	  alertWindow.setTitle("Set Filter Rule");
-	  
-	  List<String> ruleList = new ArrayList<String>();
-	  
-	  Label prompt = new Label("Add a new rule.");
-	  
-	  ObservableList<String> nutOptions = 
-			    FXCollections.observableArrayList(
-			        "Calories",
-			        "Fat",
-			        "Carbohydrates",
-			        "Fiber",
-			        "Protein"
-			    );
-	  ComboBox<String> nutCombo = new ComboBox(nutOptions);
-	  nutCombo.setPromptText("Nutrient");
-	  
-	  ObservableList<String> logicOptions = 
-			    FXCollections.observableArrayList(
-			    	"\u2265", // unicode for >=
-			    	"\u2264", // unicode for <=
-			    	"="
-			    );
-	  ComboBox<String> logicCombo = new ComboBox(logicOptions);
-	  logicCombo.setPromptText("Logic");
-	  
-	  TextField valueField = new TextField();
-	  valueField.setPromptText("Value");
-	  
-	  Button addRule = new Button("Add Rule");
-	  Button removeRule = new Button("Remove Rule");
-	  
-	  ObservableList<String> ruleListObs = FXCollections.observableArrayList(ruleList);
-	  ListView<String> listView = new ListView<String>(ruleListObs);
-	  listView.setMaxHeight(100);
-	  
-	  Button accept = new Button("Accept");
-	  Button cancel = new Button("Cancel");
-	  cancel.setOnAction(e -> alertWindow.close());
-	  
-	  HBox ruleHbox = new HBox(8);
-	  ruleHbox.getChildren().addAll(nutCombo,logicCombo,valueField);
-	  
-	  HBox ruleButtonHbox = new HBox(8);
-	  ruleButtonHbox.getChildren().addAll(addRule,removeRule);
-	  ruleButtonHbox.setAlignment(Pos.CENTER);
-	  
-	  HBox buttonHbox = new HBox(8);
-	  buttonHbox.getChildren().addAll(accept,cancel);
-	  buttonHbox.setAlignment(Pos.BOTTOM_RIGHT);
-	  
-	  VBox vbox= new VBox();
-	  vbox.getChildren().addAll(prompt, ruleHbox, ruleButtonHbox, listView, buttonHbox);
-	  
-	  Scene alertBoxScene = new Scene(vbox);
-	  alertWindow.setScene(alertBoxScene);
-	  alertWindow.showAndWait();
-	  
+    Stage alertWindow = new Stage();
+    alertWindow.initModality(Modality.APPLICATION_MODAL);
+    alertWindow.setTitle("Set Filter Rule");
+
+    List<String> ruleList = new ArrayList<String>();
+
+    Label prompt = new Label("Add a new rule.");
+
+    ObservableList<String> nutOptions =
+        FXCollections.observableArrayList("Calories", "Fat", "Carbohydrates", "Fiber", "Protein");
+    ComboBox<String> nutCombo = new ComboBox(nutOptions);
+    nutCombo.setPromptText("Nutrient");
+
+    ObservableList<String> logicOptions = FXCollections.observableArrayList("\u2265", // unicode for
+                                                                                      // >=
+        "\u2264", // unicode for <=
+        "=");
+    ComboBox<String> logicCombo = new ComboBox(logicOptions);
+    logicCombo.setPromptText("Logic");
+
+    TextField valueField = new TextField();
+    valueField.setPromptText("Value");
+
+    Button addRule = new Button("Add Rule");
+    Button removeRule = new Button("Remove Rule");
+
+    ObservableList<String> ruleListObs = FXCollections.observableArrayList(ruleList);
+    ListView<String> listView = new ListView<String>(ruleListObs);
+    listView.setMaxHeight(100);
+
+    Button accept = new Button("Accept");
+    Button cancel = new Button("Cancel");
+    cancel.setOnAction(e -> alertWindow.close());
+
+    HBox ruleHbox = new HBox(8);
+    ruleHbox.getChildren().addAll(nutCombo, logicCombo, valueField);
+
+    HBox ruleButtonHbox = new HBox(8);
+    ruleButtonHbox.getChildren().addAll(addRule, removeRule);
+    ruleButtonHbox.setAlignment(Pos.CENTER);
+
+    HBox buttonHbox = new HBox(8);
+    buttonHbox.getChildren().addAll(accept, cancel);
+    buttonHbox.setAlignment(Pos.BOTTOM_RIGHT);
+
+    VBox vbox = new VBox();
+    vbox.getChildren().addAll(prompt, ruleHbox, ruleButtonHbox, listView, buttonHbox);
+
+    Scene alertBoxScene = new Scene(vbox);
+    alertWindow.setScene(alertBoxScene);
+    alertWindow.showAndWait();
+
   }
-  
+
   /**
    * Standardized error message popup
    * 
@@ -871,68 +856,68 @@ public class FoodTruckApplication extends Application {
    * @param message: the text that displays within the message
    */
   private void getErrorMessage(String title, String message) {
-	  Stage alertWindow = new Stage();
-	  alertWindow.initModality(Modality.APPLICATION_MODAL);
-	  alertWindow.setTitle(title);
-	  alertWindow.setMinHeight(115);
-	  alertWindow.setMinWidth(300);
-	  
-	  
-	  Label errorMessage = new Label();
-	  errorMessage.setText(message);
-	  
-	  Button goBackButton = new Button("Go back");
-	  
-	  VBox alertBox = new VBox(10);
-	  alertBox.getChildren().addAll(errorMessage, goBackButton);
-	  alertBox.setAlignment(Pos.CENTER);
-	  
-	  goBackButton.setOnAction(e -> alertWindow.close());
-	  
-	  Scene alertBoxScene = new Scene(alertBox);
-	  
-	  alertWindow.setScene(alertBoxScene);
-	  alertWindow.showAndWait();
-	  
+    Stage alertWindow = new Stage();
+    alertWindow.initModality(Modality.APPLICATION_MODAL);
+    alertWindow.setTitle(title);
+    alertWindow.setMinHeight(115);
+    alertWindow.setMinWidth(300);
+
+
+    Label errorMessage = new Label();
+    errorMessage.setText(message);
+
+    Button goBackButton = new Button("Go back");
+
+    VBox alertBox = new VBox(10);
+    alertBox.getChildren().addAll(errorMessage, goBackButton);
+    alertBox.setAlignment(Pos.CENTER);
+
+    goBackButton.setOnAction(e -> alertWindow.close());
+
+    Scene alertBoxScene = new Scene(alertBox);
+
+    alertWindow.setScene(alertBoxScene);
+    alertWindow.showAndWait();
+
   }
-  
-  
+
+
   /**
    * Popup error message prompting user to save before exiting
    * 
-   * @param title name of the popup
-   * @param message the main text in the popup 
+   * @param title   name of the popup
+   * @param message the main text in the popup
    */
   private void getSaveMessage(String title, String message) {
-	  Stage alertWindow = new Stage();
-	  alertWindow.initModality(Modality.APPLICATION_MODAL);
-	  alertWindow.setTitle(title);
-	  alertWindow.setMinHeight(115);
-	  alertWindow.setMinWidth(300);
-	  
-	  Label errorMessage = new Label();
-	  errorMessage.setText(message);
-	  
-	  Button saveButton = new Button("Save");
-	  Button dontSaveButton = new Button("Don't Save");
-	  	  
-	  VBox alertBox = new VBox(10);
-	  HBox hBox = new HBox(10);
-	  
-	  Label spacer = new Label();
-	  errorMessage.setAlignment(Pos.CENTER);
-	  hBox.getChildren().addAll(saveButton, dontSaveButton);
-	  alertBox.getChildren().addAll(errorMessage, spacer, hBox);
-	  alertBox.setAlignment(Pos.CENTER);
-	  hBox.setAlignment(Pos.BOTTOM_RIGHT);
-	  
-	  //TODO: add save and don't save actions
-	  dontSaveButton.setOnAction(e -> alertWindow.close());
-	  
-	  Scene alertBoxScene = new Scene(alertBox);
-	  
-	  alertWindow.setScene(alertBoxScene);
-	  alertWindow.showAndWait();
+    Stage alertWindow = new Stage();
+    alertWindow.initModality(Modality.APPLICATION_MODAL);
+    alertWindow.setTitle(title);
+    alertWindow.setMinHeight(115);
+    alertWindow.setMinWidth(300);
+
+    Label errorMessage = new Label();
+    errorMessage.setText(message);
+
+    Button saveButton = new Button("Save");
+    Button dontSaveButton = new Button("Don't Save");
+
+    VBox alertBox = new VBox(10);
+    HBox hBox = new HBox(10);
+
+    Label spacer = new Label();
+    errorMessage.setAlignment(Pos.CENTER);
+    hBox.getChildren().addAll(saveButton, dontSaveButton);
+    alertBox.getChildren().addAll(errorMessage, spacer, hBox);
+    alertBox.setAlignment(Pos.CENTER);
+    hBox.setAlignment(Pos.BOTTOM_RIGHT);
+
+    // TODO: add save and don't save actions
+    dontSaveButton.setOnAction(e -> alertWindow.close());
+
+    Scene alertBoxScene = new Scene(alertBox);
+
+    alertWindow.setScene(alertBoxScene);
+    alertWindow.showAndWait();
   }
 
   /**
@@ -956,7 +941,7 @@ public class FoodTruckApplication extends Application {
     imageView.setPreserveRatio(true);
     imageView.setSmooth(true);
     GridPane.setConstraints(imageView, 0, 1, 1, 1, HPos.CENTER, VPos.CENTER);
-    
+
     // create text and add to grid
     Label appCredits =
         new Label("By: Brett Clarke, Ryan Keil, Jerald Kuan, Riley Olson, and Jamison Wickman");
