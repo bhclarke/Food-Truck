@@ -337,16 +337,16 @@ public class FoodTruckApplication extends Application {
     // TODO: remove mock data // begin mock data
     ObservableList<Meal> mealList = FXCollections.observableArrayList();
     foodData.loadFoodItems("foodItems.csv");
-    Meal meal1 = new Meal();
+    Meal meal1 = new Meal("Meal 1");
     meal1.addFoodItem(foodData.getAllFoodItems().get(0));
     meal1.addFoodItem(foodData.getAllFoodItems().get(2));
-    Meal meal2 = new Meal();
+    Meal meal2 = new Meal("Meal 2");
     meal2.addFoodItem(foodData.getAllFoodItems().get(5));
     meal2.addFoodItem(foodData.getAllFoodItems().get(6));
 
     // need the following two lines in order to avoid duplicate meal names
-    meal1.createMealName();
-    meal2.createMealName();
+    //meal1.createMealName();
+    //meal2.createMealName();
     mealList.addAll(meal1, meal2);
 
     // Define grid and settings

@@ -33,8 +33,8 @@ public class Meal extends FoodData {
   public void analyzeMealData() {
     // start with a new nutrientString mealNutrients to avoid over-appending or over-incrementing
     // this is a temp workaround until conditional is set up in button event handler
-    // nutrientString = new String();
-    // mealNutrients = new HashMap<>();
+    nutrientString = new String();
+    mealNutrients = new HashMap<>();
     for (int i = 0; i < super.getAllFoodItems().size(); i++) {
       foodItem = super.getAllFoodItems().get(i); // look at each food item
       nutrients = foodItem.getNutrients(); // get the nutrient map - a new one is created for each
