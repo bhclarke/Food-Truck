@@ -76,6 +76,10 @@ public class FoodTruckApplication extends Application {
   List<Meal> mealData = new ArrayList<Meal>();
   List<String> rulesData = new ArrayList<String>();
   FileChooser fileChooser = new FileChooser();
+  
+  // Make the TextArea that displays nutrients 
+  // accessible from any scene
+  TextArea nutrientField = new TextArea();
 
   public static void main(String[] args) {
     launch(args);
@@ -214,7 +218,7 @@ public class FoodTruckApplication extends Application {
     toggleButtonBox.getChildren().addAll(addButton, removeButton);
 
     // create a text field for displaying nutrient data for each meal
-    TextArea nutrientField = new TextArea();
+    //TextArea nutrientField = new TextArea();
     nutrientField.setPrefRowCount(12);
 
     // an alternative to TextArea is discrete fields to show each nutrient value
@@ -225,7 +229,8 @@ public class FoodTruckApplication extends Application {
     // nutrients
     analyzeMealButton.setOnAction((event) -> {
       meal.analyzeMealData();
-      nutrientField.setText(meal.getNutrientString());
+      nutrientField.setText("Meal data for " + meal.getMealName() + "\n");  // show meal name in nutrient display
+      nutrientField.appendText(meal.getNutrientString());
     });
 
     // Add all to grid
@@ -343,11 +348,12 @@ public class FoodTruckApplication extends Application {
     Meal meal2 = new Meal("Meal 2");
     meal2.addFoodItem(foodData.getAllFoodItems().get(5));
     meal2.addFoodItem(foodData.getAllFoodItems().get(6));
-
+    
     // need the following two lines in order to avoid duplicate meal names
     //meal1.createMealName();
     //meal2.createMealName();
     mealList.addAll(meal1, meal2);
+    meal1.analyzeMealData(); meal2.analyzeMealData();
 
     // Define grid and settings
     GridPane mealGrid = new GridPane();
@@ -374,6 +380,8 @@ public class FoodTruckApplication extends Application {
         .addListener((obs, oldSelection, newSelection) -> {
           if (newSelection != null) {
             layout.setCenter(createEditMeal(newSelection));
+            // show meal name in nutrient display
+            nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
           } else {
             layout.setCenter(getStartCredits());
           }

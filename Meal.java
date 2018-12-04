@@ -41,7 +41,7 @@ public class Meal extends FoodData {
                                            // food item in meal
       // TODO: remove the following line -- this just includes the name of all food items in the
       // meal (for troubleshooting)
-      nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
+      //nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
       for (String label : nutrients.keySet()) {
         if (mealNutrients.containsKey(label)) {
           // if we previously added a nutrient of this (label), retrieve its
