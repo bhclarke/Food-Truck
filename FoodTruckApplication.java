@@ -391,39 +391,59 @@ public class FoodTruckApplication extends Application {
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
 
-      layout.setCenter(createEditMeal(new Meal()));
+      // layout.setCenter(createEditMeal(new Meal()));
       // Create a grid pane to store the text field and buttons
-      /*
-       * GridPane mealCreationGrid = new GridPane(); mealCreationGrid.setHgap(10);
-       * mealCreationGrid.setVgap(10);
-       * 
-       * Stage mealCreationStage = new Stage();
-       * mealCreationStage.initModality(Modality.APPLICATION_MODAL);
-       * mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(570);
-       * mealCreationStage.setMaxWidth(570); mealCreationStage.setMinHeight(290);
-       * mealCreationStage.setMaxHeight(290);
-       * 
-       * TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
-       * mealNameInput.setMinHeight(25);
-       * 
-       * Button closeMealButton = new Button("Close"); Button acceptMealButton = new
-       * Button("Accept"); acceptMealButton.getStyleClass().add("button-affirmative");
-       * closeMealButton.getStyleClass().add("button-negative");
-       * closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
-       * 
-       * 
-       * VBox mealNameBox = new VBox(); mealNameBox.getChildren().addAll(mealCreationGrid);
-       * mealNameBox.setPadding(new Insets(0, 10, 10, 10));
-       * mealNameBox.getChildren().addAll(acceptMealButton,closeMealButton);
-       * 
-       * mealCreationGrid.add(mealNameInput, 2, 2); mealCreationGrid.add(mealNameBox, 3, 3);
-       * 
-       * 
-       * Scene mealScene = new Scene(mealNameBox);
-       * mealScene.getStylesheets().add("FoodTruckMain.css");
-       * 
-       * mealCreationStage.setScene(mealScene); mealCreationStage.showAndWait();
-       */
+      
+      GridPane mealCreationGrid = new GridPane(); mealCreationGrid.setHgap(10);
+      mealCreationGrid.setVgap(10);
+      
+      Stage mealCreationStage = new Stage();
+      mealCreationStage.initModality(Modality.APPLICATION_MODAL);
+      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(570);
+      mealCreationStage.setMaxWidth(570); mealCreationStage.setMinHeight(290);
+      mealCreationStage.setMaxHeight(290);
+      
+      TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
+      mealNameInput.setMinHeight(25);
+      
+      Button closeMealButton = new Button("Close"); 
+      Button acceptMealButton = new Button("Accept"); 
+      acceptMealButton.setDisable(true);  // initially disabled -- only enable if there is a meal name
+      acceptMealButton.getStyleClass().add("button-affirmative");
+      closeMealButton.getStyleClass().add("button-negative");
+      closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
+      
+      // add a listener to the TextField so that Accept button
+      // is active only when there is Meal name entered in the TextField
+      mealNameInput.textProperty().addListener((obs, oldV, newV) -> {
+    	  if (newV.isEmpty() == false) {
+    		  acceptMealButton.setDisable(false);
+    	  } else {
+    		  acceptMealButton.setDisable(true);
+    	  }
+      });
+      
+      // when the user hits the Accept button, create the meal and update the Meal List
+      acceptMealButton.setOnAction(closeMealWindowEvent -> {
+    	  mealCreationStage.close();  // close the pop up window
+    	  layout.setCenter(createEditMeal(new Meal(mealNameInput.getText())));
+    	  // TODO: add this new meal to Table and update the list of Meals
+      });
+      
+      HBox mealButtonsBox = new HBox();
+      mealButtonsBox.getChildren().addAll(acceptMealButton, closeMealButton);
+      mealButtonsBox.setPadding(new Insets(0, 10, 10, 10));
+      
+      // grid has two elements:
+      // row 2 = TextField for the meal name
+      // row 3 = HBox for the Accept and Cancel buttons
+      mealCreationGrid.add(mealNameInput, 2, 2); mealCreationGrid.add(mealButtonsBox, 3, 3);
+            
+      Scene mealScene = new Scene(mealCreationGrid);
+      mealScene.getStylesheets().add("FoodTruckMain.css");
+      
+      mealCreationStage.setScene(mealScene); mealCreationStage.showAndWait();
+      //layout.setCenter(createEditMeal(new Meal())); // when we have the necessary info, create meal
     });
 
     GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
