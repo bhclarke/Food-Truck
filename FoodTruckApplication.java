@@ -482,6 +482,7 @@ public class FoodTruckApplication extends Application {
 
     // menu button actions
     addFoodItem.setOnAction(e -> getAddFoodItem());
+    addMeal.setOnAction(e -> layout.setCenter(createEditMeal(new Meal())));
     loadFoodList.setOnAction(e -> {
       fileChooser.setTitle("Open Food List");
       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
@@ -589,7 +590,6 @@ public class FoodTruckApplication extends Application {
    * Pop-up for adding new food item
    */
   private void getAddFoodItem() {
-    // TODO
     // set up window
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
@@ -808,8 +808,6 @@ public class FoodTruckApplication extends Application {
     alertWindow.initModality(Modality.APPLICATION_MODAL);
     alertWindow.setTitle("Set Filter Rule");
 
-    List<String> ruleList = new ArrayList<String>();
-
     Label prompt = new Label("Add a new rule.");
 
     ObservableList<String> nutOptions =
@@ -830,7 +828,31 @@ public class FoodTruckApplication extends Application {
     Button addRule = new Button("Add Rule");
     Button removeRule = new Button("Remove Rule");
 
-    ObservableList<String> ruleListObs = FXCollections.observableArrayList(ruleList);
+    ObservableList<String> ruleListObs = 
+    		FXCollections.observableArrayList(new ArrayList<String>());
+    String current;
+	String nut;
+	String logic;
+	String value;
+    
+    for (int i = 0; i < rulesData.size();i++) {
+    	current = rulesData.get(i);
+		nut = current.substring(0, current.indexOf(" "));
+		current = current.substring(current.indexOf(" ") + 1);
+		logic = current.substring(0, current.indexOf(" "));
+		current = current.substring(current.indexOf(" ") + 1);
+		value = current;
+		if (logic.compareTo(">=") == 0) {
+			logic = "\u2265";
+		}else if (logic.compareTo("<=") == 0) {
+			logic = "\u2264";
+		}else  if (logic.compareTo("==") == 0){
+			logic = "=";
+		}
+		
+		ruleListObs.add(nut + " " + logic + " " + value);
+    }
+    
     ListView<String> listView = new ListView<String>(ruleListObs);
     listView.setMaxHeight(100);
 
@@ -872,16 +894,45 @@ public class FoodTruckApplication extends Application {
     		failedParse = true;
     	}
     	if (failedParse == false) {
-    		ruleListObs.add(nutCombo.getValue() + " " + logicCombo.getValue() + " " + 
-    			valueField.getText());
+    		String rule = nutCombo.getValue() + " " + logicCombo.getValue() + " " + 
+					valueField.getText();
+    		if(ruleListObs.contains(rule) != true) {
+    			ruleListObs.add(rule);
+    		}
     	}
     });
     removeRule.setOnAction(e -> {
     	int selectedRow = listView.getSelectionModel().getSelectedIndex();
-    	ruleListObs.remove(selectedRow);
+    	if ((ruleListObs.isEmpty() != true) && (selectedRow >= 0)) {
+    		System.out.println(selectedRow);
+    		ruleListObs.remove(selectedRow);
+    	}
     });
     accept.setOnAction(e -> {
     	//TODO: add accept action
+    	rulesData.clear();
+    	String current2;
+    	String nut2;
+    	String logic2;
+    	String value2;
+    	for(int i = 0; i < ruleListObs.size(); i++) {
+    		current2 = ruleListObs.get(i);
+    		nut2 = current2.substring(0, current2.indexOf(" "));
+    		current2 = current2.substring(current2.indexOf(" ") + 1);
+    		logic2 = current2.substring(0, current2.indexOf(" "));
+    		current2 = current2.substring(current2.indexOf(" ") + 1);
+    		value2 = current2;
+    		if (logic2.compareTo("\u2265") == 0) {
+    			logic2 = ">=";
+    		}else if (logic2.compareTo("\u2264") == 0) {
+    			logic2 = "<=";
+    		}else  if (logic2.compareTo("=") == 0){
+    			logic2 = "==";
+    		}
+    		
+    		rulesData.add(nut2 + " " + logic2 + " " + value2);
+    	}
+    	alertWindow.close();
     });
     cancel.setOnAction(e -> alertWindow.close());
     
