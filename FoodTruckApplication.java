@@ -428,8 +428,12 @@ public class FoodTruckApplication extends Application {
       acceptMealButton.setOnAction(closeMealWindowEvent -> {
     	  mealCreationStage.close();  // close the pop up window
     	  Meal newMeal = new Meal(mealNameInput.getText());
+    	  // add newly created meal to the Meal List and
+    	  // update the Edit Meal section to allow for editing that new Meal
     	  layout.setCenter(createEditMeal(newMeal));
     	  mealTable.getItems().add(newMeal);
+    	  // in Meal List, set selection to the newly created meal
+    	  mealTable.getSelectionModel().select(newMeal);
       });
       
       HBox mealButtonsBox = new HBox();
