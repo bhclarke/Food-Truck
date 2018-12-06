@@ -66,6 +66,7 @@ public class FoodTruckApplication extends Application {
   // Edit Meal Scene
   BorderPane editMealLayout;
   Scene editMealScene;
+  TableView<Meal> mealTable;
 
   // Edit Rules Scene
   BorderPane editRuleLayout;
@@ -366,7 +367,7 @@ public class FoodTruckApplication extends Application {
     mealGridLabel.getStyleClass().add("label-tableHeader");
 
     // Define Meal Table
-    TableView<Meal> mealTable = new TableView<>();
+    mealTable = new TableView<>();
     TableColumn<Meal, String> mealNames = new TableColumn<Meal, String>("Name");
     mealNames.setMinWidth(200);
     mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));
@@ -426,8 +427,9 @@ public class FoodTruckApplication extends Application {
       // when the user hits the Accept button, create the meal and update the Meal List
       acceptMealButton.setOnAction(closeMealWindowEvent -> {
     	  mealCreationStage.close();  // close the pop up window
-    	  layout.setCenter(createEditMeal(new Meal(mealNameInput.getText())));
-    	  // TODO: add this new meal to Table and update the list of Meals
+    	  Meal newMeal = new Meal(mealNameInput.getText());
+    	  layout.setCenter(createEditMeal(newMeal));
+    	  mealTable.getItems().add(newMeal);
       });
       
       HBox mealButtonsBox = new HBox();
