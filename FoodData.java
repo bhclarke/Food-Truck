@@ -14,7 +14,7 @@ import java.io.PrintStream;
 /**
  * This class represents the backend for managing all the operations associated with FoodItems
  * 
- * @author sapan (sapan@cs.wisc.edu)
+ * @authors Riley, Brett Ryan, Jerald, Jamison
  */
 public class FoodData implements FoodDataADT<FoodItem> {
 
@@ -26,11 +26,9 @@ public class FoodData implements FoodDataADT<FoodItem> {
 
 
   /**
-   * Public constructor
+   * Constructor to create food data list
    */
   public FoodData() {
-    // TODO : Complete
-
     foodItemList = new ArrayList<FoodItem>();
     indexes = new HashMap<String, BPTree<Double, String>>();
     
@@ -43,10 +41,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }
 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see skeleton.FoodDataADT#loadFoodItems(java.lang.String)
+  /**
+   * Loads data from file to the food list
    */
   @Override
   public void loadFoodItems(String filePath) {
@@ -55,18 +51,19 @@ public class FoodData implements FoodDataADT<FoodItem> {
     String oneLineOfData = null;
 
     try {
+      // Read data from each file line
       inputFile = new File(filePath);
       input = new Scanner(inputFile);
       while (input.hasNextLine()) {
         oneLineOfData = input.nextLine();
 
-        // handle empty rows
+        // Handle empty rows
         if (oneLineOfData.length() == 0) {
           continue;
         }
 
         String[] commaSplit = oneLineOfData.split(",");
-        // handle null ids
+        // Handle null ids
         if (commaSplit[0].length() == 0) {
           continue;
         }
@@ -75,11 +72,11 @@ public class FoodData implements FoodDataADT<FoodItem> {
         FoodItem food = new FoodItem(commaSplit[0], commaSplit[1]);
         for (int i = 3; i < commaSplit.length; i = i + 2) {
           double nut = Double.parseDouble(commaSplit[i]);
+	  // Handle negative values
 	  if (nut < 0) nut = 0;
           food.addNutrient(commaSplit[i - 1].toLowerCase(), nut);
         }
-        
-        
+       
         foodItemList.add(food);
         indexFoodItem(food);
 
@@ -89,10 +86,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see skeleton.FoodDataADT#filterByName(java.lang.String)
+  /**
+   * Filters food list by substring
    */
   @Override
   public List<FoodItem> filterByName(String substring) {
@@ -104,10 +99,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
     return newList;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see skeleton.FoodDataADT#filterByNutrients(java.util.List)
+  /**
+   * Filters food list by nutrition rules
    */
   @Override
   public List<FoodItem> filterByNutrients(List<String> inputRules) {
@@ -141,10 +134,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
     return resultList;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see skeleton.FoodDataADT#addFoodItem(skeleton.FoodItem)
+  /**
+   * Add food item to the data list
    */
   @Override
   public void addFoodItem(FoodItem foodItem) {
@@ -152,17 +143,17 @@ public class FoodData implements FoodDataADT<FoodItem> {
     indexFoodItem(foodItem);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see skeleton.FoodDataADT#getAllFoodItems()
+  /**
+   * Returns food items from the list
    */
   @Override
   public List<FoodItem> getAllFoodItems() {
     return foodItemList;
   }
 
-
+  /**
+   * Save food data list to a file
+   */
   @Override
   public void saveFoodItems(String filename) {
     File outputFile = null;
