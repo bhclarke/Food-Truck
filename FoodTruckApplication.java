@@ -353,10 +353,9 @@ public class FoodTruckApplication extends Application {
     foodTable.getSelectionModel().selectedItemProperty()
 	.addListener((obs, oldV, newV) -> {
 		if (newV != null) {
-			layout.setCenter(showFoodItemData(newV)); 
-			nutrientField.setText("Nutrition data for " + newV.getName());
 			newV.getItemNutrition();
-			nutrientField.appendText("\n" + newV.getNutrientString());
+			mealTable.getSelectionModel().clearSelection();
+			layout.setCenter(showFoodItemData(newV));
 		} else {
 			layout.setCenter(getStartCredits());
 		}
@@ -426,14 +425,6 @@ public class FoodTruckApplication extends Application {
           }
 
         });
-    
-    foodTable.getSelectionModel().selectedItemProperty()
-    	.addListener((obs, oldV, newV) -> {
-    		if (newV != null) {
-    			mealTable.getSelectionModel().clearSelection();
-    			layout.setCenter(showFoodItemData(newV));
-    		}
-    	});
 
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
@@ -461,6 +452,7 @@ public class FoodTruckApplication extends Application {
       Button acceptMealButton = new Button("Accept"); 
       acceptMealButton.setDisable(true);  // initially disabled -- only enable if there is a meal name
       acceptMealButton.getStyleClass().add("button-affirmative");
+      acceptMealButton.setDefaultButton(true);  // binds Enter key to Accept buttton
       closeMealButton.getStyleClass().add("button-negative");
       closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
       
