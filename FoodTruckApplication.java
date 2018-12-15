@@ -291,6 +291,10 @@ public class FoodTruckApplication extends Application {
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
     foodTable.setMinWidth(400);
 
+    int counted = foodData.getAllFoodItems().size();
+    Label countL = new Label();
+    countL.setText("Total: " + counted);
+    
     // Define Search Field
     TextField input = new TextField();
     input.setMaxHeight(20);
@@ -305,8 +309,11 @@ public class FoodTruckApplication extends Application {
             .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         foodTable.setItems(temp); // TODO does this replace or append?
+        countL.setText("Total: " + temp.size());       
       };
     });
+    
+    GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Define Buttons
     Button add = new Button("Add Food Item");
@@ -314,10 +321,6 @@ public class FoodTruckApplication extends Application {
     add.setOnAction(e -> getAddFoodItem());
     rule.setOnAction(e -> getRulePopup());
 
-    int counted = foodData.getAllFoodItems().size();
-    String count = "Total: " + counted;
-    Label countL = new Label(count);
-    GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
