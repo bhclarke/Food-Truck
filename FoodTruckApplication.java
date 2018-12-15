@@ -1074,9 +1074,9 @@ public class FoodTruckApplication extends Application {
 		current = current.substring(current.indexOf(" ") + 1);
 		value = current;
 		if (logic.compareTo(">=") == 0) {		// Requires comparators to be java syntax
-			logic = ">=";
+			logic = "\u2265"; // unicode for >=
 		}else if (logic.compareTo("<=") == 0) {
-			logic = ">=";
+			logic = "\u2264"; // unicode for <=
 		}else  if (logic.compareTo("==") == 0){
 			logic = "==";
 		}
