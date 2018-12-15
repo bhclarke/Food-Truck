@@ -22,6 +22,7 @@ public class Meal extends FoodData {
   public Meal(String mealName) {
     this.mealName = mealName;
   }
+  
 
   /**
    * Given a list of foodItems in a Meal object, adds nutrition values in a long string. The form of
