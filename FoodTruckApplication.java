@@ -50,7 +50,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
+/**
+ * Activity to load, save, edit, and analyze food & meal data.
+ * Creates an interactive window with food and meal tables and functionality
+ * to edit data.
+ * 
+ * @authors Riley, Brett Ryan, Jerald, Jamison
+ */
 public class FoodTruckApplication extends Application {
 
   Stage window;
