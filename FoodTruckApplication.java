@@ -772,33 +772,28 @@ public class FoodTruckApplication extends Application {
       
       // validate name
       if (nameInput.getText().compareTo("") == 0) {
-        nameLabel.setTextFill(Color.RED);
-        nameLabel.setStyle("-fx-font-weight: bold");
+        nameLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
   		getErrorMessage("Add Food Item","Error: Name must be specified.");
       } 
       else {
-        nameLabel.setTextFill(Color.BLACK);
-        nameLabel.setStyle("-fx-font-weight: normal");
+        nameLabel.getStyleClass().remove("label-invalidInput");
       }
 
       // validate ids
       boolean invalidId = false;
       if (idInput.getText().compareTo("") == 0) {
-        idLabel.setTextFill(Color.RED);
-        idLabel.setStyle("-fx-font-weight: bold");
+    	idLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
         invalidId = true;
   		getErrorMessage("Add Food Item","Error: ID must be specified.");
       } else {
-        idLabel.setTextFill(Color.BLACK);
-        idLabel.setStyle("-fx-font-weight: normal");
+        idLabel.getStyleClass().remove("label-invalidInput");
       }
       
       for (FoodItem f : foodData.getAllFoodItems()) {
     	  if (f.getID().equals(idInput.getText())) {
-    	      idLabel.setTextFill(Color.RED);
-    	      idLabel.setStyle("-fx-font-weight: bold");
+    	      idLabel.getStyleClass().add("label-invalidInput");
     		  failedParse = true;
     		  invalidId = true;
       		getErrorMessage("Add Food Item","Error: ID must be unique.");
@@ -810,18 +805,15 @@ public class FoodTruckApplication extends Application {
         calories = Double.parseDouble(calInput.getText());
         if (calories < 0) {
         	failedParse = true;
-        	calLabel.setTextFill(Color.RED);
-            calLabel.setStyle("-fx-font-weight: bold");
+        	calLabel.getStyleClass().add("label-invalidInput");
         }
         
         else {
-        	calLabel.setTextFill(Color.BLACK);
-            calLabel.setStyle("-fx-font-weight: normal");
+        	calLabel.getStyleClass().remove("label-invalidInput");
         }
       
       } catch (NumberFormatException f) {
-        calLabel.setTextFill(Color.RED);
-        calLabel.setStyle("-fx-font-weight: bold");
+        calLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -830,18 +822,15 @@ public class FoodTruckApplication extends Application {
         fat = Double.parseDouble(fatInput.getText());
         if (fat < 0) {
         	failedParse = true;
-        	fatLabel.setTextFill(Color.RED);
-            fatLabel.setStyle("-fx-font-weight: bold");
+        	fatLabel.getStyleClass().add("label-invalidInput");
         }
         
         else {
-        	fatLabel.setTextFill(Color.BLACK);
-            fatLabel.setStyle("-fx-font-weight: normal");
+        	fatLabel.getStyleClass().remove("label-invalidInput");
         }
       
       } catch (NumberFormatException f) {
-        fatLabel.setTextFill(Color.RED);
-        fatLabel.setStyle("-fx-font-weight: bold");
+    	fatLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -850,18 +839,15 @@ public class FoodTruckApplication extends Application {
         carbohydrates = Double.parseDouble(carbInput.getText());
         if (carbohydrates < 0) {
         	failedParse = true;
-        	carbLabel.setTextFill(Color.RED);
-            carbLabel.setStyle("-fx-font-weight: bold");
+        	carbLabel.getStyleClass().add("label-invalidInput");
         }
         
         else {
-        	carbLabel.setTextFill(Color.BLACK);
-            carbLabel.setStyle("-fx-font-weight: normal");
+        	carbLabel.getStyleClass().remove("label-invalidInput");
         }
         
       } catch (NumberFormatException f) {
-        carbLabel.setTextFill(Color.RED);
-        carbLabel.setStyle("-fx-font-weight: bold");
+    	carbLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -870,18 +856,15 @@ public class FoodTruckApplication extends Application {
         fiber = Double.parseDouble(fiberInput.getText());
         if (fiber < 0) {
         	failedParse = true;
-            fiberLabel.setTextFill(Color.RED);
-            fiberLabel.setStyle("-fx-font-weight: bold");
+        	fiberLabel.getStyleClass().add("label-invalidInput");
         }
         
         else {
-            fiberLabel.setTextFill(Color.BLACK);
-            fiberLabel.setStyle("-fx-font-weight: normal");
+        	fiberLabel.getStyleClass().remove("label-invalidInput");
         }
         
       } catch (NumberFormatException f) {
-        fiberLabel.setTextFill(Color.RED);
-        fiberLabel.setStyle("-fx-font-weight: bold");
+    	fiberLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -890,18 +873,15 @@ public class FoodTruckApplication extends Application {
         protein = Double.parseDouble(proInput.getText());
         if (protein < 0) {
         	failedParse = true;
-            proLabel.setTextFill(Color.RED);
-            proLabel.setStyle("-fx-font-weight: bold");
+            proLabel.getStyleClass().add("label-invalidInput");
         }
         
         else {
-            proLabel.setTextFill(Color.BLACK);
-            proLabel.setStyle("-fx-font-weight: normal");
+            proLabel.getStyleClass().remove("label-invalidInput");
         }
 
       } catch (NumberFormatException f) {
-        proLabel.setTextFill(Color.RED);
-        proLabel.setStyle("-fx-font-weight: bold");
+    	proLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 

@@ -19,6 +19,11 @@
 	-fx-font-size: 20pt;
 }
 
+.label-invalidInput {
+	-fx-text-fill: red;
+	-fx-font-weight: bold;
+}
+
 .menu-bar {
 	-fx-background-color: #1f425d;
 }
@@ -114,6 +119,10 @@
 .scroll-pane {
 	-fx-background-color: #1f425d;
 	-fx-background-radius:0;
+}
+
+.scroll-pane .corner {
+	-fx-background-color: #1f425d;
 }
 
 .scroll-bar .thumb {
