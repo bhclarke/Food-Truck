@@ -1003,13 +1003,14 @@ public class FoodTruckApplication extends Application {
 		}else if (logic.compareTo("<=") == 0) {
 			logic = "\u2264"; // unicode for <=
 		}else  if (logic.compareTo("==") == 0){
-			logic = "==";
+			logic = "=";
 		}
 		
 		ruleListObs.add(nut + " " + logic + " " + value);
     }
     
     ListView<String> listView = new ListView<String>(ruleListObs);
+    listView.getSelectionModel().clearSelection();
     listView.setMaxHeight(100);
 
     Button accept = new Button("Accept");
