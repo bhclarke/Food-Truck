@@ -960,14 +960,14 @@ public class FoodTruckApplication extends Application {
 
     ObservableList<String> nutOptions =
         FXCollections.observableArrayList("Calories", "Fat", "Carbohydrate", "Fiber", "Protein");
-    ComboBox<String> nutCombo = new ComboBox(nutOptions);
+    ComboBox<String> nutCombo = new ComboBox<String>(nutOptions);
     nutCombo.setPromptText("Nutrient");
 
     ObservableList<String> logicOptions = FXCollections.observableArrayList(
     	"\u2265", // unicode for >=
         "\u2264", // unicode for <=
         "=");
-    ComboBox<String> logicCombo = new ComboBox(logicOptions);
+    ComboBox<String> logicCombo = new ComboBox<String>(logicOptions);
     logicCombo.setPromptText("Logic");
 
     TextField valueField = new TextField();
