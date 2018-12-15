@@ -81,6 +81,9 @@ public class FoodTruckApplication extends Application {
   // Make the TextArea that displays nutrients 
   // accessible from any scene
   TextArea nutrientField = new TextArea();
+  
+  // Make foodTable accessible from any scene
+  TableView<FoodItem> foodTable = new TableView<>();
 
   public static void main(String[] args) {
     launch(args);
@@ -369,7 +372,6 @@ public class FoodTruckApplication extends Application {
       foodList.add(fi);
     }
 
-    TableView<FoodItem> foodTable = new TableView<>();
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     foodNames.setSortType(TableColumn.SortType.ASCENDING);
@@ -422,8 +424,32 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
 
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
-
+    
+    foodTable.getSelectionModel().selectedItemProperty()
+	.addListener((obs, oldV, newV) -> {
+		if (newV != null) {
+			layout.setCenter(showFoodItemData(newV)); // TODO: need a layout to show -- something other than createEditMeal
+			nutrientField.setText("Nutrition data for " + newV.getName());
+			newV.getItemNutrition();
+			nutrientField.appendText("\n" + newV.getNutrientString());
+		} else {
+			layout.setCenter(getStartCredits());
+		}
+	});
+        
     return grid;
+  }
+  
+  /**
+   * Center pane when a food item is selected from the overall food item list
+   * @return
+   */
+  private GridPane showFoodItemData(FoodItem fi) {
+	  GridPane foodItemNutritionForm = new GridPane();
+	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
+	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
+	  foodItemNutritionForm.add(nutData, 1, 1);
+	  return foodItemNutritionForm;
   }
 
   /**
@@ -461,6 +487,7 @@ public class FoodTruckApplication extends Application {
     mealTable.getSelectionModel().selectedItemProperty()
         .addListener((obs, oldSelection, newSelection) -> {
           if (newSelection != null) {
+        	foodTable.getSelectionModel().clearSelection();
             layout.setCenter(createEditMeal(newSelection));
             // show meal name in nutrient display
             nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
@@ -472,6 +499,14 @@ public class FoodTruckApplication extends Application {
           }
 
         });
+    
+    foodTable.getSelectionModel().selectedItemProperty()
+    	.addListener((obs, oldV, newV) -> {
+    		if (newV != null) {
+    			mealTable.getSelectionModel().clearSelection();
+    			layout.setCenter(showFoodItemData(newV));
+    		}
+    	});
 
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
