@@ -30,6 +30,12 @@ public class FoodData implements FoodDataADT<FoodItem> {
 
     foodItemList = new ArrayList<FoodItem>();
     indexes = new HashMap<String, BPTree<Double, FoodItem>>();
+    
+    // Set up indices for nutrients
+    String [] allNutrients = {"calories", "fat", "carbohydrate", "fiber", "protein"};
+    for (String currentNutrient : allNutrients) {
+    	indexes.put(currentNutrient, new BPTree<Double, FoodItem>(3));	//For now try branching factor of 3
+    }
 
   }
 
@@ -70,6 +76,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         }
 
         foodItemList.add(food);
+        indexFoodItem(food);
 
       }
     } catch (Exception e) {
@@ -111,6 +118,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
   @Override
   public void addFoodItem(FoodItem foodItem) {
     foodItemList.add(foodItem);
+    indexFoodItem(foodItem);
   }
 
   /*
@@ -139,7 +147,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         String id = f.getID();
         String name = f.getName();
         writer.println(id + "," + name + ",calories," + f.getNutrientValue("calories") + ",fat,"
-            + f.getNutrientValue("fat") + ",carbohydrates," + f.getNutrientValue("carbohydrates")
+            + f.getNutrientValue("fat") + ",carbohydrate," + f.getNutrientValue("carbohydrate")
             + "fiber," + f.getNutrientValue("fiber") + ",protein," + f.getNutrientValue("protein"));
       }
 
@@ -151,6 +159,25 @@ public class FoodData implements FoodDataADT<FoodItem> {
     }
 
   }
+  
+  /**
+   * TODO fill out javadoc
+   * @param foodItem
+   */
+  private void indexFoodItem (FoodItem foodItem) {
+	  String [] allNutrients = {"calories", "fat", "carbohydrate", "fiber", "protein"};
+	  
+	  for (String currentNutrient : allNutrients) {
+		  if (!indexes.containsKey(currentNutrient) ) {	// This nutrient doesn't have an index
+			  continue;
+		  }
+		  Double nutrientValue = foodItem.getNutrientValue(currentNutrient);
+		  if (nutrientValue != 0) {
+			  indexes.get(currentNutrient).insert(nutrientValue, foodItem);
+		  }
+	  }
+	  return;
+  }	// indexFoodItem
 
   public static void main(String[] args) {
     FoodData d = new FoodData();

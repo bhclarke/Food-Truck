@@ -61,6 +61,7 @@ public class FoodItem {
      */
     public void addNutrient(String name, double value) {
         if (name != null) {
+        	name.toLowerCase();
           nutrients.put(name, value);
         }
     }
@@ -70,6 +71,9 @@ public class FoodItem {
      * If not present, then returns 0.
      */
     public double getNutrientValue(String name) {
+    	if (name != null) {
+    		name.toLowerCase();
+    	}
         if (nutrients.containsKey(name)) {
           return nutrients.get(name);
         }
