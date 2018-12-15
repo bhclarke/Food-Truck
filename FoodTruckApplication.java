@@ -733,7 +733,7 @@ public class FoodTruckApplication extends Application {
       double protein = 0.0;
 
       
-      // check each field for validation
+      // validate name
       if (nameInput.getText().compareTo("") == 0) {
         nameLabel.setTextFill(Color.RED);
         nameLabel.setStyle("-fx-font-weight: bold");
@@ -745,6 +745,7 @@ public class FoodTruckApplication extends Application {
         nameLabel.setStyle("-fx-font-weight: normal");
       }
 
+      // validate ids
       if (idInput.getText().compareTo("") == 0) {
         idLabel.setTextFill(Color.RED);
         idLabel.setStyle("-fx-font-weight: bold");
@@ -764,10 +765,22 @@ public class FoodTruckApplication extends Application {
     	  }
       }
 
+      // validate calories
       try {
         calories = Double.parseDouble(calInput.getText());
-        calLabel.setTextFill(Color.BLACK);
-        calLabel.setStyle("-fx-font-weight: normal");
+        if (calories < 0) {
+        	failedParse = true;
+        	calLabel.setTextFill(Color.RED);
+            calLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	calLabel.setTextFill(Color.BLACK);
+            calLabel.setStyle("-fx-font-weight: normal");
+        }
+      
       } catch (NumberFormatException f) {
         calLabel.setTextFill(Color.RED);
         calLabel.setStyle("-fx-font-weight: bold");
@@ -775,10 +788,22 @@ public class FoodTruckApplication extends Application {
   		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate fat
       try {
         fat = Double.parseDouble(fatInput.getText());
-        fatLabel.setTextFill(Color.BLACK);
-        fatLabel.setStyle("-fx-font-weight: normal");
+        if (fat < 0) {
+        	failedParse = true;
+        	fatLabel.setTextFill(Color.RED);
+            fatLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	fatLabel.setTextFill(Color.BLACK);
+            fatLabel.setStyle("-fx-font-weight: normal");
+        }
+      
       } catch (NumberFormatException f) {
         fatLabel.setTextFill(Color.RED);
         fatLabel.setStyle("-fx-font-weight: bold");
@@ -786,10 +811,22 @@ public class FoodTruckApplication extends Application {
   		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate carbohydrates
       try {
         carbohydrates = Double.parseDouble(carbInput.getText());
-        carbLabel.setTextFill(Color.BLACK);
-        carbLabel.setStyle("-fx-font-weight: normal");
+        if (carbohydrates < 0) {
+        	failedParse = true;
+        	carbLabel.setTextFill(Color.RED);
+            carbLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	carbLabel.setTextFill(Color.BLACK);
+            carbLabel.setStyle("-fx-font-weight: normal");
+        }
+        
       } catch (NumberFormatException f) {
         carbLabel.setTextFill(Color.RED);
         carbLabel.setStyle("-fx-font-weight: bold");
@@ -797,10 +834,22 @@ public class FoodTruckApplication extends Application {
   		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate fiber
       try {
         fiber = Double.parseDouble(fiberInput.getText());
-        fiberLabel.setTextFill(Color.BLACK);
-        fiberLabel.setStyle("-fx-font-weight: normal");
+        if (fiber < 0) {
+        	failedParse = true;
+            fiberLabel.setTextFill(Color.RED);
+            fiberLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+            fiberLabel.setTextFill(Color.BLACK);
+            fiberLabel.setStyle("-fx-font-weight: normal");
+        }
+        
       } catch (NumberFormatException f) {
         fiberLabel.setTextFill(Color.RED);
         fiberLabel.setStyle("-fx-font-weight: bold");
@@ -808,10 +857,22 @@ public class FoodTruckApplication extends Application {
   		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate protein
       try {
         protein = Double.parseDouble(proInput.getText());
-        proLabel.setTextFill(Color.BLACK);
-        proLabel.setStyle("-fx-font-weight: normal");
+        if (protein < 0) {
+        	failedParse = true;
+            proLabel.setTextFill(Color.RED);
+            proLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+            proLabel.setTextFill(Color.BLACK);
+            proLabel.setStyle("-fx-font-weight: normal");
+        }
+
       } catch (NumberFormatException f) {
         proLabel.setTextFill(Color.RED);
         proLabel.setStyle("-fx-font-weight: bold");
