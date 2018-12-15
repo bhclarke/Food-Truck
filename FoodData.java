@@ -178,6 +178,39 @@ public class FoodData implements FoodDataADT<FoodItem> {
 	  }
 	  return;
   }	// indexFoodItem
+  
+  /**
+   * TODO fill in javadoc
+   * @param rule
+   * @return
+   */
+  private List<FoodItem> filterOneNutrient (String rule) {
+	String current = rule;
+	String nutrient = current.substring(0, current.indexOf(" "));
+	current = current.substring(current.indexOf(" ") + 1);
+	String logic = current.substring(0, current.indexOf(" "));
+	current = current.substring(current.indexOf(" ") + 1);
+	String valueString = current;
+	
+	// Convert value string to double
+	Double value = null;
+	try {
+		value = Double.parseDouble(valueString);
+	} catch (NumberFormatException f) {
+		return new ArrayList<FoodItem>();	//Invalid rule, return empty list
+	}
+	
+	BPTree<Double, FoodItem> nutrientIndex = indexes.get(nutrient);
+	if (nutrientIndex == null || value == null) {
+		return new ArrayList<FoodItem>();
+	}
+	
+	List<FoodItem> result = nutrientIndex.rangeSearch(value, logic);
+	if (result == null) {
+		result = new ArrayList<FoodItem>();
+	}
+	return result;
+  } // FilterOneNutrient
 
   public static void main(String[] args) {
     FoodData d = new FoodData();
