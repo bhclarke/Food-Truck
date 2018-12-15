@@ -126,16 +126,6 @@ public class FoodTruckApplication extends Application {
   }
 
   /**
-   * Create layout for the edit food area of the application
-   * 
-   * @return BorderPane. You can change the return type.
-   */
-  private BorderPane createEditFood() {
-    // TODO
-    return new BorderPane();
-  }
-
-  /**
    * Create layout for the edit meal area of the application
    * 
    * @return BorderPane. You can change the return type.
@@ -394,7 +384,12 @@ public class FoodTruckApplication extends Application {
     TextField input = new TextField();
     input.setMaxHeight(20);
     input.setMinWidth(200);
-    input.setPromptText("Search Food Items (Press Enter)");
+    if (searchText.equals("")) {
+      input.setPromptText("Search Food Items (Press Enter)");
+    }
+    else {
+      input.setText(searchText);
+    }
     input.setFocusTraversable(false);
     input.setOnAction(new EventHandler<ActionEvent>() {
       @Override
@@ -428,6 +423,7 @@ public class FoodTruckApplication extends Application {
 
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
     
+    // apply filters if set
     ObservableList<FoodItem> temp = foodData.filterByNutrients(rulesData).stream()
         .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
         .collect(Collectors.toCollection(FXCollections::observableArrayList));
@@ -437,7 +433,7 @@ public class FoodTruckApplication extends Application {
     foodTable.getSelectionModel().selectedItemProperty()
 	.addListener((obs, oldV, newV) -> {
 		if (newV != null) {
-			layout.setCenter(showFoodItemData(newV)); // TODO: need a layout to show -- something other than createEditMeal
+			layout.setCenter(showFoodItemData(newV)); 
 			nutrientField.setText("Nutrition data for " + newV.getName());
 			newV.getItemNutrition();
 			nutrientField.appendText("\n" + newV.getNutrientString());
@@ -1142,7 +1138,6 @@ public class FoodTruckApplication extends Application {
     removeRule.setOnAction(e -> {
     	int selectedRow = listView.getSelectionModel().getSelectedIndex();
     	if ((ruleListObs.isEmpty() != true) && (selectedRow >= 0)) {
-    		System.out.println(selectedRow);
     		ruleListObs.remove(selectedRow);
     	}
     });
@@ -1167,8 +1162,8 @@ public class FoodTruckApplication extends Application {
     			logic2 = "==";
     		}
     		rulesData.add(nut2 + " " + logic2 + " " + value2);
-    		layout.setLeft(getFoodList());
     	}
+    	layout.setLeft(getFoodList());
     	alertWindow.close();
     });
     cancel.setOnAction(e -> alertWindow.close());
