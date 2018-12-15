@@ -664,7 +664,7 @@ public class FoodTruckApplication extends Application {
     alertGrid.add(proInput, 3, 1);
 
     
-    VBox vbox = new VBox();
+    VBox vbox = new VBox(5);
     vbox.getChildren().addAll(header,alertGrid,spacer);
     
     return vbox;
