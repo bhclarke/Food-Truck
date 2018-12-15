@@ -383,6 +383,9 @@ public class FoodTruckApplication extends Application {
             layout.setCenter(createEditMeal(newSelection));
             // show meal name in nutrient display
             nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
+            // update the nutrition data for the old selection so that selecting
+            // a new meal and going back to the old meal essentially files whatever changes were made
+            if (oldSelection != null) {oldSelection.analyzeMealData();}
           } else {
             layout.setCenter(getStartCredits());
           }
@@ -400,11 +403,15 @@ public class FoodTruckApplication extends Application {
       
       Stage mealCreationStage = new Stage();
       mealCreationStage.initModality(Modality.APPLICATION_MODAL);
-      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(570);
-      mealCreationStage.setMaxWidth(570); mealCreationStage.setMinHeight(290);
-      mealCreationStage.setMaxHeight(290);
+      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(400);
+      mealCreationStage.setMaxWidth(400); mealCreationStage.setMinHeight(200);
+      mealCreationStage.setMaxHeight(200);
       
       TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
+      Label mealNameInputLabel = new Label("Meal name: ");
+      HBox mealNameAndLabel = new HBox();
+      mealNameAndLabel.getChildren().addAll(mealNameInputLabel, mealNameInput);
+      mealNameAndLabel.setPadding(new Insets(0, 10, 10, 10));
       mealNameInput.setMinHeight(25);
       
       Button closeMealButton = new Button("Close"); 
@@ -438,12 +445,12 @@ public class FoodTruckApplication extends Application {
       
       HBox mealButtonsBox = new HBox();
       mealButtonsBox.getChildren().addAll(acceptMealButton, closeMealButton);
-      mealButtonsBox.setPadding(new Insets(0, 10, 10, 10));
+      mealButtonsBox.setPadding(new Insets(10, 10, 10, 10));
       
       // grid has two elements:
       // row 2 = TextField for the meal name
       // row 3 = HBox for the Accept and Cancel buttons
-      mealCreationGrid.add(mealNameInput, 2, 2); mealCreationGrid.add(mealButtonsBox, 3, 3);
+      mealCreationGrid.add(mealNameAndLabel, 2, 2); mealCreationGrid.add(mealButtonsBox, 2, 3);
             
       Scene mealScene = new Scene(mealCreationGrid);
       mealScene.getStylesheets().add("FoodTruckMain.css");
