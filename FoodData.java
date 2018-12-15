@@ -81,9 +81,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         indexFoodItem(food);
 
       }
-    } catch (Exception e) {
-       System.out.println(e.getMessage());
-    }
+    } catch (Exception e) {}
   }
 
   /**
