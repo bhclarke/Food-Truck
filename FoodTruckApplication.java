@@ -76,6 +76,7 @@ public class FoodTruckApplication extends Application {
   FoodData foodData = new FoodData();
   List<Meal> mealData = new ArrayList<Meal>();
   List<String> rulesData = new ArrayList<String>();
+  String searchText = "";
   FileChooser fileChooser = new FileChooser();
   
   // Make the TextArea that displays nutrients 
@@ -394,11 +395,11 @@ public class FoodTruckApplication extends Application {
     input.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-        ObservableList<FoodItem> temp = foodData.getAllFoodItems().stream()
-            .filter(s -> s.getName().toLowerCase().contains(input.getText().toLowerCase()))
+        searchText = input.getText();
+        ObservableList<FoodItem> temp = foodData.filterByNutrients(rulesData).stream()
+            .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
             .collect(Collectors.toCollection(FXCollections::observableArrayList));
-
-        foodTable.setItems(temp); // TODO does this replace or append?
+        foodTable.setItems(temp); 
         countL.setText("Total: " + temp.size());       
       };
     });
@@ -422,6 +423,12 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
 
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
+    
+    ObservableList<FoodItem> temp = foodData.filterByNutrients(rulesData).stream()
+        .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
+        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    foodTable.setItems(temp); 
+    countL.setText("Total: " + temp.size());    
 
     return grid;
   }
@@ -1122,8 +1129,8 @@ public class FoodTruckApplication extends Application {
     		}else  if (logic2.compareTo("=") == 0){
     			logic2 = "==";
     		}
-    		
     		rulesData.add(nut2 + " " + logic2 + " " + value2);
+    		layout.setLeft(getFoodList());
     	}
     	alertWindow.close();
     });
