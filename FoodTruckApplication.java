@@ -782,7 +782,7 @@ public class FoodTruckApplication extends Application {
         FoodItem food = new FoodItem(idInput.getText(), nameInput.getText());
         food.addNutrient("calories", calories);
         food.addNutrient("fat", fat);
-        food.addNutrient("carbohydrates", carbohydrates);
+        food.addNutrient("carbohydrate", carbohydrates);
         food.addNutrient("fiber", fiber);
         food.addNutrient("protein", protein);
         foodData.addFoodItem(food);
@@ -837,7 +837,7 @@ public class FoodTruckApplication extends Application {
     Label prompt = new Label("Add a new rule.");
 
     ObservableList<String> nutOptions =
-        FXCollections.observableArrayList("Calories", "Fat", "Carbohydrates", "Fiber", "Protein");
+        FXCollections.observableArrayList("Calories", "Fat", "Carbohydrate", "Fiber", "Protein");
     ComboBox<String> nutCombo = new ComboBox(nutOptions);
     nutCombo.setPromptText("Nutrient");
 
@@ -868,12 +868,12 @@ public class FoodTruckApplication extends Application {
 		logic = current.substring(0, current.indexOf(" "));
 		current = current.substring(current.indexOf(" ") + 1);
 		value = current;
-		if (logic.compareTo(">=") == 0) {
-			logic = "\u2265";
+		if (logic.compareTo(">=") == 0) {		// Requires comparators to be java syntax
+			logic = ">=";
 		}else if (logic.compareTo("<=") == 0) {
-			logic = "\u2264";
+			logic = ">=";
 		}else  if (logic.compareTo("==") == 0){
-			logic = "=";
+			logic = "==";
 		}
 		
 		ruleListObs.add(nut + " " + logic + " " + value);
