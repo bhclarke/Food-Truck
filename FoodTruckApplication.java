@@ -326,8 +326,8 @@ public class FoodTruckApplication extends Application {
         }else {
       	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
         }
-      
-      //grid.getChildren().set(4, nutData);
+      GridPane.setConstraints(nutData, 0, 0, 3, 1);
+      grid.getChildren().set(4, nutData);
     });
 
     // Add all to grid
