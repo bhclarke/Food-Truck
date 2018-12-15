@@ -186,8 +186,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }
   
   /**
-   * TODO fill out javadoc
-   * @param foodItem
+   * Add food item to nutrient index
    */
   private void indexFoodItem (FoodItem foodItem) {
 	  String [] allNutrients = {"calories", "fat", "carbohydrate", "fiber", "protein"};
@@ -205,9 +204,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }	// indexFoodItem
   
   /**
-   * TODO fill in javadoc
-   * @param rule
-   * @return
+   * Filter food items in the list by a nutrition rule
    */
   private Set<String> filterOneNutrient (String rule) {
 	String current = rule;
