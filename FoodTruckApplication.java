@@ -89,7 +89,7 @@ public class FoodTruckApplication extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     // get starting data
-    foodData.loadFoodItems("foodItems.csv");
+    //foodData.loadFoodItems("foodItems.csv"); //TODO - remove line
 
     // Set Application Title
     window = primaryStage;
@@ -165,16 +165,20 @@ public class FoodTruckApplication extends Application {
         new TableColumn<FoodItem, String>("Available Food");
     allFoodNames.setMinWidth(200);
     allFoodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
+    allFoodNames.setSortType(TableColumn.SortType.ASCENDING);
     allFoodTable.setItems(foodListView);
     allFoodTable.getColumns().add(allFoodNames);
+    allFoodTable.getSortOrder().add(allFoodNames);
     allFoodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
 
     TableView<FoodItem> mealFoodTable = new TableView<>();
     TableColumn<FoodItem, String> mealFoodNames = new TableColumn<FoodItem, String>("Food in Meal");
     mealFoodNames.setMinWidth(200);
     mealFoodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
+    mealFoodNames.setSortType(TableColumn.SortType.ASCENDING);
     mealFoodTable.setItems(mealListView);
     mealFoodTable.getColumns().add(mealFoodNames);
+    mealFoodTable.getSortOrder().add(mealFoodNames);
     mealFoodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.MULTIPLE);
 
     // Define Buttons
@@ -190,6 +194,7 @@ public class FoodTruckApplication extends Application {
           foodListView.remove((FoodItem) foodItem);
           mealListView.add((FoodItem) foodItem);
           meal.addFoodItem((FoodItem) foodItem);
+          mealFoodTable.sort();
         } ;
 
       }
@@ -207,6 +212,7 @@ public class FoodTruckApplication extends Application {
           foodListView.add((FoodItem) foodItem);
           mealListView.remove((FoodItem) foodItem);
           meal.removeFood((FoodItem) foodItem);
+          allFoodTable.sort();
         } ;
 
       }
@@ -284,9 +290,11 @@ public class FoodTruckApplication extends Application {
     TableView<FoodItem> foodTable = new TableView<>();
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
-
+    foodNames.setSortType(TableColumn.SortType.ASCENDING);
+    
     foodTable.setItems(foodList);
     foodTable.getColumns().add(foodNames);
+    foodTable.getSortOrder().add(foodNames);
     foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
     foodTable.setMinWidth(400);
@@ -340,21 +348,7 @@ public class FoodTruckApplication extends Application {
    */
   private GridPane getMealList() {
 
-    // TODO: remove mock data // begin mock data
     ObservableList<Meal> mealList = FXCollections.observableArrayList();
-    foodData.loadFoodItems("foodItems.csv");
-    Meal meal1 = new Meal("Meal 1");
-    meal1.addFoodItem(foodData.getAllFoodItems().get(0));
-    meal1.addFoodItem(foodData.getAllFoodItems().get(2));
-    Meal meal2 = new Meal("Meal 2");
-    meal2.addFoodItem(foodData.getAllFoodItems().get(5));
-    meal2.addFoodItem(foodData.getAllFoodItems().get(6));
-    
-    // need the following two lines in order to avoid duplicate meal names
-    //meal1.createMealName();
-    //meal2.createMealName();
-    mealList.addAll(meal1, meal2);
-    meal1.analyzeMealData(); meal2.analyzeMealData();
 
     // Define grid and settings
     GridPane mealGrid = new GridPane();
@@ -370,10 +364,12 @@ public class FoodTruckApplication extends Application {
     mealTable = new TableView<>();
     TableColumn<Meal, String> mealNames = new TableColumn<Meal, String>("Name");
     mealNames.setMinWidth(200);
-    mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));
+    mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));    
+    mealNames.setSortType(TableColumn.SortType.ASCENDING);
 
     mealTable.setItems(mealList);
     mealTable.getColumns().add(mealNames);
+    mealTable.getSortOrder().add(mealNames);
     mealTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     mealTable.setColumnResizePolicy(mealTable.CONSTRAINED_RESIZE_POLICY);
     mealTable.setMinWidth(400);
@@ -392,7 +388,7 @@ public class FoodTruckApplication extends Application {
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
 
-      // layout.setCenter(createEditMeal(new Meal()));
+      layout.setCenter(getStartCredits());
       // Create a grid pane to store the text field and buttons
       
       GridPane mealCreationGrid = new GridPane(); mealCreationGrid.setHgap(10);
@@ -433,7 +429,9 @@ public class FoodTruckApplication extends Application {
     	  layout.setCenter(createEditMeal(newMeal));
     	  mealTable.getItems().add(newMeal);
     	  // in Meal List, set selection to the newly created meal
+    	  mealTable.sort();
     	  mealTable.getSelectionModel().select(newMeal);
+    	  
       });
       
       HBox mealButtonsBox = new HBox();
@@ -516,6 +514,7 @@ public class FoodTruckApplication extends Application {
       File selectedFile = fileChooser.showOpenDialog(window);
       if (selectedFile != null) {
         foodData.loadFoodItems(selectedFile.getAbsolutePath());
+        layout.setLeft(getFoodList());
       }
     });
     saveFoodList.setOnAction(e -> {
@@ -616,6 +615,9 @@ public class FoodTruckApplication extends Application {
    * Pop-up for adding new food item
    */
   private void getAddFoodItem() {
+    // clear center activity
+    layout.setCenter(getStartCredits());
+    
     // set up window
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
@@ -786,6 +788,7 @@ public class FoodTruckApplication extends Application {
         food.addNutrient("fiber", fiber);
         food.addNutrient("protein", protein);
         foodData.addFoodItem(food);
+        layout.setLeft(getFoodList());
         alertWindow.close();
       }
 
