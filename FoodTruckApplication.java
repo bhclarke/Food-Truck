@@ -240,15 +240,23 @@ public class FoodTruckApplication extends Application {
       nutrientField.appendText(meal.getNutrientString());
     });
 
-    // Add all to grid
-    GridPane.setConstraints(allFoodTable, 0, 0, 1, 1);
-    GridPane.setConstraints(toggleButtonBox, 1, 0, 1, 1);
-    GridPane.setConstraints(mealFoodTable, 2, 0, 1, 1);
-    GridPane.setConstraints(analyzeMealButton, 2, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
-    GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
+    VBox nutData = getNutritionForm("Meal data for " + meal.getMealName(),meal.getCal(),meal.getFat(),
+    		meal.getCarb(),meal.getFiber(),meal.getProtein());
 
+    // Add all to grid
+    GridPane.setConstraints(allFoodTable, 0, 1, 1, 1);
+    GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
+    GridPane.setConstraints(mealFoodTable, 2, 1, 1, 1);
+    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
+    //GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
+
+    /*
     grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
         nutrientField);
+	*/
+    GridPane.setConstraints(nutData, 0, 0, 3, 1);
+    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
+            nutData);
 
     return grid;
   }
@@ -299,6 +307,10 @@ public class FoodTruckApplication extends Application {
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
     foodTable.setMinWidth(400);
 
+    int counted = foodData.getAllFoodItems().size();
+    Label countL = new Label();
+    countL.setText("Total: " + counted);
+    
     // Define Search Field
     TextField input = new TextField();
     input.setMaxHeight(20);
@@ -313,8 +325,11 @@ public class FoodTruckApplication extends Application {
             .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         foodTable.setItems(temp); // TODO does this replace or append?
+        countL.setText("Total: " + temp.size());       
       };
     });
+    
+    GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Define Buttons
     Button add = new Button("Add Food Item");
@@ -322,10 +337,6 @@ public class FoodTruckApplication extends Application {
     add.setOnAction(e -> getAddFoodItem());
     rule.setOnAction(e -> getRulePopup());
 
-    int counted = foodData.getAllFoodItems().size();
-    String count = "Total: " + counted;
-    Label countL = new Label(count);
-    GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Add all to grid
     GridPane.setConstraints(foodListLabel, 0, 0, 3, 1);
@@ -379,6 +390,9 @@ public class FoodTruckApplication extends Application {
             layout.setCenter(createEditMeal(newSelection));
             // show meal name in nutrient display
             nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
+            // update the nutrition data for the old selection so that selecting
+            // a new meal and going back to the old meal essentially files whatever changes were made
+            if (oldSelection != null) {oldSelection.analyzeMealData();}
           } else {
             layout.setCenter(getStartCredits());
           }
@@ -396,11 +410,15 @@ public class FoodTruckApplication extends Application {
       
       Stage mealCreationStage = new Stage();
       mealCreationStage.initModality(Modality.APPLICATION_MODAL);
-      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(570);
-      mealCreationStage.setMaxWidth(570); mealCreationStage.setMinHeight(290);
-      mealCreationStage.setMaxHeight(290);
+      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(400);
+      mealCreationStage.setMaxWidth(400); mealCreationStage.setMinHeight(200);
+      mealCreationStage.setMaxHeight(200);
       
       TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
+      Label mealNameInputLabel = new Label("Meal name: ");
+      HBox mealNameAndLabel = new HBox();
+      mealNameAndLabel.getChildren().addAll(mealNameInputLabel, mealNameInput);
+      mealNameAndLabel.setPadding(new Insets(0, 10, 10, 10));
       mealNameInput.setMinHeight(25);
       
       Button closeMealButton = new Button("Close"); 
@@ -436,12 +454,12 @@ public class FoodTruckApplication extends Application {
       
       HBox mealButtonsBox = new HBox();
       mealButtonsBox.getChildren().addAll(acceptMealButton, closeMealButton);
-      mealButtonsBox.setPadding(new Insets(0, 10, 10, 10));
+      mealButtonsBox.setPadding(new Insets(10, 10, 10, 10));
       
       // grid has two elements:
       // row 2 = TextField for the meal name
       // row 3 = HBox for the Accept and Cancel buttons
-      mealCreationGrid.add(mealNameInput, 2, 2); mealCreationGrid.add(mealButtonsBox, 3, 3);
+      mealCreationGrid.add(mealNameAndLabel, 2, 2); mealCreationGrid.add(mealButtonsBox, 2, 3);
             
       Scene mealScene = new Scene(mealCreationGrid);
       mealScene.getStylesheets().add("FoodTruckMain.css");
@@ -552,6 +570,9 @@ public class FoodTruckApplication extends Application {
     Label header = new Label();
     header.setText(name);
     header.setMinHeight(25);
+    header.getStyleClass().add("label-tableHeader");
+    
+    Label spacer = new Label();
 
     Label calLabel = new Label();
     calLabel.setText("Calories: ");
@@ -605,7 +626,10 @@ public class FoodTruckApplication extends Application {
     alertGrid.add(proLabel, 2, 1);
     alertGrid.add(proInput, 3, 1);
 
+    
     VBox vbox = new VBox();
+    vbox.getChildren().addAll(header,alertGrid,spacer);
+    
     return vbox;
 
   }
@@ -710,73 +734,152 @@ public class FoodTruckApplication extends Application {
       double fiber = 0.0;
       double protein = 0.0;
 
-      // check each field for validation
+      
+      // validate name
       if (nameInput.getText().compareTo("") == 0) {
         nameLabel.setTextFill(Color.RED);
         nameLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-      } else {
+  		getErrorMessage("Add Food Item","Error: Name must be specified.");
+      } 
+      else {
         nameLabel.setTextFill(Color.BLACK);
         nameLabel.setStyle("-fx-font-weight: normal");
       }
 
+      // validate ids
       if (idInput.getText().compareTo("") == 0) {
         idLabel.setTextFill(Color.RED);
         idLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: ID must be specified.");
       } else {
         idLabel.setTextFill(Color.BLACK);
         idLabel.setStyle("-fx-font-weight: normal");
       }
+      
+      for (FoodItem f : foodData.getAllFoodItems()) {
+    	  if (f.getID().equals(idInput.getText())) {
+    	      idLabel.setTextFill(Color.RED);
+    	      idLabel.setStyle("-fx-font-weight: bold");
+    		  failedParse = true;
+      		getErrorMessage("Add Food Item","Error: ID must be unique.");
+    	  }
+      }
 
+      // validate calories
       try {
         calories = Double.parseDouble(calInput.getText());
-        calLabel.setTextFill(Color.BLACK);
-        calLabel.setStyle("-fx-font-weight: normal");
+        if (calories < 0) {
+        	failedParse = true;
+        	calLabel.setTextFill(Color.RED);
+            calLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	calLabel.setTextFill(Color.BLACK);
+            calLabel.setStyle("-fx-font-weight: normal");
+        }
+      
       } catch (NumberFormatException f) {
         calLabel.setTextFill(Color.RED);
         calLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate fat
       try {
         fat = Double.parseDouble(fatInput.getText());
-        fatLabel.setTextFill(Color.BLACK);
-        fatLabel.setStyle("-fx-font-weight: normal");
+        if (fat < 0) {
+        	failedParse = true;
+        	fatLabel.setTextFill(Color.RED);
+            fatLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	fatLabel.setTextFill(Color.BLACK);
+            fatLabel.setStyle("-fx-font-weight: normal");
+        }
+      
       } catch (NumberFormatException f) {
         fatLabel.setTextFill(Color.RED);
         fatLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate carbohydrates
       try {
         carbohydrates = Double.parseDouble(carbInput.getText());
-        carbLabel.setTextFill(Color.BLACK);
-        carbLabel.setStyle("-fx-font-weight: normal");
+        if (carbohydrates < 0) {
+        	failedParse = true;
+        	carbLabel.setTextFill(Color.RED);
+            carbLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+        	carbLabel.setTextFill(Color.BLACK);
+            carbLabel.setStyle("-fx-font-weight: normal");
+        }
+        
       } catch (NumberFormatException f) {
         carbLabel.setTextFill(Color.RED);
         carbLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate fiber
       try {
         fiber = Double.parseDouble(fiberInput.getText());
-        fiberLabel.setTextFill(Color.BLACK);
-        fiberLabel.setStyle("-fx-font-weight: normal");
+        if (fiber < 0) {
+        	failedParse = true;
+            fiberLabel.setTextFill(Color.RED);
+            fiberLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+            fiberLabel.setTextFill(Color.BLACK);
+            fiberLabel.setStyle("-fx-font-weight: normal");
+        }
+        
       } catch (NumberFormatException f) {
         fiberLabel.setTextFill(Color.RED);
         fiberLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
+      // validate protein
       try {
         protein = Double.parseDouble(proInput.getText());
-        proLabel.setTextFill(Color.BLACK);
-        proLabel.setStyle("-fx-font-weight: normal");
+        if (protein < 0) {
+        	failedParse = true;
+            proLabel.setTextFill(Color.RED);
+            proLabel.setStyle("-fx-font-weight: bold");
+      		getErrorMessage("Add Food Item","Error: Nutrition values "
+      				+ "must be greater than zero.");
+        }
+        
+        else {
+            proLabel.setTextFill(Color.BLACK);
+            proLabel.setStyle("-fx-font-weight: normal");
+        }
+
       } catch (NumberFormatException f) {
         proLabel.setTextFill(Color.RED);
         proLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // check if validation fails

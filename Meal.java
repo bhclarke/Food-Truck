@@ -96,5 +96,25 @@ public class Meal extends FoodData {
   public String getNutrientString() {
     return nutrientString;
   }
+	  
+  public Double getCal() {
+	  return mealNutrients.get("calories");
+  }
+	  
+  public Double getFat() {
+	  return mealNutrients.get("fat");
+  }
+	  
+  public Double getCarb() {
+	  return mealNutrients.get("carbohydrate");
+  }
+	  
+  public Double getFiber() {
+	  return mealNutrients.get("fiber");
+  }
+	  
+  public Double getProtein() {
+	  return mealNutrients.get("protein");
+  }
 
 }
