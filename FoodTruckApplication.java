@@ -120,7 +120,6 @@ public class FoodTruckApplication extends Application {
   /**
    * Create layout for the initial start of the application
    * 
-   * @return BorderPane. You can change the return type.
    */
   private void createStart() {
     layout = new BorderPane();
@@ -135,7 +134,7 @@ public class FoodTruckApplication extends Application {
   /**
    * Create layout for the edit meal area of the application
    * 
-   * @return BorderPane. You can change the return type.
+   * @return meal grid
    */
   private GridPane createEditMeal(Meal meal) {
     // Define grid and settings
@@ -273,7 +272,7 @@ public class FoodTruckApplication extends Application {
    * Create view of food list that includes the filter and search functionality. This will be added
    * to the left-hand area of each scene.
    * 
-   * @return VBox. You can change the return type.
+   * @return food list grid
    */
   private GridPane getFoodList() {
     // Define grid and settings
@@ -374,7 +373,7 @@ public class FoodTruckApplication extends Application {
   
   /**
    * Center pane when a food item is selected from the overall food item list
-   * @return
+   * @return grid
    */
   private GridPane showFoodItemData(FoodItem fi) {
 	  GridPane foodItemNutritionForm = new GridPane();
@@ -389,7 +388,7 @@ public class FoodTruckApplication extends Application {
   /**
    * Use a GridPane to display the meal list, similar to how we're displaying the food list.
    * 
-   * @return
+   * @return meal list grid
    */
   private GridPane getMealList() {
 
