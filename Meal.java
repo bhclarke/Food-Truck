@@ -2,6 +2,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Groups a list of foodItems as a meal. Can add and remove food and analyze nutritional data.
+ * 
+ * @authors Riley, Brett Ryan, Jerald, Jamison
+ */
 public class Meal extends FoodData {
 
   private FoodItem foodItem = null;
@@ -15,7 +20,7 @@ public class Meal extends FoodData {
                                                                     // nutrientString
 
   /**
-   * Default constructor -- foodItemList is defined in FoodData
+   * Constructor to create meal, a list of food items added from the food data list
    */
   public Meal() {}
 
@@ -26,8 +31,7 @@ public class Meal extends FoodData {
 
   /**
    * Given a list of foodItems in a Meal object, adds nutrition values in a long string. The form of
-   * the string is Nutrition Label: Nutrition Value TODO: may want to change this to void return
-   * type and to clear out nutrientString on each run
+   * the string is Nutrition Label: Nutrition Value
    * 
    * @return
    */
@@ -40,8 +44,6 @@ public class Meal extends FoodData {
       foodItem = super.getAllFoodItems().get(i); // look at each food item
       nutrients = foodItem.getNutrients(); // get the nutrient map - a new one is created for each
                                            // food item in meal
-      // TODO: remove the following line -- this just includes the name of all food items in the
-      // meal (for troubleshooting)
       //nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
       for (String label : nutrients.keySet()) {
         if (mealNutrients.containsKey(label)) {
@@ -80,9 +82,7 @@ public class Meal extends FoodData {
   }
 
   /**
-   * Creates the meal name string. To be called right before adding the meal to the meal list. TODO:
-   * Figure out a good naming convention for meals -- right now, it just returns the first 4 chars
-   * of each FoodItem in foodItemList
+   * Creates the meal name string. To be called right before adding the meal to the meal list.
    */
   public void createMealName() {
     for (FoodItem fi : super.getAllFoodItems()) {
