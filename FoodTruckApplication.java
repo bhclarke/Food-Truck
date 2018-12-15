@@ -375,6 +375,8 @@ public class FoodTruckApplication extends Application {
    */
   private GridPane showFoodItemData(FoodItem fi) {
 	  GridPane foodItemNutritionForm = new GridPane();
+	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
+	  
 	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
 	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
 	  foodItemNutritionForm.add(nutData, 1, 1);
