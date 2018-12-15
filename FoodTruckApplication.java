@@ -280,25 +280,31 @@ public class FoodTruckApplication extends Application {
     foodListLabel.getStyleClass().add("label-tableHeader");
 
     // Define Food Table
-    ObservableList<FoodItem> foodList = FXCollections.observableArrayList();
-    for (FoodItem fi : foodData.getAllFoodItems()) {
-      foodList.add(fi);
-    }
-
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     foodNames.setSortType(TableColumn.SortType.ASCENDING);
     
+    // apply filters if set
+    ObservableList<FoodItem> foodList = foodData.filterByNutrients(rulesData).stream()
+        .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
+        .collect(Collectors.toCollection(FXCollections::observableArrayList));
     foodTable.setItems(foodList);
+    
+    // count number of food items
+    int counted = foodList.size();
+    Label countL = new Label();
+    countL.setText("Total: " + counted);
+    
+    //foodTable.setItems(foodList);
     foodTable.getColumns().add(foodNames);
     foodTable.getSortOrder().add(foodNames);
     foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
     foodTable.setMinWidth(400);
 
-    int counted = foodData.getAllFoodItems().size();
-    Label countL = new Label();
-    countL.setText("Total: " + counted);
+    
+    
+        
     
     // Define Search Field
     TextField input = new TextField();
@@ -342,13 +348,6 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
 
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
-    
-    // apply filters if set
-    ObservableList<FoodItem> temp = foodData.filterByNutrients(rulesData).stream()
-        .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
-        .collect(Collectors.toCollection(FXCollections::observableArrayList));
-    foodTable.setItems(temp); 
-    countL.setText("Total: " + temp.size());    
     
     foodTable.getSelectionModel().selectedItemProperty()
 	.addListener((obs, oldV, newV) -> {
