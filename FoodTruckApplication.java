@@ -950,6 +950,7 @@ public class FoodTruckApplication extends Application {
         food.addNutrient("fiber", fiber);
         food.addNutrient("protein", protein);
         foodData.addFoodItem(food);
+        layout.setLeft(getFoodList());
         alertWindow.close();
       }
       else if (!invalidId) {
