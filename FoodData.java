@@ -75,6 +75,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         FoodItem food = new FoodItem(commaSplit[0], commaSplit[1]);
         for (int i = 3; i < commaSplit.length; i = i + 2) {
           double nut = Double.parseDouble(commaSplit[i]);
+	  if (nut < 0) nut = 0;
           food.addNutrient(commaSplit[i - 1].toLowerCase(), nut);
         }
         
