@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
    * Constructor to create food data list
    */
   public FoodData() {
+
     foodItemList = new ArrayList<FoodItem>();
     indexes = new HashMap<String, BPTree<Double, String>>();
     
@@ -40,7 +40,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
 
   }
 
-
   /**
    * Loads data from file to the food list
    */
@@ -51,7 +50,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
     String oneLineOfData = null;
 
     try {
-      // Read data from each file line
+    	// Read data from each file line
       inputFile = new File(filePath);
       input = new Scanner(inputFile);
       while (input.hasNextLine()) {
@@ -63,25 +62,30 @@ public class FoodData implements FoodDataADT<FoodItem> {
         }
 
         String[] commaSplit = oneLineOfData.split(",");
+        
         // Handle null ids
         if (commaSplit[0].length() == 0) {
           continue;
         }
 
-        // add new food item with nutrients
+        // Add new food item with nutrients
         FoodItem food = new FoodItem(commaSplit[0], commaSplit[1]);
         for (int i = 3; i < commaSplit.length; i = i + 2) {
           double nut = Double.parseDouble(commaSplit[i]);
-	  // Handle negative values
-	  if (nut < 0) nut = 0;
+          
+          // Handle negative nutrition values
+	      if (nut < 0) nut = 0;
           food.addNutrient(commaSplit[i - 1].toLowerCase(), nut);
         }
-       
+        
+        // add food item to list
         foodItemList.add(food);
         indexFoodItem(food);
 
       }
-    } catch (Exception e) {}
+    } catch (Exception e) {
+       System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -98,14 +102,10 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }
 
   /**
-   * Filters food list by nutrition rules
+   * Filters food list by nutrients
    */
   @Override
-  public List<FoodItem> filterByNutrients(List<String> inputRules) {
-	  //Protect the input list of rules
-	  List<String> rules = new ArrayList<String>();
-	  rules.addAll(inputRules);
-	  
+  public List<FoodItem> filterByNutrients(List<String> rules) {
 	  // Handle cases with no rules passed
 	  if (rules == null || rules.isEmpty()) {
 		  return foodItemList;
@@ -152,6 +152,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
     return foodItemList;
   }
 
+
   /**
    * Save food data list to a file
    */
@@ -166,16 +167,19 @@ public class FoodData implements FoodDataADT<FoodItem> {
       writer = new PrintStream(outputFile);
 
       for (int i = 0; i < foodItemList.size(); i++) {
+    	// Retrieve food item from list
         FoodItem f = foodItemList.get(i);
+        
+        //  Write food information to file
         String id = f.getID();
         String name = f.getName();
         writer.println(id + "," + name + ",calories," + f.getNutrientValue("calories") + ",fat,"
             + f.getNutrientValue("fat") + ",carbohydrate," + f.getNutrientValue("carbohydrate")
-            + "fiber," + f.getNutrientValue("fiber") + ",protein," + f.getNutrientValue("protein"));
+            + ",fiber," + f.getNutrientValue("fiber") + ",protein," + f.getNutrientValue("protein"));
       }
 
     } catch (IOException e) {
-      // System.out.println("WARNING: Some kind of IO error occurred");
+      System.out.println("WARNING: Some kind of IO error occurred");
     } finally {
       if (writer != null) // if statement checks for null pointer
         writer.close(); // close the file
@@ -184,7 +188,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }
   
   /**
-   * Add food item to nutrient index
+   * Add food to nutrient index
    */
   private void indexFoodItem (FoodItem foodItem) {
 	  String [] allNutrients = {"calories", "fat", "carbohydrate", "fiber", "protein"};
@@ -202,12 +206,17 @@ public class FoodData implements FoodDataADT<FoodItem> {
   }	// indexFoodItem
   
   /**
-   * Filter food items in the list by a nutrition rule
+   * Filters food data list by nutrition
+   * @return filter result
    */
   private Set<String> filterOneNutrient (String rule) {
 	String current = rule;
+	
+	// Specify nutrient
 	String nutrient = current.substring(0, current.indexOf(" ")).toLowerCase();
 	current = current.substring(current.indexOf(" ") + 1);
+	
+	// Specify logic
 	String logic = current.substring(0, current.indexOf(" "));
 	current = current.substring(current.indexOf(" ") + 1);
 	String valueString = current;
