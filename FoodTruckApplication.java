@@ -84,7 +84,7 @@ public class FoodTruckApplication extends Application {
   TextArea nutrientField = new TextArea();
   
   // Make foodTable accessible from any scene
-  TableView<FoodItem> foodTable = new TableView<>();
+  TableView<FoodItem> foodTable; // = new TableView<>();
 
   public static void main(String[] args) {
     launch(args);
@@ -365,6 +365,7 @@ public class FoodTruckApplication extends Application {
 
 
     // Define Labels
+    foodTable = new TableView<>();
     Label foodListLabel = new Label("Food List");
     foodListLabel.getStyleClass().add("label-tableHeader");
 
