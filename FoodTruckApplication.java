@@ -445,6 +445,7 @@ public class FoodTruckApplication extends Application {
       
       TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
       Label mealNameInputLabel = new Label("Meal name: ");
+      mealNameInputLabel.setMinHeight(25);
       HBox mealNameAndLabel = new HBox();
       mealNameAndLabel.getChildren().addAll(mealNameInputLabel, mealNameInput);
       mealNameAndLabel.setPadding(new Insets(0, 10, 10, 10));
