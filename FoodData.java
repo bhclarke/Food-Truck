@@ -104,7 +104,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
    */
   @Override
   public List<FoodItem> filterByNutrients(List<String> inputRules) {
-	  //Protect the passed list of rules
+	  //Protect the input list of rules
 	  List<String> rules = new ArrayList<String>();
 	  rules.addAll(inputRules);
 	  
