@@ -607,7 +607,7 @@ public class FoodTruckApplication extends Application {
     calLabel.setMinHeight(25);
 
     TextField calInput = new TextField();
-    calInput.setMinWidth(200);
+    calInput.setMinWidth(175);
     calInput.setMinHeight(25);
     calInput.setText(Double.toString(calories));
     calInput.setDisable(true);
@@ -631,7 +631,7 @@ public class FoodTruckApplication extends Application {
     fiberLabel.setMinHeight(25);
 
     TextField fiberInput = new TextField();
-    fiberInput.setMinWidth(200);
+    fiberInput.setMinWidth(175);
     fiberInput.setMinHeight(25);
     fiberInput.setText(Double.toString(fiber));
     fiberInput.setDisable(true);
