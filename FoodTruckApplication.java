@@ -137,7 +137,7 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(10, 10, 10, 10));
     grid.setVgap(8);
     grid.setHgap(10);
-    grid.setAlignment(Pos.CENTER);
+    grid.setAlignment(Pos.TOP_CENTER);
 
     // Define Food and Meal Data
     List<FoodItem> mealList = meal.getAllFoodItems();
@@ -227,20 +227,20 @@ public class FoodTruckApplication extends Application {
     //build nutrition information box
         
     if(meal.getCal() != null) {
-    	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
+    	nutData = getNutritionForm("Meal Data " + meal.getMealName(), meal.getCal(), meal.getFat(),
         		meal.getProtein(),meal.getCarb(),meal.getFiber());
       }else {
-    	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
       }
     
     // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's
     // nutrients
     analyzeMealButton.setOnAction((event) -> {
       meal.analyzeMealData();
-      nutrientField.setText("Meal data for " + meal.getMealName() + "\n");  // show meal name in nutrient display
+      nutrientField.setText("Meal Data: " + meal.getMealName() + "\n");  // show meal name in nutrient display
       nutrientField.appendText(meal.getNutrientString());
       if(meal.getCal() != null) {
-      	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
+      	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), meal.getCal(), meal.getFat(),
           		meal.getProtein(),meal.getCarb(),meal.getFiber());
         }else {
       	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
