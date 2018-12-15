@@ -394,7 +394,7 @@ public class FoodTruckApplication extends Application {
     mealGrid.setHgap(5);
 
     // Define Labels
-    Label mealGridLabel = new Label("Meal list");
+    Label mealGridLabel = new Label("Meal List");
     mealGridLabel.getStyleClass().add("label-tableHeader");
 
     // Define Meal Table
@@ -1002,13 +1002,14 @@ public class FoodTruckApplication extends Application {
 		}else if (logic.compareTo("<=") == 0) {
 			logic = "\u2264"; // unicode for <=
 		}else  if (logic.compareTo("==") == 0){
-			logic = "==";
+			logic = "=";
 		}
 		
 		ruleListObs.add(nut + " " + logic + " " + value);
     }
     
     ListView<String> listView = new ListView<String>(ruleListObs);
+    listView.getSelectionModel().clearSelection();	// No default selection
     listView.setMaxHeight(100);
 
     Button accept = new Button("Accept");
