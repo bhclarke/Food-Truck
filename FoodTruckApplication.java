@@ -682,7 +682,7 @@ public class FoodTruckApplication extends Application {
     fiberInput.setDisable(true);
 
     Label proLabel = new Label();
-    proLabel.setText("Protien: ");
+    proLabel.setText("Protein: ");
 
     TextField proInput = new TextField();
     proInput.setText(Double.toString(protein));
@@ -712,9 +712,6 @@ public class FoodTruckApplication extends Application {
    * Pop-up for adding new food item
    */
   private void getAddFoodItem() {
-    // clear center activity
-    layout.setCenter(getStartCredits());
-    
     // set up window
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
@@ -784,7 +781,7 @@ public class FoodTruckApplication extends Application {
     fiberInput.setText("0");
 
     Label proLabel = new Label();
-    proLabel.setText("Protien: ");
+    proLabel.setText("Protein: ");
 
     TextField proInput = new TextField();
     proInput.setText("0");
@@ -821,10 +818,12 @@ public class FoodTruckApplication extends Application {
       }
 
       // validate ids
+      boolean invalidId = false;
       if (idInput.getText().compareTo("") == 0) {
         idLabel.setTextFill(Color.RED);
         idLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
+        invalidId = true;
   		getErrorMessage("Add Food Item","Error: ID must be specified.");
       } else {
         idLabel.setTextFill(Color.BLACK);
@@ -836,6 +835,7 @@ public class FoodTruckApplication extends Application {
     	      idLabel.setTextFill(Color.RED);
     	      idLabel.setStyle("-fx-font-weight: bold");
     		  failedParse = true;
+    		  invalidId = true;
       		getErrorMessage("Add Food Item","Error: ID must be unique.");
     	  }
       }
@@ -847,8 +847,6 @@ public class FoodTruckApplication extends Application {
         	failedParse = true;
         	calLabel.setTextFill(Color.RED);
             calLabel.setStyle("-fx-font-weight: bold");
-      		getErrorMessage("Add Food Item","Error: Nutrition values "
-      				+ "must be greater than zero.");
         }
         
         else {
@@ -860,7 +858,6 @@ public class FoodTruckApplication extends Application {
         calLabel.setTextFill(Color.RED);
         calLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // validate fat
@@ -870,8 +867,6 @@ public class FoodTruckApplication extends Application {
         	failedParse = true;
         	fatLabel.setTextFill(Color.RED);
             fatLabel.setStyle("-fx-font-weight: bold");
-      		getErrorMessage("Add Food Item","Error: Nutrition values "
-      				+ "must be greater than zero.");
         }
         
         else {
@@ -883,7 +878,6 @@ public class FoodTruckApplication extends Application {
         fatLabel.setTextFill(Color.RED);
         fatLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // validate carbohydrates
@@ -893,8 +887,6 @@ public class FoodTruckApplication extends Application {
         	failedParse = true;
         	carbLabel.setTextFill(Color.RED);
             carbLabel.setStyle("-fx-font-weight: bold");
-      		getErrorMessage("Add Food Item","Error: Nutrition values "
-      				+ "must be greater than zero.");
         }
         
         else {
@@ -906,7 +898,6 @@ public class FoodTruckApplication extends Application {
         carbLabel.setTextFill(Color.RED);
         carbLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // validate fiber
@@ -916,8 +907,6 @@ public class FoodTruckApplication extends Application {
         	failedParse = true;
             fiberLabel.setTextFill(Color.RED);
             fiberLabel.setStyle("-fx-font-weight: bold");
-      		getErrorMessage("Add Food Item","Error: Nutrition values "
-      				+ "must be greater than zero.");
         }
         
         else {
@@ -929,7 +918,6 @@ public class FoodTruckApplication extends Application {
         fiberLabel.setTextFill(Color.RED);
         fiberLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // validate protein
@@ -939,8 +927,6 @@ public class FoodTruckApplication extends Application {
         	failedParse = true;
             proLabel.setTextFill(Color.RED);
             proLabel.setStyle("-fx-font-weight: bold");
-      		getErrorMessage("Add Food Item","Error: Nutrition values "
-      				+ "must be greater than zero.");
         }
         
         else {
@@ -952,7 +938,6 @@ public class FoodTruckApplication extends Application {
         proLabel.setTextFill(Color.RED);
         proLabel.setStyle("-fx-font-weight: bold");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Nutrition values must be numeric.");
       }
 
       // check if validation fails
@@ -964,8 +949,11 @@ public class FoodTruckApplication extends Application {
         food.addNutrient("fiber", fiber);
         food.addNutrient("protein", protein);
         foodData.addFoodItem(food);
-        layout.setLeft(getFoodList());
         alertWindow.close();
+      }
+      else if (!invalidId) {
+    		getErrorMessage("Add Food Item","Error: Nutrition values "
+    				+ "must be numeric and greater than zero.");
       }
 
     });
@@ -1003,7 +991,6 @@ public class FoodTruckApplication extends Application {
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
   }
-
 
   /**
    * Popup for rule editor
