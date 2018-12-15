@@ -2,8 +2,11 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -19,7 +22,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
   private List<FoodItem> foodItemList;
 
   // Map of nutrients and their corresponding index
-  private HashMap<String, BPTree<Double, FoodItem>> indexes;
+  private HashMap<String, BPTree<Double, String>> indexes;
 
 
   /**
@@ -29,12 +32,12 @@ public class FoodData implements FoodDataADT<FoodItem> {
     // TODO : Complete
 
     foodItemList = new ArrayList<FoodItem>();
-    indexes = new HashMap<String, BPTree<Double, FoodItem>>();
+    indexes = new HashMap<String, BPTree<Double, String>>();
     
     // Set up indices for nutrients
     String [] allNutrients = {"calories", "fat", "carbohydrate", "fiber", "protein"};
     for (String currentNutrient : allNutrients) {
-    	indexes.put(currentNutrient, new BPTree<Double, FoodItem>(3));	//For now try branching factor of 3
+    	indexes.put(currentNutrient, new BPTree<Double, String>(3));	//For now try branching factor of 3
     }
 
   }
@@ -74,13 +77,14 @@ public class FoodData implements FoodDataADT<FoodItem> {
           double nut = Double.parseDouble(commaSplit[i]);
           food.addNutrient(commaSplit[i - 1].toLowerCase(), nut);
         }
-
+        
+        
         foodItemList.add(food);
         indexFoodItem(food);
 
       }
     } catch (Exception e) {
-      // System.out.println(e.getMessage());
+       System.out.println(e.getMessage());
     }
   }
 
@@ -106,8 +110,33 @@ public class FoodData implements FoodDataADT<FoodItem> {
    */
   @Override
   public List<FoodItem> filterByNutrients(List<String> rules) {
-    // TODO : Complete
-    return null;
+	  // Handle cases with no rules passed
+	  if (rules == null || rules.isEmpty()) {
+		  return foodItemList;
+	  }
+	  
+	  // Use the first rule passed to create the base set
+	  String baseRule = rules.get(0);
+	  rules.remove(0);
+	  Set<String> baseIdSet = filterOneNutrient(baseRule);
+	  if (baseIdSet.isEmpty()) {
+		  return new ArrayList<FoodItem>();
+	  }
+	  
+	  // Use a stream to intersect the sets resulting from any remaining rules
+	  Set<String> resultSet = rules.stream()
+			  						.map(rule -> filterOneNutrient(rule))
+			  						.reduce(baseIdSet, (base,test) -> {
+			  							base.retainAll(test);
+			  							return base;
+			  						});
+			  						
+	  // Transform stream back to a list of foodItems
+	  List<FoodItem> resultList = foodItemList.stream()
+			  						.filter(item -> resultSet.contains(item.getID()))
+			  						.collect(Collectors.toList());
+
+    return resultList;
   }
 
   /*
@@ -172,8 +201,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
 			  continue;
 		  }
 		  Double nutrientValue = foodItem.getNutrientValue(currentNutrient);
-		  if (nutrientValue != 0) {
-			  indexes.get(currentNutrient).insert(nutrientValue, foodItem);
+		  if (nutrientValue >= 0) {
+			  indexes.get(currentNutrient).insert(nutrientValue, foodItem.getID());
 		  }
 	  }
 	  return;
@@ -184,9 +213,9 @@ public class FoodData implements FoodDataADT<FoodItem> {
    * @param rule
    * @return
    */
-  private List<FoodItem> filterOneNutrient (String rule) {
+  private Set<String> filterOneNutrient (String rule) {
 	String current = rule;
-	String nutrient = current.substring(0, current.indexOf(" "));
+	String nutrient = current.substring(0, current.indexOf(" ")).toLowerCase();
 	current = current.substring(current.indexOf(" ") + 1);
 	String logic = current.substring(0, current.indexOf(" "));
 	current = current.substring(current.indexOf(" ") + 1);
@@ -197,19 +226,25 @@ public class FoodData implements FoodDataADT<FoodItem> {
 	try {
 		value = Double.parseDouble(valueString);
 	} catch (NumberFormatException f) {
-		return new ArrayList<FoodItem>();	//Invalid rule, return empty list
+		return new HashSet<String>();	//Invalid rule, return empty set
 	}
 	
-	BPTree<Double, FoodItem> nutrientIndex = indexes.get(nutrient);
+	BPTree<Double, String> nutrientIndex = indexes.get(nutrient);
 	if (nutrientIndex == null || value == null) {
-		return new ArrayList<FoodItem>();
+		return new HashSet<String>();
 	}
 	
-	List<FoodItem> result = nutrientIndex.rangeSearch(value, logic);
-	if (result == null) {
-		result = new ArrayList<FoodItem>();
+	List<String> indexResult = nutrientIndex.rangeSearch(value, logic);
+	if (indexResult == null) {
+		return new HashSet<String>();
 	}
-	return result;
+	
+	// Make resulting list into a set
+	Set<String> resultSet = new HashSet<String>();
+	resultSet.addAll(indexResult);
+	
+	return resultSet;
+
   } // FilterOneNutrient
 
   public static void main(String[] args) {
