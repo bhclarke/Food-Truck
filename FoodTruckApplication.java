@@ -483,7 +483,7 @@ public class FoodTruckApplication extends Application {
     	  
       });
       
-      HBox mealButtonsBox = new HBox();
+      HBox mealButtonsBox = new HBox(8);
       mealButtonsBox.getChildren().addAll(acceptMealButton, closeMealButton);
       mealButtonsBox.setPadding(new Insets(10, 10, 10, 10));
       
