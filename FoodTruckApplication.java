@@ -137,6 +137,7 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(10, 10, 10, 10));
     grid.setVgap(8);
     grid.setHgap(10);
+    grid.setAlignment(Pos.CENTER);
 
     // Define Food and Meal Data
     List<FoodItem> mealList = meal.getAllFoodItems();
@@ -242,7 +243,7 @@ public class FoodTruckApplication extends Application {
       	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
           		meal.getProtein(),meal.getCarb(),meal.getFiber());
         }else {
-      	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+      	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
         }
       GridPane.setConstraints(nutData, 0, 0, 3, 1);
       grid.getChildren().set(4, nutData);
@@ -354,10 +355,9 @@ public class FoodTruckApplication extends Application {
     foodTable.getSelectionModel().selectedItemProperty()
 	.addListener((obs, oldV, newV) -> {
 		if (newV != null) {
-			layout.setCenter(showFoodItemData(newV)); 
-			nutrientField.setText("Nutrition data for " + newV.getName());
 			newV.getItemNutrition();
-			nutrientField.appendText("\n" + newV.getNutrientString());
+			mealTable.getSelectionModel().clearSelection();
+			layout.setCenter(showFoodItemData(newV));
 		} else {
 			layout.setCenter(getStartCredits());
 		}
@@ -374,7 +374,7 @@ public class FoodTruckApplication extends Application {
 	  GridPane foodItemNutritionForm = new GridPane();
 	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
 	  
-	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
+	  VBox nutData = getNutritionForm("Nutrition Data: " + fi.getName(),fi.getCal(),fi.getFat(),
 	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
 	  foodItemNutritionForm.add(nutData, 1, 1);
 	  return foodItemNutritionForm;
@@ -427,14 +427,6 @@ public class FoodTruckApplication extends Application {
           }
 
         });
-    
-    foodTable.getSelectionModel().selectedItemProperty()
-    	.addListener((obs, oldV, newV) -> {
-    		if (newV != null) {
-    			mealTable.getSelectionModel().clearSelection();
-    			layout.setCenter(showFoodItemData(newV));
-    		}
-    	});
 
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
@@ -462,6 +454,7 @@ public class FoodTruckApplication extends Application {
       Button acceptMealButton = new Button("Accept"); 
       acceptMealButton.setDisable(true);  // initially disabled -- only enable if there is a meal name
       acceptMealButton.getStyleClass().add("button-affirmative");
+      acceptMealButton.setDefaultButton(true);  // binds Enter key to Accept buttton
       closeMealButton.getStyleClass().add("button-negative");
       closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
       
@@ -616,7 +609,7 @@ public class FoodTruckApplication extends Application {
     calLabel.setMinHeight(25);
 
     TextField calInput = new TextField();
-    calInput.setMinWidth(200);
+    calInput.setMinWidth(175);
     calInput.setMinHeight(25);
     calInput.setText(Double.toString(calories));
     calInput.setDisable(true);
@@ -640,7 +633,7 @@ public class FoodTruckApplication extends Application {
     fiberLabel.setMinHeight(25);
 
     TextField fiberInput = new TextField();
-    fiberInput.setMinWidth(200);
+    fiberInput.setMinWidth(175);
     fiberInput.setMinHeight(25);
     fiberInput.setText(Double.toString(fiber));
     fiberInput.setDisable(true);
@@ -752,6 +745,7 @@ public class FoodTruckApplication extends Application {
     proInput.setText("0");
 
     Button acceptButton = new Button("Accept");
+    acceptButton.setDefaultButton(true);
     Button closeButton = new Button("Close");
 
     // Button style classes
@@ -1147,6 +1141,7 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(50, 50, 200, 50));
     grid.setVgap(8);
     grid.setHgap(10);
+    grid.setAlignment(Pos.CENTER);
 
     // import logo and add to grid
     String imagePath = "file:food-truck-logo.png";
