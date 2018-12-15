@@ -17,10 +17,6 @@ public class FoodItem {
     // Map of nutrients and value.
     private HashMap<String, Double> nutrients;
     
-    private String nutrientString;
-    
-    //private HashMap<String, Double> foodItemNutrients = new HashMap<String, Double>();
-    
     /**
      * Constructor
      * @param name name of the food item
@@ -82,38 +78,5 @@ public class FoodItem {
           return nutrients.get(name);
         }
         return 0;
-    }
-    
-    public void getItemNutrition() {
-    	HashMap<String, Double> nutritionInfo = new HashMap<String, Double>();
-    	nutrientString = new String();
-    	nutritionInfo = this.getNutrients();
-    	for (String label : nutritionInfo.keySet()) {
-    		nutrientString += label.toUpperCase() + ": " + nutritionInfo.get(label) + "\n";
-    	}
-    }
-    
-    public String getNutrientString() {
-    	return nutrientString;
-    }
-    
-    public Double getCal() {
-  	  return nutrients.get("calories");
-    }
-  	  
-    public Double getFat() {
-  	  return nutrients.get("fat");
-    }
-  	  
-    public Double getCarb() {
-  	  return nutrients.get("carbohydrate");
-    }
-  	  
-    public Double getFiber() {
-  	  return nutrients.get("fiber");
-    }
-  	  
-    public Double getProtein() {
-  	  return nutrients.get("protein");
     }
 }

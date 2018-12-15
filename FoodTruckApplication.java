@@ -360,7 +360,6 @@ public class FoodTruckApplication extends Application {
     foodTable.getSelectionModel().selectedItemProperty()
 	.addListener((obs, oldV, newV) -> {
 		if (newV != null) {
-			newV.getItemNutrition();
 			mealTable.getSelectionModel().clearSelection();
 			layout.setCenter(showFoodItemData(newV));
 		} else {
@@ -379,8 +378,8 @@ public class FoodTruckApplication extends Application {
 	  GridPane foodItemNutritionForm = new GridPane();
 	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
 	  
-	  VBox nutData = getNutritionForm("Nutrition Data: " + fi.getName(),fi.getCal(),fi.getFat(),
-	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
+	  VBox nutData = getNutritionForm("Nutrition Data: " + fi.getName(),fi.getNutrientValue("calories"),fi.getNutrientValue("fat"),
+	    		fi.getNutrientValue("carbohydrate"),fi.getNutrientValue("fiber"),fi.getNutrientValue("protein"));
 	  foodItemNutritionForm.add(nutData, 1, 1);
 	  return foodItemNutritionForm;
   }
