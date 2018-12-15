@@ -67,6 +67,7 @@ public class FoodTruckApplication extends Application {
   BorderPane editMealLayout;
   Scene editMealScene;
   TableView<Meal> mealTable;
+  ObservableList<FoodItem> foodListView;
 
   // Edit Rules Scene
   BorderPane editRuleLayout;
@@ -139,13 +140,14 @@ public class FoodTruckApplication extends Application {
 
     // Define Food and Meal Data
     List<FoodItem> mealList = meal.getAllFoodItems();
-    List<FoodItem> foodList = foodData.getAllFoodItems();
 
-    ObservableList<FoodItem> foodListView = FXCollections.observableArrayList();
+    foodListView = FXCollections.observableArrayList();
     ObservableList<FoodItem> mealListView = FXCollections.observableArrayList();
-    for (FoodItem foodItem : foodList) {
-      foodListView.add(foodItem);
-    }
+    
+    // filter foodListView
+    foodListView = foodData.filterByNutrients(rulesData).stream()
+        .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
+        .collect(Collectors.toCollection(FXCollections::observableArrayList));
     for (FoodItem foodItem : mealList) {
       foodListView.remove(foodItem);
       mealListView.add(foodItem);
@@ -674,6 +676,7 @@ public class FoodTruckApplication extends Application {
    * Pop-up for adding new food item
    */
   private void getAddFoodItem() {
+    layout.setCenter(getStartCredits());
     // set up window
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
@@ -959,6 +962,7 @@ public class FoodTruckApplication extends Application {
    * Popup for rule editor
    */
   private void getRulePopup() {
+    layout.setCenter(getStartCredits());
     Stage alertWindow = new Stage();
     alertWindow.initModality(Modality.APPLICATION_MODAL);
     alertWindow.setTitle("Set Filter Rule");
