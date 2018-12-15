@@ -62,7 +62,7 @@ public class FoodTruckApplication extends Application {
   // Edit Food
   BorderPane editFoodLayout;
   Scene editFoodScene;
-
+  VBox nutData;
   // Edit Meal Scene
   BorderPane editMealLayout;
   Scene editMealScene;
@@ -82,6 +82,9 @@ public class FoodTruckApplication extends Application {
   // Make the TextArea that displays nutrients 
   // accessible from any scene
   TextArea nutrientField = new TextArea();
+  
+  // Make foodTable accessible from any scene
+  TableView<FoodItem> foodTable = new TableView<>();
 
   public static void main(String[] args) {
     launch(args);
@@ -227,9 +230,10 @@ public class FoodTruckApplication extends Application {
     nutrientField.setPrefRowCount(12);
 
     Button analyzeMealButton = new Button("Analyze Meal");
-    meal.analyzeMealData();
+    
     //build nutrition information box
     
+    /*
     GridPane alertGrid = new GridPane();
     alertGrid.setHgap(10);
     alertGrid.setVgap(10);
@@ -302,9 +306,14 @@ public class FoodTruckApplication extends Application {
     alertGrid.add(proLabel, 2, 1);
     alertGrid.add(proInput, 3, 1);
 
+    */
     
-    VBox nutData = new VBox();
-    nutData.getChildren().addAll(header,alertGrid,spacer);
+    if(meal.getCal() != null) {
+    	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
+        		meal.getProtein(),meal.getCarb(),meal.getFiber());
+      }else {
+    	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+      }
     
     // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's
     // nutrients
@@ -312,19 +321,14 @@ public class FoodTruckApplication extends Application {
       meal.analyzeMealData();
       nutrientField.setText("Meal data for " + meal.getMealName() + "\n");  // show meal name in nutrient display
       nutrientField.appendText(meal.getNutrientString());
-      try {
-      	calInput.setText(Double.toString(meal.getCal()));
-      	fatInput.setText(Double.toString(meal.getFat()));
-      	carbInput.setText(Double.toString(meal.getCarb()));
-      	fiberInput.setText(Double.toString(meal.getFiber()));
-      	proInput.setText(Double.toString(meal.getProtein()));
-      }catch (Exception e) {
-      	calInput.setText("0");
-      	fatInput.setText("0");
-      	carbInput.setText("0");
-      	fiberInput.setText("0");
-      	proInput.setText("0");
-      }
+      if(meal.getCal() != null) {
+      	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
+          		meal.getProtein(),meal.getCarb(),meal.getFiber());
+        }else {
+      	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+        }
+      GridPane.setConstraints(nutData, 0, 0, 3, 1);
+      grid.getChildren().set(4, nutData);
     });
 
     // Add all to grid
@@ -332,7 +336,7 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
     GridPane.setConstraints(mealFoodTable, 2, 1, 1, 1);
     GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
-    GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
+    //GridPane.setConstraints(nutrientField, 0, 2, 3, 1); TODO remove this line
 
     /*
     grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
@@ -370,7 +374,6 @@ public class FoodTruckApplication extends Application {
       foodList.add(fi);
     }
 
-    TableView<FoodItem> foodTable = new TableView<>();
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     foodNames.setSortType(TableColumn.SortType.ASCENDING);
@@ -429,8 +432,32 @@ public class FoodTruckApplication extends Application {
         .collect(Collectors.toCollection(FXCollections::observableArrayList));
     foodTable.setItems(temp); 
     countL.setText("Total: " + temp.size());    
-
+    
+    foodTable.getSelectionModel().selectedItemProperty()
+	.addListener((obs, oldV, newV) -> {
+		if (newV != null) {
+			layout.setCenter(showFoodItemData(newV)); // TODO: need a layout to show -- something other than createEditMeal
+			nutrientField.setText("Nutrition data for " + newV.getName());
+			newV.getItemNutrition();
+			nutrientField.appendText("\n" + newV.getNutrientString());
+		} else {
+			layout.setCenter(getStartCredits());
+		}
+	});
+        
     return grid;
+  }
+  
+  /**
+   * Center pane when a food item is selected from the overall food item list
+   * @return
+   */
+  private GridPane showFoodItemData(FoodItem fi) {
+	  GridPane foodItemNutritionForm = new GridPane();
+	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
+	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
+	  foodItemNutritionForm.add(nutData, 1, 1);
+	  return foodItemNutritionForm;
   }
 
   /**
@@ -468,6 +495,7 @@ public class FoodTruckApplication extends Application {
     mealTable.getSelectionModel().selectedItemProperty()
         .addListener((obs, oldSelection, newSelection) -> {
           if (newSelection != null) {
+        	foodTable.getSelectionModel().clearSelection();
             layout.setCenter(createEditMeal(newSelection));
             // show meal name in nutrient display
             nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
@@ -479,6 +507,14 @@ public class FoodTruckApplication extends Application {
           }
 
         });
+    
+    foodTable.getSelectionModel().selectedItemProperty()
+    	.addListener((obs, oldV, newV) -> {
+    		if (newV != null) {
+    			mealTable.getSelectionModel().clearSelection();
+    			layout.setCenter(showFoodItemData(newV));
+    		}
+    	});
 
     Button createMealButton = new Button("Create Meal");
     createMealButton.setOnAction(e -> {
@@ -1044,9 +1080,9 @@ public class FoodTruckApplication extends Application {
 		current = current.substring(current.indexOf(" ") + 1);
 		value = current;
 		if (logic.compareTo(">=") == 0) {		// Requires comparators to be java syntax
-			logic = ">=";
+			logic = "\u2265"; // unicode for >=
 		}else if (logic.compareTo("<=") == 0) {
-			logic = ">=";
+			logic = "\u2264"; // unicode for <=
 		}else  if (logic.compareTo("==") == 0){
 			logic = "==";
 		}

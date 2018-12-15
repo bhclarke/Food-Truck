@@ -75,6 +75,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         FoodItem food = new FoodItem(commaSplit[0], commaSplit[1]);
         for (int i = 3; i < commaSplit.length; i = i + 2) {
           double nut = Double.parseDouble(commaSplit[i]);
+	  if (nut < 0) nut = 0;
           food.addNutrient(commaSplit[i - 1].toLowerCase(), nut);
         }
         
@@ -109,7 +110,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
    * @see skeleton.FoodDataADT#filterByNutrients(java.util.List)
    */
   @Override
-  public List<FoodItem> filterByNutrients(List<String> rules) {
+  public List<FoodItem> filterByNutrients(List<String> inputRules) {
+	  List<String> rules = inputRules;
 	  // Handle cases with no rules passed
 	  if (rules == null || rules.isEmpty()) {
 		  return foodItemList;
