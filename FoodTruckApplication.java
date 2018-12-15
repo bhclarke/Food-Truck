@@ -88,8 +88,6 @@ public class FoodTruckApplication extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    // get starting data
-    //foodData.loadFoodItems("foodItems.csv"); //TODO - remove line
 
     // Set Application Title
     window = primaryStage;
@@ -225,11 +223,7 @@ public class FoodTruckApplication extends Application {
     toggleButtonBox.getChildren().addAll(addButton, removeButton);
 
     // create a text field for displaying nutrient data for each meal
-    //TextArea nutrientField = new TextArea();
     nutrientField.setPrefRowCount(12);
-
-    // an alternative to TextArea is discrete fields to show each nutrient value
-    // TODO: set this up
 
     Button analyzeMealButton = new Button("Analyze Meal");
     meal.analyzeMealData();
@@ -349,16 +343,6 @@ public class FoodTruckApplication extends Application {
             nutData);
 	
     return grid;
-  }
-
-  /**
-   * Create layout for the edit rule area of the application
-   * 
-   * @return BorderPane. You can change the return type.
-   */
-  private BorderPane createEditRule() {
-    // TODO
-    return new BorderPane();
   }
 
   /**
@@ -1118,7 +1102,6 @@ public class FoodTruckApplication extends Application {
     	}
     });
     accept.setOnAction(e -> {
-    	//TODO: add accept action
     	rulesData.clear();
     	String current2;
     	String nut2;
@@ -1184,48 +1167,6 @@ public class FoodTruckApplication extends Application {
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
 
-  }
-
-
-  /**
-   * Popup error message prompting user to save before exiting
-   * 
-   * @param title   name of the popup
-   * @param message the main text in the popup
-   */
-  private void getSaveMessage(String title, String message) {
-    Stage alertWindow = new Stage();
-    alertWindow.initModality(Modality.APPLICATION_MODAL);
-    alertWindow.setTitle(title);
-    alertWindow.setMinHeight(115);
-    alertWindow.setMinWidth(300);
-
-    Label errorMessage = new Label();
-    errorMessage.setText(message);
-
-    Button saveButton = new Button("Save");
-    Button dontSaveButton = new Button("Don't Save");
-    saveButton.getStyleClass().add("button-affirmative");
-    dontSaveButton.getStyleClass().add("button-negative");
-    
-    VBox alertBox = new VBox(10);
-    HBox hBox = new HBox(10);
-
-    Label spacer = new Label();
-    errorMessage.setAlignment(Pos.CENTER);
-    hBox.getChildren().addAll(saveButton, dontSaveButton);
-    alertBox.getChildren().addAll(errorMessage, spacer, hBox);
-    alertBox.setAlignment(Pos.CENTER);
-    hBox.setAlignment(Pos.BOTTOM_RIGHT);
-
-    // TODO: add save and don't save actions
-    dontSaveButton.setOnAction(e -> alertWindow.close());
-
-    Scene alertBoxScene = new Scene(alertBox);
-    alertBoxScene.getStylesheets().add("FoodTruckMain.css");
-
-    alertWindow.setScene(alertBoxScene);
-    alertWindow.showAndWait();
   }
 
   /**
