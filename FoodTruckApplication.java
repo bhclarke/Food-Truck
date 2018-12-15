@@ -1010,7 +1010,7 @@ public class FoodTruckApplication extends Application {
     }
     
     ListView<String> listView = new ListView<String>(ruleListObs);
-    listView.getSelectionModel().clearSelection();
+    listView.getSelectionModel().clearSelection();	// No default selection
     listView.setMaxHeight(100);
 
     Button accept = new Button("Accept");
