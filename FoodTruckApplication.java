@@ -136,6 +136,7 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(10, 10, 10, 10));
     grid.setVgap(8);
     grid.setHgap(10);
+    grid.setAlignment(Pos.CENTER);
 
     // Define Food and Meal Data
     List<FoodItem> mealList = meal.getAllFoodItems();
@@ -240,7 +241,7 @@ public class FoodTruckApplication extends Application {
       	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
           		meal.getProtein(),meal.getCarb(),meal.getFiber());
         }else {
-      	nutData = getNutritionForm("Meal data for " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+      	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
         }
       GridPane.setConstraints(nutData, 0, 0, 3, 1);
       grid.getChildren().set(4, nutData);
@@ -372,7 +373,7 @@ public class FoodTruckApplication extends Application {
 	  GridPane foodItemNutritionForm = new GridPane();
 	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
 	  
-	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
+	  VBox nutData = getNutritionForm("Nutrition Data: " + fi.getName(),fi.getCal(),fi.getFat(),
 	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
 	  foodItemNutritionForm.add(nutData, 1, 1);
 	  return foodItemNutritionForm;
@@ -1143,6 +1144,7 @@ public class FoodTruckApplication extends Application {
     grid.setPadding(new Insets(50, 50, 200, 50));
     grid.setVgap(8);
     grid.setHgap(10);
+    grid.setAlignment(Pos.CENTER);
 
     // import logo and add to grid
     String imagePath = "file:food-truck-logo.png";
