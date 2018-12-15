@@ -222,82 +222,7 @@ public class FoodTruckApplication extends Application {
     Button analyzeMealButton = new Button("Analyze Meal");
     
     //build nutrition information box
-    
-    /*
-    GridPane alertGrid = new GridPane();
-    alertGrid.setHgap(10);
-    alertGrid.setVgap(10);
-
-    Label header = new Label();
-    header.setText("Meal data for " + meal.getMealName());
-    header.setMinHeight(25);
-    header.getStyleClass().add("label-tableHeader");
-    
-    Label spacer = new Label();
-
-    Label calLabel = new Label();
-    calLabel.setText("Calories: ");
-    calLabel.setMinHeight(25);
-
-    TextField calInput = new TextField();
-    calInput.setMinWidth(200);
-    calInput.setMinHeight(25);
-    calInput.setDisable(true);
-
-    Label fatLabel = new Label();
-    fatLabel.setText("Fat: ");
-
-    TextField fatInput = new TextField();
-    fatInput.setDisable(true);
-
-    Label carbLabel = new Label();
-    carbLabel.setText("Carbs: ");
-
-    TextField carbInput = new TextField();
-    carbInput.setDisable(true);
-
-    Label fiberLabel = new Label();
-    fiberLabel.setText("Fiber: ");
-    fiberLabel.setMinHeight(25);
-
-    TextField fiberInput = new TextField();
-    fiberInput.setMinWidth(200);
-    fiberInput.setMinHeight(25);
-    fiberInput.setDisable(true);
-
-    Label proLabel = new Label();
-    proLabel.setText("Protien: ");
-
-    TextField proInput = new TextField();
-    proInput.setDisable(true);
-
-    try {
-    	calInput.setText(Double.toString(meal.getCal()));
-    	fatInput.setText(Double.toString(meal.getFat()));
-    	carbInput.setText(Double.toString(meal.getCarb()));
-    	fiberInput.setText(Double.toString(meal.getFiber()));
-    	proInput.setText(Double.toString(meal.getProtein()));
-    }catch (Exception e) {
-    	calInput.setText("0");
-    	fatInput.setText("0");
-    	carbInput.setText("0");
-    	fiberInput.setText("0");
-    	proInput.setText("0");
-    }
-    
-    alertGrid.add(calLabel, 0, 0);
-    alertGrid.add(calInput, 1, 0);
-    alertGrid.add(fatLabel, 0, 1);
-    alertGrid.add(fatInput, 1, 1);
-    alertGrid.add(carbLabel, 0, 2);
-    alertGrid.add(carbInput, 1, 2);
-    alertGrid.add(fiberLabel, 2, 0);
-    alertGrid.add(fiberInput, 3, 0);
-    alertGrid.add(proLabel, 2, 1);
-    alertGrid.add(proInput, 3, 1);
-
-    */
-    
+        
     if(meal.getCal() != null) {
     	nutData = getNutritionForm("Meal data for " + meal.getMealName(), meal.getCal(), meal.getFat(),
         		meal.getProtein(),meal.getCarb(),meal.getFiber());
@@ -322,16 +247,11 @@ public class FoodTruckApplication extends Application {
     });
 
     // Add all to grid
+    GridPane.setConstraints(nutData, 0, 0, 3, 1);
     GridPane.setConstraints(allFoodTable, 0, 1, 1, 1);
     GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
     GridPane.setConstraints(mealFoodTable, 2, 1, 1, 1);
-    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
-    //GridPane.setConstraints(nutrientField, 0, 2, 3, 1); TODO remove this line
-
-    /*
-    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
-        nutrientField);
-    */    
+    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);    
     GridPane.setConstraints(nutData, 0, 0, 3, 1);
     
     grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
@@ -451,6 +371,8 @@ public class FoodTruckApplication extends Application {
    */
   private GridPane showFoodItemData(FoodItem fi) {
 	  GridPane foodItemNutritionForm = new GridPane();
+	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
+	  
 	  VBox nutData = getNutritionForm("Nutrition data for food item " + fi.getName(),fi.getCal(),fi.getFat(),
 	    		fi.getCarb(),fi.getFiber(),fi.getProtein());
 	  foodItemNutritionForm.add(nutData, 1, 1);
