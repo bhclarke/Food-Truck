@@ -742,6 +742,7 @@ public class FoodTruckApplication extends Application {
     proInput.setText("0");
 
     Button acceptButton = new Button("Accept");
+    acceptButton.setDefaultButton(true);
     Button closeButton = new Button("Close");
 
     // Button style classes
