@@ -171,7 +171,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         String name = f.getName();
         writer.println(id + "," + name + ",calories," + f.getNutrientValue("calories") + ",fat,"
             + f.getNutrientValue("fat") + ",carbohydrate," + f.getNutrientValue("carbohydrate")
-            + "fiber," + f.getNutrientValue("fiber") + ",protein," + f.getNutrientValue("protein"));
+            + ",fiber," + f.getNutrientValue("fiber") + ",protein," + f.getNutrientValue("protein"));
       }
 
     } catch (IOException e) {
