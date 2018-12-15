@@ -234,15 +234,23 @@ public class FoodTruckApplication extends Application {
       nutrientField.appendText(meal.getNutrientString());
     });
 
-    // Add all to grid
-    GridPane.setConstraints(allFoodTable, 0, 0, 1, 1);
-    GridPane.setConstraints(toggleButtonBox, 1, 0, 1, 1);
-    GridPane.setConstraints(mealFoodTable, 2, 0, 1, 1);
-    GridPane.setConstraints(analyzeMealButton, 2, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
-    GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
+    VBox nutData = getNutritionForm("Meal data for " + meal.getMealName(),meal.getCal(),meal.getFat(),
+    		meal.getCarb(),meal.getFiber(),meal.getProtein());
 
+    // Add all to grid
+    GridPane.setConstraints(allFoodTable, 0, 1, 1, 1);
+    GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
+    GridPane.setConstraints(mealFoodTable, 2, 1, 1, 1);
+    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
+    //GridPane.setConstraints(nutrientField, 0, 2, 3, 1);
+
+    /*
     grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
         nutrientField);
+	*/
+    GridPane.setConstraints(nutData, 0, 0, 3, 1);
+    grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
+            nutData);
 
     return grid;
   }
@@ -563,6 +571,9 @@ public class FoodTruckApplication extends Application {
     Label header = new Label();
     header.setText(name);
     header.setMinHeight(25);
+    header.getStyleClass().add("label-tableHeader");
+    
+    Label spacer = new Label();
 
     Label calLabel = new Label();
     calLabel.setText("Calories: ");
@@ -616,7 +627,10 @@ public class FoodTruckApplication extends Application {
     alertGrid.add(proLabel, 2, 1);
     alertGrid.add(proInput, 3, 1);
 
+    
     VBox vbox = new VBox();
+    vbox.getChildren().addAll(header,alertGrid,spacer);
+    
     return vbox;
 
   }
