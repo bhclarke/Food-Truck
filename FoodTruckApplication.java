@@ -395,7 +395,7 @@ public class FoodTruckApplication extends Application {
     mealGrid.setHgap(5);
 
     // Define Labels
-    Label mealGridLabel = new Label("Meal list");
+    Label mealGridLabel = new Label("Meal List");
     mealGridLabel.getStyleClass().add("label-tableHeader");
 
     // Define Meal Table
