@@ -1,6 +1,4 @@
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Groups a list of foodItems as a meal. Can add and remove food and analyze nutritional data.
@@ -27,7 +25,7 @@ public class Meal extends FoodData {
   public Meal(String mealName) {
     this.mealName = mealName;
   }
-  
+
 
   /**
    * Given a list of foodItems in a Meal object, adds nutrition values in a long string. The form of
@@ -44,7 +42,7 @@ public class Meal extends FoodData {
       foodItem = super.getAllFoodItems().get(i); // look at each food item
       nutrients = foodItem.getNutrients(); // get the nutrient map - a new one is created for each
                                            // food item in meal
-      //nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
+      // nutrientString += super.getAllFoodItems().get(i).getName() + "\n";
       for (String label : nutrients.keySet()) {
         if (mealNutrients.containsKey(label)) {
           // if we previously added a nutrient of this (label), retrieve its
@@ -97,25 +95,25 @@ public class Meal extends FoodData {
   public String getNutrientString() {
     return nutrientString;
   }
-	  
+
   public Double getCal() {
-	  return mealNutrients.get("calories");
+    return mealNutrients.get("calories");
   }
-	  
+
   public Double getFat() {
-	  return mealNutrients.get("fat");
+    return mealNutrients.get("fat");
   }
-	  
+
   public Double getCarb() {
-	  return mealNutrients.get("carbohydrate");
+    return mealNutrients.get("carbohydrate");
   }
-	  
+
   public Double getFiber() {
-	  return mealNutrients.get("fiber");
+    return mealNutrients.get("fiber");
   }
-	  
+
   public Double getProtein() {
-	  return mealNutrients.get("protein");
+    return mealNutrients.get("protein");
   }
 
 }

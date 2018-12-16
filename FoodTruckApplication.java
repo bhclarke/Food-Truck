@@ -6,13 +6,9 @@
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,7 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -42,18 +37,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
- * Activity to load, save, edit, and analyze food & meal data.
- * Creates an interactive window with food and meal tables and functionality
- * to edit data.
+ * Activity to load, save, edit, and analyze food & meal data. Creates an interactive window with
+ * food and meal tables and functionality to edit data.
  * 
  * @authors Riley, Brett, Ryan, Jerald, Jamison
  */
@@ -85,11 +75,11 @@ public class FoodTruckApplication extends Application {
   List<String> rulesData = new ArrayList<String>();
   String searchText = "";
   FileChooser fileChooser = new FileChooser();
-  
-  // Make the TextArea that displays nutrients 
+
+  // Make the TextArea that displays nutrients
   // accessible from any scene
   TextArea nutrientField = new TextArea();
-  
+
   // Make foodTable accessible from any scene
   TableView<FoodItem> foodTable; // = new TableView<>();
 
@@ -149,7 +139,7 @@ public class FoodTruckApplication extends Application {
 
     foodListView = FXCollections.observableArrayList();
     ObservableList<FoodItem> mealListView = FXCollections.observableArrayList();
-    
+
     // filter foodListView
     foodListView = foodData.filterByNutrients(rulesData).stream()
         .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
@@ -228,28 +218,29 @@ public class FoodTruckApplication extends Application {
     nutrientField.setPrefRowCount(12);
 
     Button analyzeMealButton = new Button("Analyze Meal");
-    
-    //build nutrition information box
-        
-    if(meal.getCal() != null) {
-    	nutData = getNutritionForm("Meal Data " + meal.getMealName(), meal.getCal(), meal.getFat(),
-        		meal.getProtein(),meal.getCarb(),meal.getFiber());
-      }else {
-    	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
-      }
-    
+
+    // build nutrition information box
+
+    if (meal.getCal() != null) {
+      nutData = getNutritionForm("Meal Data " + meal.getMealName(), meal.getCal(), meal.getFat(),
+          meal.getProtein(), meal.getCarb(), meal.getFiber());
+    } else {
+      nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    }
+
     // whenever the Analyze Selected Meal button is clicked, analyze the currently selected meal's
     // nutrients
     analyzeMealButton.setOnAction((event) -> {
       meal.analyzeMealData();
-      nutrientField.setText("Meal Data: " + meal.getMealName() + "\n");  // show meal name in nutrient display
+      nutrientField.setText("Meal Data: " + meal.getMealName() + "\n"); // show meal name in
+                                                                        // nutrient display
       nutrientField.appendText(meal.getNutrientString());
-      if(meal.getCal() != null) {
-      	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), meal.getCal(), meal.getFat(),
-          		meal.getProtein(),meal.getCarb(),meal.getFiber());
-        }else {
-      	nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
-        }
+      if (meal.getCal() != null) {
+        nutData = getNutritionForm("Meal Data: " + meal.getMealName(), meal.getCal(), meal.getFat(),
+            meal.getProtein(), meal.getCarb(), meal.getFiber());
+      } else {
+        nutData = getNutritionForm("Meal Data: " + meal.getMealName(), 0.0, 0.0, 0.0, 0.0, 0.0);
+      }
       GridPane.setConstraints(nutData, 0, 0, 3, 1);
       grid.getChildren().set(4, nutData);
     });
@@ -259,12 +250,12 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(allFoodTable, 0, 1, 1, 1);
     GridPane.setConstraints(toggleButtonBox, 1, 1, 1, 1);
     GridPane.setConstraints(mealFoodTable, 2, 1, 1, 1);
-    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);    
+    GridPane.setConstraints(analyzeMealButton, 2, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
     GridPane.setConstraints(nutData, 0, 0, 3, 1);
-    
+
     grid.getChildren().addAll(allFoodTable, mealFoodTable, toggleButtonBox, analyzeMealButton,
-            nutData);
-	
+        nutData);
+
     return grid;
   }
 
@@ -274,6 +265,7 @@ public class FoodTruckApplication extends Application {
    * 
    * @return food list grid
    */
+  @SuppressWarnings("static-access")
   private GridPane getFoodList() {
     // Define grid and settings
     GridPane grid = new GridPane();
@@ -291,37 +283,34 @@ public class FoodTruckApplication extends Application {
     TableColumn<FoodItem, String> foodNames = new TableColumn<FoodItem, String>("Name");
     foodNames.setCellValueFactory(new PropertyValueFactory<>("name"));
     foodNames.setSortType(TableColumn.SortType.ASCENDING);
-    
+
     // apply filters if set
     ObservableList<FoodItem> foodList = foodData.filterByNutrients(rulesData).stream()
         .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
         .collect(Collectors.toCollection(FXCollections::observableArrayList));
     foodTable.setItems(foodList);
-    
+
     // count number of food items
     int counted = foodList.size();
     Label countL = new Label();
     countL.setText("Total: " + counted);
-    
-    //foodTable.setItems(foodList);
+
+    // foodTable.setItems(foodList);
     foodTable.getColumns().add(foodNames);
     foodTable.getSortOrder().add(foodNames);
     foodTable.getSelectionModel().selectionModeProperty().set(SelectionMode.SINGLE);
     foodTable.setColumnResizePolicy(foodTable.CONSTRAINED_RESIZE_POLICY);
     foodTable.setMinWidth(400);
 
-    
-    
-        
-    
+
+
     // Define Search Field
     TextField input = new TextField();
     input.setMaxHeight(20);
     input.setMinWidth(200);
     if (searchText.equals("")) {
       input.setPromptText("Search Food Items (Press Enter)");
-    }
-    else {
+    } else {
       input.setText(searchText);
     }
     input.setFocusTraversable(false);
@@ -332,11 +321,11 @@ public class FoodTruckApplication extends Application {
         ObservableList<FoodItem> temp = foodData.filterByNutrients(rulesData).stream()
             .filter(s -> s.getName().toLowerCase().contains(searchText.toLowerCase()))
             .collect(Collectors.toCollection(FXCollections::observableArrayList));
-        foodTable.setItems(temp); 
-        countL.setText("Total: " + temp.size());       
+        foodTable.setItems(temp);
+        countL.setText("Total: " + temp.size());
       };
     });
-    
+
     GridPane.setConstraints(countL, 2, 3, 1, 1, HPos.RIGHT, VPos.BOTTOM);
 
     // Define Buttons
@@ -356,32 +345,34 @@ public class FoodTruckApplication extends Application {
     GridPane.setConstraints(foodTable, 0, 2, 3, 1);
 
     grid.getChildren().addAll(foodListLabel, foodTable, input, add, rule, countL);
-    
-    foodTable.getSelectionModel().selectedItemProperty()
-	.addListener((obs, oldV, newV) -> {
-		if (newV != null) {
-			mealTable.getSelectionModel().clearSelection();
-			layout.setCenter(showFoodItemData(newV));
-		} else {
-			layout.setCenter(getStartCredits());
-		}
-	});
-        
+
+    foodTable.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+      if (newV != null) {
+        mealTable.getSelectionModel().clearSelection();
+        layout.setCenter(showFoodItemData(newV));
+      } else {
+        layout.setCenter(getStartCredits());
+      }
+    });
+
     return grid;
   }
-  
+
   /**
    * Center pane when a food item is selected from the overall food item list
+   * 
    * @return grid
    */
   private GridPane showFoodItemData(FoodItem fi) {
-	  GridPane foodItemNutritionForm = new GridPane();
-	  foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
-	  
-	  VBox nutData = getNutritionForm("Nutrition Data: " + fi.getName(),fi.getNutrientValue("calories"),fi.getNutrientValue("fat"),
-	    		fi.getNutrientValue("carbohydrate"),fi.getNutrientValue("fiber"),fi.getNutrientValue("protein"));
-	  foodItemNutritionForm.add(nutData, 1, 1);
-	  return foodItemNutritionForm;
+    GridPane foodItemNutritionForm = new GridPane();
+    foodItemNutritionForm.setPadding(new Insets(10, 10, 10, 10));
+
+    VBox nutData =
+        getNutritionForm("Nutrition Data: " + fi.getName(), fi.getNutrientValue("calories"),
+            fi.getNutrientValue("fat"), fi.getNutrientValue("carbohydrate"),
+            fi.getNutrientValue("fiber"), fi.getNutrientValue("protein"));
+    foodItemNutritionForm.add(nutData, 1, 1);
+    return foodItemNutritionForm;
   }
 
   /**
@@ -389,6 +380,7 @@ public class FoodTruckApplication extends Application {
    * 
    * @return meal list grid
    */
+  @SuppressWarnings("static-access")
   private GridPane getMealList() {
 
     ObservableList<Meal> mealList = FXCollections.observableArrayList();
@@ -407,7 +399,7 @@ public class FoodTruckApplication extends Application {
     mealTable = new TableView<>();
     TableColumn<Meal, String> mealNames = new TableColumn<Meal, String>("Name");
     mealNames.setMinWidth(200);
-    mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));    
+    mealNames.setCellValueFactory(new PropertyValueFactory<>("mealName"));
     mealNames.setSortType(TableColumn.SortType.ASCENDING);
 
     mealTable.setItems(mealList);
@@ -419,13 +411,17 @@ public class FoodTruckApplication extends Application {
     mealTable.getSelectionModel().selectedItemProperty()
         .addListener((obs, oldSelection, newSelection) -> {
           if (newSelection != null) {
-        	foodTable.getSelectionModel().clearSelection();
+            foodTable.getSelectionModel().clearSelection();
             layout.setCenter(createEditMeal(newSelection));
             // show meal name in nutrient display
-            nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n" + newSelection.getNutrientString());
+            nutrientField.setText("Meal data for " + newSelection.getMealName() + "\n"
+                + newSelection.getNutrientString());
             // update the nutrition data for the old selection so that selecting
-            // a new meal and going back to the old meal essentially files whatever changes were made
-            if (oldSelection != null) {oldSelection.analyzeMealData();}
+            // a new meal and going back to the old meal essentially files whatever changes were
+            // made
+            if (oldSelection != null) {
+              oldSelection.analyzeMealData();
+            }
           } else {
             layout.setCenter(getStartCredits());
           }
@@ -437,70 +433,78 @@ public class FoodTruckApplication extends Application {
 
       layout.setCenter(getStartCredits());
       // Create a grid pane to store the text field and buttons
-      
-      GridPane mealCreationGrid = new GridPane(); mealCreationGrid.setHgap(10);
+
+      GridPane mealCreationGrid = new GridPane();
+      mealCreationGrid.setHgap(10);
       mealCreationGrid.setVgap(10);
-      
+
       Stage mealCreationStage = new Stage();
       mealCreationStage.initModality(Modality.APPLICATION_MODAL);
-      mealCreationStage.setTitle("Create new meal"); mealCreationStage.setMinWidth(400);
-      mealCreationStage.setMaxWidth(400); mealCreationStage.setMinHeight(200);
+      mealCreationStage.setTitle("Create new meal");
+      mealCreationStage.setMinWidth(400);
+      mealCreationStage.setMaxWidth(400);
+      mealCreationStage.setMinHeight(200);
       mealCreationStage.setMaxHeight(200);
-      
-      TextField mealNameInput = new TextField(); mealNameInput.setMinWidth(200);
+
+      TextField mealNameInput = new TextField();
+      mealNameInput.setMinWidth(200);
       Label mealNameInputLabel = new Label("Meal name: ");
       mealNameInputLabel.setMinHeight(25);
       HBox mealNameAndLabel = new HBox();
       mealNameAndLabel.getChildren().addAll(mealNameInputLabel, mealNameInput);
       mealNameAndLabel.setPadding(new Insets(0, 10, 10, 10));
       mealNameInput.setMinHeight(25);
-      
-      Button closeMealButton = new Button("Close"); 
-      Button acceptMealButton = new Button("Accept"); 
-      acceptMealButton.setDisable(true);  // initially disabled -- only enable if there is a meal name
+
+      Button closeMealButton = new Button("Close");
+      Button acceptMealButton = new Button("Accept");
+      acceptMealButton.setDisable(true); // initially disabled -- only enable if there is a meal
+                                         // name
       acceptMealButton.getStyleClass().add("button-affirmative");
-      acceptMealButton.setDefaultButton(true);  // binds Enter key to Accept buttton
+      acceptMealButton.setDefaultButton(true); // binds Enter key to Accept buttton
       closeMealButton.getStyleClass().add("button-negative");
       closeMealButton.setOnAction(closeMealWindowEvent -> mealCreationStage.close());
-      
+
       // add a listener to the TextField so that Accept button
       // is active only when there is Meal name entered in the TextField
       mealNameInput.textProperty().addListener((obs, oldV, newV) -> {
-    	  if (newV.isEmpty() == false) {
-    		  acceptMealButton.setDisable(false);
-    	  } else {
-    		  acceptMealButton.setDisable(true);
-    	  }
+        if (newV.isEmpty() == false) {
+          acceptMealButton.setDisable(false);
+        } else {
+          acceptMealButton.setDisable(true);
+        }
       });
-      
+
       // when the user hits the Accept button, create the meal and update the Meal List
       acceptMealButton.setOnAction(closeMealWindowEvent -> {
-    	  mealCreationStage.close();  // close the pop up window
-    	  Meal newMeal = new Meal(mealNameInput.getText());
-    	  // add newly created meal to the Meal List and
-    	  // update the Edit Meal section to allow for editing that new Meal
-    	  layout.setCenter(createEditMeal(newMeal));
-    	  mealTable.getItems().add(newMeal);
-    	  // in Meal List, set selection to the newly created meal
-    	  mealTable.sort();
-    	  mealTable.getSelectionModel().select(newMeal);
-    	  
+        mealCreationStage.close(); // close the pop up window
+        Meal newMeal = new Meal(mealNameInput.getText());
+        // add newly created meal to the Meal List and
+        // update the Edit Meal section to allow for editing that new Meal
+        layout.setCenter(createEditMeal(newMeal));
+        mealTable.getItems().add(newMeal);
+        // in Meal List, set selection to the newly created meal
+        mealTable.sort();
+        mealTable.getSelectionModel().select(newMeal);
+
       });
-      
+
       HBox mealButtonsBox = new HBox(8);
       mealButtonsBox.getChildren().addAll(acceptMealButton, closeMealButton);
       mealButtonsBox.setPadding(new Insets(10, 10, 10, 10));
-      
+
       // grid has two elements:
       // row 2 = TextField for the meal name
       // row 3 = HBox for the Accept and Cancel buttons
-      mealCreationGrid.add(mealNameAndLabel, 2, 2); mealCreationGrid.add(mealButtonsBox, 2, 3);
-            
+      mealCreationGrid.add(mealNameAndLabel, 2, 2);
+      mealCreationGrid.add(mealButtonsBox, 2, 3);
+
       Scene mealScene = new Scene(mealCreationGrid);
       mealScene.getStylesheets().add("FoodTruckMain.css");
-      
-      mealCreationStage.setScene(mealScene); mealCreationStage.showAndWait();
-      //layout.setCenter(createEditMeal(new Meal())); // when we have the necessary info, create meal
+
+      mealCreationStage.setScene(mealScene);
+      mealCreationStage.showAndWait();
+      // layout.setCenter(createEditMeal(new Meal())); // when we have the necessary info, create
+      // meal
     });
 
     GridPane.setConstraints(mealGridLabel, 0, 0, 1, 1);
@@ -606,7 +610,7 @@ public class FoodTruckApplication extends Application {
     header.setText(name);
     header.setMinHeight(25);
     header.getStyleClass().add("label-tableHeader");
-    
+
     Label spacer = new Label();
 
     Label calLabel = new Label();
@@ -661,10 +665,10 @@ public class FoodTruckApplication extends Application {
     alertGrid.add(proLabel, 2, 1);
     alertGrid.add(proInput, 3, 1);
 
-    
+
     VBox vbox = new VBox(5);
-    vbox.getChildren().addAll(header,alertGrid,spacer);
-    
+    vbox.getChildren().addAll(header, alertGrid, spacer);
+
     return vbox;
 
   }
@@ -768,49 +772,48 @@ public class FoodTruckApplication extends Application {
       double fiber = 0.0;
       double protein = 0.0;
 
-      
+
       // validate name
       if (nameInput.getText().compareTo("") == 0) {
         nameLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
-  		getErrorMessage("Add Food Item","Error: Name must be specified.");
-      } 
-      else {
+        getErrorMessage("Add Food Item", "Error: Name must be specified.");
+      } else {
         nameLabel.getStyleClass().remove("label-invalidInput");
       }
 
       // validate ids
       boolean invalidId = false;
       if (idInput.getText().compareTo("") == 0) {
-    	idLabel.getStyleClass().add("label-invalidInput");
+        idLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
         invalidId = true;
-  		getErrorMessage("Add Food Item","Error: ID must be specified.");
+        getErrorMessage("Add Food Item", "Error: ID must be specified.");
       } else {
         idLabel.getStyleClass().remove("label-invalidInput");
       }
-      
+
       for (FoodItem f : foodData.getAllFoodItems()) {
-    	  if (f.getID().equals(idInput.getText())) {
-    	      idLabel.getStyleClass().add("label-invalidInput");
-    		  failedParse = true;
-    		  invalidId = true;
-      		getErrorMessage("Add Food Item","Error: ID must be unique.");
-    	  }
+        if (f.getID().equals(idInput.getText())) {
+          idLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          invalidId = true;
+          getErrorMessage("Add Food Item", "Error: ID must be unique.");
+        }
       }
 
       // validate calories
       try {
         calories = Double.parseDouble(calInput.getText());
         if (calories < 0) {
-        	failedParse = true;
-        	calLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          calLabel.getStyleClass().add("label-invalidInput");
         }
-        
+
         else {
-        	calLabel.getStyleClass().remove("label-invalidInput");
+          calLabel.getStyleClass().remove("label-invalidInput");
         }
-      
+
       } catch (NumberFormatException f) {
         calLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
@@ -820,16 +823,16 @@ public class FoodTruckApplication extends Application {
       try {
         fat = Double.parseDouble(fatInput.getText());
         if (fat < 0) {
-        	failedParse = true;
-        	fatLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          fatLabel.getStyleClass().add("label-invalidInput");
         }
-        
+
         else {
-        	fatLabel.getStyleClass().remove("label-invalidInput");
+          fatLabel.getStyleClass().remove("label-invalidInput");
         }
-      
+
       } catch (NumberFormatException f) {
-    	fatLabel.getStyleClass().add("label-invalidInput");
+        fatLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -837,16 +840,16 @@ public class FoodTruckApplication extends Application {
       try {
         carbohydrates = Double.parseDouble(carbInput.getText());
         if (carbohydrates < 0) {
-        	failedParse = true;
-        	carbLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          carbLabel.getStyleClass().add("label-invalidInput");
         }
-        
+
         else {
-        	carbLabel.getStyleClass().remove("label-invalidInput");
+          carbLabel.getStyleClass().remove("label-invalidInput");
         }
-        
+
       } catch (NumberFormatException f) {
-    	carbLabel.getStyleClass().add("label-invalidInput");
+        carbLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -854,16 +857,16 @@ public class FoodTruckApplication extends Application {
       try {
         fiber = Double.parseDouble(fiberInput.getText());
         if (fiber < 0) {
-        	failedParse = true;
-        	fiberLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          fiberLabel.getStyleClass().add("label-invalidInput");
         }
-        
+
         else {
-        	fiberLabel.getStyleClass().remove("label-invalidInput");
+          fiberLabel.getStyleClass().remove("label-invalidInput");
         }
-        
+
       } catch (NumberFormatException f) {
-    	fiberLabel.getStyleClass().add("label-invalidInput");
+        fiberLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -871,16 +874,16 @@ public class FoodTruckApplication extends Application {
       try {
         protein = Double.parseDouble(proInput.getText());
         if (protein < 0) {
-        	failedParse = true;
-            proLabel.getStyleClass().add("label-invalidInput");
+          failedParse = true;
+          proLabel.getStyleClass().add("label-invalidInput");
         }
-        
+
         else {
-            proLabel.getStyleClass().remove("label-invalidInput");
+          proLabel.getStyleClass().remove("label-invalidInput");
         }
 
       } catch (NumberFormatException f) {
-    	proLabel.getStyleClass().add("label-invalidInput");
+        proLabel.getStyleClass().add("label-invalidInput");
         failedParse = true;
       }
 
@@ -895,10 +898,9 @@ public class FoodTruckApplication extends Application {
         foodData.addFoodItem(food);
         layout.setLeft(getFoodList());
         alertWindow.close();
-      }
-      else if (!invalidId) {
-    		getErrorMessage("Add Food Item","Error: Nutrition values "
-    				+ "must be numeric and greater than zero.");
+      } else if (!invalidId) {
+        getErrorMessage("Add Food Item",
+            "Error: Nutrition values " + "must be numeric and greater than zero.");
       }
 
     });
@@ -953,8 +955,8 @@ public class FoodTruckApplication extends Application {
     ComboBox<String> nutCombo = new ComboBox<String>(nutOptions);
     nutCombo.setPromptText("Nutrient");
 
-    ObservableList<String> logicOptions = FXCollections.observableArrayList(
-    	"\u2265", // unicode for >=
+    ObservableList<String> logicOptions = FXCollections.observableArrayList("\u2265", // unicode for
+                                                                                      // >=
         "\u2264", // unicode for <=
         "=");
     ComboBox<String> logicCombo = new ComboBox<String>(logicOptions);
@@ -966,33 +968,32 @@ public class FoodTruckApplication extends Application {
     Button addRule = new Button("Add Rule");
     Button removeRule = new Button("Remove Rule");
 
-    ObservableList<String> ruleListObs = 
-    		FXCollections.observableArrayList(new ArrayList<String>());
+    ObservableList<String> ruleListObs = FXCollections.observableArrayList(new ArrayList<String>());
     String current;
-	String nut;
-	String logic;
-	String value;
-    
-    for (int i = 0; i < rulesData.size();i++) {
-    	current = rulesData.get(i);
-		nut = current.substring(0, current.indexOf(" "));
-		current = current.substring(current.indexOf(" ") + 1);
-		logic = current.substring(0, current.indexOf(" "));
-		current = current.substring(current.indexOf(" ") + 1);
-		value = current;
-		if (logic.compareTo(">=") == 0) {		// Requires comparators to be java syntax
-			logic = "\u2265"; // unicode for >=
-		}else if (logic.compareTo("<=") == 0) {
-			logic = "\u2264"; // unicode for <=
-		}else  if (logic.compareTo("==") == 0){
-			logic = "=";
-		}
-		
-		ruleListObs.add(nut + " " + logic + " " + value);
+    String nut;
+    String logic;
+    String value;
+
+    for (int i = 0; i < rulesData.size(); i++) {
+      current = rulesData.get(i);
+      nut = current.substring(0, current.indexOf(" "));
+      current = current.substring(current.indexOf(" ") + 1);
+      logic = current.substring(0, current.indexOf(" "));
+      current = current.substring(current.indexOf(" ") + 1);
+      value = current;
+      if (logic.compareTo(">=") == 0) { // Requires comparators to be java syntax
+        logic = "\u2265"; // unicode for >=
+      } else if (logic.compareTo("<=") == 0) {
+        logic = "\u2264"; // unicode for <=
+      } else if (logic.compareTo("==") == 0) {
+        logic = "=";
+      }
+
+      ruleListObs.add(nut + " " + logic + " " + value);
     }
-    
+
     ListView<String> listView = new ListView<String>(ruleListObs);
-    listView.getSelectionModel().clearSelection();	// No default selection
+    listView.getSelectionModel().clearSelection(); // No default selection
     listView.setMaxHeight(100);
 
     Button accept = new Button("Accept");
@@ -1013,69 +1014,69 @@ public class FoodTruckApplication extends Application {
 
     VBox vbox = new VBox(8);
     vbox.getChildren().addAll(prompt, ruleHbox, ruleButtonHbox, listView, buttonHbox);
-    vbox.setPadding(new Insets(0,8,8,8));
-    
-    //button actions
+    vbox.setPadding(new Insets(0, 8, 8, 8));
+
+    // button actions
     addRule.setOnAction(e -> {
-    	boolean failedParse = false;
-    	if (nutCombo.getSelectionModel().isEmpty()) {
-    		getErrorMessage("Set Filter Rule","Error: A nutrient must be specified.");
-    		failedParse = true;
-    	}
-    	if(logicCombo.getSelectionModel().isEmpty()) {
-    		getErrorMessage("Set Filter Rule","Error: A logic must be specified.");
-    		failedParse = true;
-    	}
-    	try {
-    		Double.parseDouble(valueField.getText());
-    	} catch(NumberFormatException f) {
-    		getErrorMessage("Set Filter Rule", "Error: Value must be a double.");
-    		failedParse = true;
-    	}
-    	if (failedParse == false) {
-    		String rule = nutCombo.getValue() + " " + logicCombo.getValue() + " " + 
-					valueField.getText();
-    		if(ruleListObs.contains(rule) != true) {
-    			ruleListObs.add(rule);
-    		}
-    	}
+      boolean failedParse = false;
+      if (nutCombo.getSelectionModel().isEmpty()) {
+        getErrorMessage("Set Filter Rule", "Error: A nutrient must be specified.");
+        failedParse = true;
+      }
+      if (logicCombo.getSelectionModel().isEmpty()) {
+        getErrorMessage("Set Filter Rule", "Error: A logic must be specified.");
+        failedParse = true;
+      }
+      try {
+        Double.parseDouble(valueField.getText());
+      } catch (NumberFormatException f) {
+        getErrorMessage("Set Filter Rule", "Error: Value must be a double.");
+        failedParse = true;
+      }
+      if (failedParse == false) {
+        String rule =
+            nutCombo.getValue() + " " + logicCombo.getValue() + " " + valueField.getText();
+        if (ruleListObs.contains(rule) != true) {
+          ruleListObs.add(rule);
+        }
+      }
     });
     removeRule.setOnAction(e -> {
-    	int selectedRow = listView.getSelectionModel().getSelectedIndex();
-    	if ((ruleListObs.isEmpty() != true) && (selectedRow >= 0)) {
-    		ruleListObs.remove(selectedRow);
-    	}
+      int selectedRow = listView.getSelectionModel().getSelectedIndex();
+      if ((ruleListObs.isEmpty() != true) && (selectedRow >= 0)) {
+        ruleListObs.remove(selectedRow);
+      }
     });
     accept.setOnAction(e -> {
-    	rulesData.clear();
-    	String current2;
-    	String nut2;
-    	String logic2;
-    	String value2;
-    	for(int i = 0; i < ruleListObs.size(); i++) {
-    		current2 = ruleListObs.get(i);
-    		nut2 = current2.substring(0, current2.indexOf(" "));
-    		current2 = current2.substring(current2.indexOf(" ") + 1);
-    		logic2 = current2.substring(0, current2.indexOf(" "));
-    		current2 = current2.substring(current2.indexOf(" ") + 1);
-    		value2 = current2;
-    		if (logic2.compareTo("\u2265") == 0) {
-    			logic2 = ">=";
-    		}else if (logic2.compareTo("\u2264") == 0) {
-    			logic2 = "<=";
-    		}else  if (logic2.compareTo("=") == 0){
-    			logic2 = "==";
-    		}
-    		rulesData.add(nut2 + " " + logic2 + " " + value2);
-    	}
-    	layout.setLeft(getFoodList());
-    	alertWindow.close();
+      rulesData.clear();
+      String current2;
+      String nut2;
+      String logic2;
+      String value2;
+      for (int i = 0; i < ruleListObs.size(); i++) {
+        current2 = ruleListObs.get(i);
+        nut2 = current2.substring(0, current2.indexOf(" "));
+        current2 = current2.substring(current2.indexOf(" ") + 1);
+        logic2 = current2.substring(0, current2.indexOf(" "));
+        current2 = current2.substring(current2.indexOf(" ") + 1);
+        value2 = current2;
+        if (logic2.compareTo("\u2265") == 0) {
+          logic2 = ">=";
+        } else if (logic2.compareTo("\u2264") == 0) {
+          logic2 = "<=";
+        } else if (logic2.compareTo("=") == 0) {
+          logic2 = "==";
+        }
+        rulesData.add(nut2 + " " + logic2 + " " + value2);
+      }
+      layout.setLeft(getFoodList());
+      alertWindow.close();
     });
     cancel.setOnAction(e -> alertWindow.close());
-    
+
     Scene alertBoxScene = new Scene(vbox);
     alertBoxScene.getStylesheets().add("FoodTruckMain.css");
-    
+
     alertWindow.setScene(alertBoxScene);
     alertWindow.showAndWait();
 
