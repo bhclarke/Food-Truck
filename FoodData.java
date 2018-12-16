@@ -105,7 +105,11 @@ public class FoodData implements FoodDataADT<FoodItem> {
    * Filters food list by nutrients
    */
   @Override
-  public List<FoodItem> filterByNutrients(List<String> rules) {
+  public List<FoodItem> filterByNutrients(List<String> inputRules) {
+	  // Protect the passed rule list
+	  List<String> rules = new ArrayList<String>();
+	  rules.addAll(inputRules);
+	  
 	  // Handle cases with no rules passed
 	  if (rules == null || rules.isEmpty()) {
 		  return foodItemList;
@@ -246,11 +250,5 @@ public class FoodData implements FoodDataADT<FoodItem> {
 	return resultSet;
 
   } // FilterOneNutrient
-
-  public static void main(String[] args) {
-    FoodData d = new FoodData();
-    d.loadFoodItems("foodItems.txt");
-    d.saveFoodItems("newFile.txt");
-  }
 
 }
