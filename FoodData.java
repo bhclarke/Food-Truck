@@ -13,7 +13,7 @@ import java.io.PrintStream;
 /**
  * This class represents the backend for managing all the operations associated with FoodItems
  * 
- * @authors Riley, Brett Ryan, Jerald, Jamison
+ * @authors Riley, Brett, Ryan, Jerald, Jamison
  */
 public class FoodData implements FoodDataADT<FoodItem> {
 

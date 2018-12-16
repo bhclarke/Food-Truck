@@ -55,7 +55,7 @@ import javafx.util.Callback;
  * Creates an interactive window with food and meal tables and functionality
  * to edit data.
  * 
- * @authors Riley, Brett Ryan, Jerald, Jamison
+ * @authors Riley, Brett, Ryan, Jerald, Jamison
  */
 public class FoodTruckApplication extends Application {
 
