@@ -3,7 +3,7 @@ import java.util.HashMap;
 /**
  * Groups a list of foodItems as a meal. Can add and remove food and analyze nutritional data.
  * 
- * @authors Riley, Brett Ryan, Jerald, Jamison
+ * @authors Riley, Brett, Ryan, Jerald, Jamison
  */
 public class Meal extends FoodData {
 
